@@ -76,7 +76,7 @@ class SessionsFormationSeeder extends Seeder
             // === Licence en Gestion des Ressources Naturelles ===
             [
                 'formation_titre'    => 'Licence en Gestion des Ressources Naturelles',
-                'date_debut'         => '2026-10-01',
+                'date_debut'         => '2026-12-01',
                 'date_fin'           => '2029-06-30',
                 'lieu'               => 'Ouagadougou - Campus principal',
                 'places_totales'     => 50,

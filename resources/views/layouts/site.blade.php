@@ -567,119 +567,147 @@
         }
 
         /* ---------- Hero-side : animation d'entrée + Ken Burns + shine ---------- */
-.hero-side {
-    isolation: isolate;
-}
+        .hero-side {
+            isolation: isolate;
+        }
 
-/* Zoom lent et continu sur la photo de fond */
-.hero-side-photo {
-    animation: heroKenBurns 16s ease-in-out infinite alternate;
-    will-change: transform;
-}
+        /* Zoom lent et continu sur la photo de fond */
+        .hero-side-photo {
+            animation: heroKenBurns 16s ease-in-out infinite alternate;
+            will-change: transform;
+        }
 
-@keyframes heroKenBurns {
-    from { transform: scale(1); }
-    to   { transform: scale(1.09); }
-}
+        @keyframes heroKenBurns {
+            from {
+                transform: scale(1);
+            }
 
-/* Sweep lumineux diagonal qui traverse la carte au chargement puis au survol */
-.hero-side::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    z-index: 3;
-    pointer-events: none;
-    background: linear-gradient(
-        115deg,
-        transparent 40%,
-        rgba(255, 255, 255, .16) 50%,
-        transparent 60%
-    );
-    background-size: 220% 220%;
-    background-position: 120% 0;
-    animation: heroShine 5s ease-in-out .6s 1;
-}
+            to {
+                transform: scale(1.09);
+            }
+        }
 
-.hero-side:hover::after {
-    animation: heroShine 1.4s ease-in-out;
-}
+        /* Sweep lumineux diagonal qui traverse la carte au chargement puis au survol */
+        .hero-side::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            z-index: 3;
+            pointer-events: none;
+            background: linear-gradient(115deg,
+                    transparent 40%,
+                    rgba(255, 255, 255, .16) 50%,
+                    transparent 60%);
+            background-size: 220% 220%;
+            background-position: 120% 0;
+            animation: heroShine 5s ease-in-out .6s 1;
+        }
 
-@keyframes heroShine {
-    from { background-position: 130% 0; }
-    to   { background-position: -30% 0; }
-}
+        .hero-side:hover::after {
+            animation: heroShine 1.4s ease-in-out;
+        }
 
-/* Cascade d'apparition du contenu texte, dans l'ordre : tag → titre → texte → bouton */
-.hero-side .tag,
-.hero-side h3,
-.hero-side p,
-.hero-side .btn {
-    opacity: 0;
-    transform: translateY(18px);
-    animation: heroFadeUp .7s cubic-bezier(.19, 1, .22, 1) forwards;
-}
+        @keyframes heroShine {
+            from {
+                background-position: 130% 0;
+            }
 
-.hero-side .tag  { animation-delay: .15s; }
-.hero-side h3    { animation-delay: .32s; }
-.hero-side p     { animation-delay: .5s;  }
-.hero-side .btn  { animation-delay: .68s; }
+            to {
+                background-position: -30% 0;
+            }
+        }
 
-@keyframes heroFadeUp {
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
+        /* Cascade d'apparition du contenu texte, dans l'ordre : tag → titre → texte → bouton */
+        .hero-side .tag,
+        .hero-side h3,
+        .hero-side p,
+        .hero-side .btn {
+            opacity: 0;
+            transform: translateY(18px);
+            animation: heroFadeUp .7s cubic-bezier(.19, 1, .22, 1) forwards;
+        }
 
-/* Petit repère animé devant "Actualité à la une" */
-.hero-side .tag {
-    position: relative;
-    padding-left: 18px;
-}
+        .hero-side .tag {
+            animation-delay: .15s;
+        }
 
-.hero-side .tag::before {
-    content: "";
-    position: absolute;
-    left: 0;
-    top: 50%;
-    width: 9px;
-    height: 9px;
-    border-radius: 50%;
-    background: var(--leaf);
-    transform: translateY(-50%);
-    box-shadow: 0 0 0 0 rgba(127, 166, 107, .55);
-    animation: heroPulse 2.2s ease-out infinite;
-}
+        .hero-side h3 {
+            animation-delay: .32s;
+        }
 
-@keyframes heroPulse {
-    0%   { box-shadow: 0 0 0 0 rgba(127, 166, 107, .55); }
-    70%  { box-shadow: 0 0 0 9px rgba(127, 166, 107, 0); }
-    100% { box-shadow: 0 0 0 0 rgba(127, 166, 107, 0); }
-}
+        .hero-side p {
+            animation-delay: .5s;
+        }
 
-/* Légère élévation de la carte au survol, cohérente avec le reste du site */
-.hero-side {
-    transition: transform .4s ease, box-shadow .4s ease;
-}
+        .hero-side .btn {
+            animation-delay: .68s;
+        }
 
-.hero-side:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 20px 40px -20px rgba(0, 0, 0, .45);
-}
+        @keyframes heroFadeUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
 
-@media (prefers-reduced-motion: reduce) {
-    .hero-side-photo,
-    .hero-side::after,
-    .hero-side .tag,
-    .hero-side h3,
-    .hero-side p,
-    .hero-side .btn,
-    .hero-side .tag::before {
-        animation: none !important;
-        opacity: 1 !important;
-        transform: none !important;
-    }
-}
+        /* Petit repère animé devant "Actualité à la une" */
+        .hero-side .tag {
+            position: relative;
+            padding-left: 18px;
+        }
+
+        .hero-side .tag::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 50%;
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+            background: var(--leaf);
+            transform: translateY(-50%);
+            box-shadow: 0 0 0 0 rgba(127, 166, 107, .55);
+            animation: heroPulse 2.2s ease-out infinite;
+        }
+
+        @keyframes heroPulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(127, 166, 107, .55);
+            }
+
+            70% {
+                box-shadow: 0 0 0 9px rgba(127, 166, 107, 0);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0 rgba(127, 166, 107, 0);
+            }
+        }
+
+        /* Légère élévation de la carte au survol, cohérente avec le reste du site */
+        .hero-side {
+            transition: transform .4s ease, box-shadow .4s ease;
+        }
+
+        .hero-side:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 20px 40px -20px rgba(0, 0, 0, .45);
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+
+            .hero-side-photo,
+            .hero-side::after,
+            .hero-side .tag,
+            .hero-side h3,
+            .hero-side p,
+            .hero-side .btn,
+            .hero-side .tag::before {
+                animation: none !important;
+                opacity: 1 !important;
+                transform: none !important;
+            }
+        }
 
         .dg-photo-round {
             width: 64px;
@@ -1762,8 +1790,8 @@
             </div>
             <div class="topbar-right">
                 <div class="topbar-social">
-                    <a href="https://www.facebook.com/enef2021" aria-label="Facebook"><svg width="15" height="15" viewBox="0 0 24 24"
-                            fill="currentColor">
+                    <a href="https://www.facebook.com/enef2021" aria-label="Facebook"><svg width="15" height="15"
+                            viewBox="0 0 24 24" fill="currentColor">
                             <path
                                 d="M22 12a10 10 0 1 0-11.56 9.88v-6.99H7.9V12h2.54V9.8c0-2.5 1.49-3.89 3.78-3.89 1.1 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56V12h2.78l-.44 2.89h-2.34v6.99A10 10 0 0 0 22 12z" />
                         </svg></a>
@@ -1844,21 +1872,22 @@
             </ul>
 
             <div class="nav-actions">
-                <button class="icon-btn" aria-label="Rechercher sur le site">
+                {{-- <button class="icon-btn" aria-label="Rechercher sur le site">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <circle cx="11" cy="11" r="7" />
                         <path d="M21 21l-4.3-4.3" />
                     </svg>
-                </button>
+                </button> --}}
                 <div class="account-dd">
-                    <button class="btn btn-outline btn-sm toplink" aria-expanded="false">
+                    <a href="{{ route('login') }}" class="btn btn-outline btn-sm toplink">
                         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                             stroke-width="2">
                             <circle cx="12" cy="8" r="4" />
                             <path d="M4 21c1.5-4.5 5-6 8-6s6.5 1.5 8 6" />
                         </svg>
-                        {{-- Connexion --}}
-                    </button>
+                        Connexion
+                    </a>
+
                     <ul class="dropdown">
                         <li><a href="#login">Se connecter</a></li>
                         <li><a href="#register">Créer un compte candidat</a></li>

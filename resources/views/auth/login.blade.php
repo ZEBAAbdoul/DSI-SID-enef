@@ -24,7 +24,7 @@
                         font-family: 'Poppins', sans-serif;
                         font-size: 1.4rem;
                         font-weight: 700;
-                        color: #2e7d32;
+                        color: #000000;
                         letter-spacing: 1px;
                     }
 

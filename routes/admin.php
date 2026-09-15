@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CategorieDocumentController;
 use App\Http\Controllers\DocumentController;
+use App\Http\Controllers\FormationController;
 use App\Http\Controllers\InscriptionAdminController;
 use App\Http\Controllers\InscriptionController;
 use App\Http\Controllers\ProfileController;
@@ -106,6 +107,22 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(
             [InscriptionController::class, 'destroyPiece']
         )->name('piece.destroy');
     });
+
+
+    /*
+|--------------------------------------------------------------------------
+| Formations
+|--------------------------------------------------------------------------
+*/
+
+    Route::resource('formations', FormationController::class)
+        ->names('formations');
+
+    Route::patch(
+        'formations/{formation}/statut',
+        [FormationController::class, 'changerStatut']
+    )->name('formations.statut');
+
 
     // ==================== SESSIONS DE FORMATION (back-office) ====================
     Route::resource('sessions-formation', SessionFormationController::class)
