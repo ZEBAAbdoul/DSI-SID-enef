@@ -35,7 +35,8 @@
     $parametresActive =
         Route::is('admin.user.*') ||
         Route::is('admin.parametres.*') ||
-        Route::is('admin.categories-formation.*');
+        Route::is('admin.categories-formation.*') ||
+        Route::is('admin.types-pieces.*');
 @endphp
 
 
@@ -618,6 +619,23 @@
 
                             <p>
                                 Catégories de formation
+                            </p>
+
+                        </a>
+
+                    </li>
+
+
+                    {{-- Types de pièces --}}
+                    <li class="nav-item">
+
+                        <a href="{{ route('admin.types-pieces.index') }}"
+                           class="nav-link {{ Route::is('admin.types-pieces.*') ? 'active' : '' }}">
+
+                            <i class="fas fa-id-card nav-icon"></i>
+
+                            <p>
+                                Types de pièces
                             </p>
 
                         </a>
