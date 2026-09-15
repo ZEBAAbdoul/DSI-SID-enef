@@ -5,12 +5,12 @@
     <div class="login-box">
         <div class="card card-outline card-primary">
             <div class="card-header text-center">
-                <a href="/" class="h1"><b>{{ config('app.name') }}</a>
+                <a href="/" class="h1"><b>Ges-Commerce</a>
             </div>
             <div class="card-body">
                 <x-auth-session-status class="mb-4" :status="session('status')" />
-                <p class="login-box-msg">Forgot your password? No problem. Just let us know your email address and we
-                    will email you a password reset link that will allow you to choose a new one.</p>
+                <p class="login-box-msg">Vous avez oublié votre mot de passe ? Aucun problème. Indiquez-nous simplement votre adresse e-mail et nous
+                    vous enverra par e-mail un lien de réinitialisation du mot de passe qui vous permettra d’en choisir un nouveau.</p>
                 <form action="{{ route('password.email') }}" method="POST">
                     @csrf
                     <div class="input-group mb-3">
@@ -25,7 +25,7 @@
                     </div>
                     <div class="row">
                         <div class="col-12">
-                            <button type="submit" class="btn btn-primary btn-block">Email Password Reset Link</button>
+                            <button type="submit" class="btn btn-primary btn-block">Lien de réinitialisation du mot de passe de l’e-mail</button>
                         </div>
                         <!-- /.col -->
                     </div>

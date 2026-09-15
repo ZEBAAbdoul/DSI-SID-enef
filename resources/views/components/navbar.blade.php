@@ -6,18 +6,36 @@
         </li>
     </ul>
     <ul class="navbar-nav ml-auto">
-        <li class="nav-item">
-            <form method="POST" action="{{ route('logout') }}">
-                @csrf
-                <form method="POST" action="{{ route('logout') }}">
+        <li class="nav-item dropdown no-arrow">
+            <a class="nav-link dropdown-toggle text-dark" href="#" id="userDropdown" role="button"
+                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <span class="mr-2 d-none d-lg-inline text-dark small">{{ Auth::user()->username }}</span>
+            </a>
+            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
+                <!-- Header du user -->
+                <div class="dropdown-header text-center">
+                    <img class="img-profile rounded-circle mb-2"
+                        src="{{ Auth::user()->avatar ?? asset('admin/dist/img/user.jpg') }}" width="60"
+                        height="60">
+                    <p class="mb-0">{{ Auth::user()->name }} {{ Auth::user()->forname }}</p>
+                    <small class="text-muted">{{ Auth::user()->username }}</small>
+                    <br>
+                    <small class="text-primary">
+                        {{ Auth::user()->roles->pluck('name')->join(', ') }}
+                    </small>
+                </div>
+                <div class="dropdown-divider"></div>
+                <!-- Déconnexion -->
+                <a class="dropdown-item" href="#"
+                    onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                    <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                    Déconnexion
+                </a>
+                <!-- Formulaire de déconnexion caché -->
+                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                     @csrf
-                    <input type="submit" name="submit" value="Log out" class="btn btn-primary btn-sm">
-                    {{-- <a :href="route('logout')"
-                        onclick="event.preventDefault();
-                                    this.closest('form').submit();">
-                        {{ __('Log Out') }}
-                    </a> --}}
                 </form>
+            </div>
         </li>
     </ul>
 </nav>

@@ -2,34 +2,37 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Support\Str;
 use Spatie\Permission\Traits\HasRoles;
+
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable, HasRoles;
+    use HasFactory, Notifiable, HasRoles;
+
     /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
+     * UUID comme clé primaire
+     */
+    public $incrementing = false;
+    protected $keyType = 'string';
+
+    /**
+     * Champs remplissables
      */
     protected $fillable = [
-        'name',
+        'personne_id',
         'email',
         'password',
-        'phonenumber',
-        'provider_id',
-        'avatar'
+        'mode',
+        'email_verified_at', // utile si vérification email
     ];
 
     /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array<int, string>
+     * Champs masqués (JSON / API)
      */
     protected $hidden = [
         'password',
@@ -37,12 +40,103 @@ class User extends Authenticatable
     ];
 
     /**
-     * The attributes that should be cast.
-     *
-     * @var array<string, string>
+     * Casts automatiques
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
-        'password' => 'hashed',
+        'created_at'        => 'datetime:d/m/Y H:i',
+        'updated_at'        => 'datetime:d/m/Y H:i',
     ];
+
+    /**
+     * Génération automatique UUID
+     */
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+            if (empty($model->{$model->getKeyName()})) {
+                $model->{$model->getKeyName()} = (string) Str::uuid();
+            }
+        });
+    }
+
+    /* =====================================================
+     |                    RELATIONS
+     ===================================================== */
+
+    /**
+     * L'état civil rattaché à ce compte
+     */
+    public function personne()
+    {
+        return $this->belongsTo(Personne::class);
+    }
+
+    /* =====================================================
+     |                    SCOPES
+     ===================================================== */
+
+    /**
+     * Scope : filtre par rôle
+     */
+    public function scopeByRole($query, $role)
+    {
+        if ($role) {
+            $query->whereHas('roles', fn ($q) => $q->where('name', $role));
+        }
+        return $query;
+    }
+
+    /**
+     * Scope : filtre par date de création
+     */
+    public function scopeCreatedOn($query, $date)
+    {
+        if ($date) {
+            $query->whereDate('created_at', $date);
+        }
+        return $query;
+    }
+
+    /* =====================================================
+     |                ATTRIBUTS VIRTUELS
+     ===================================================== */
+
+    /**
+     * Rôles formatés (DataTable / Vue)
+     */
+    public function getRolesBadgeAttribute()
+    {
+        if ($this->roles->isEmpty()) {
+            return '<span class="badge bg-secondary">Aucun</span>';
+        }
+
+        return $this->roles
+            ->map(fn ($role) =>
+                '<span class="badge bg-info mr-1">'.e($role->name).'</span>'
+            )
+            ->implode(' ');
+    }
+
+    /**
+     * Nom complet, lu depuis la personne rattachée.
+     * Conserve la compatibilité avec le code / les vues
+     * qui appellent encore $user->name.
+     */
+    public function getNameAttribute()
+    {
+        return $this->personne?->nom_complet;
+    }
+
+    /**
+     * Nom + Email (utile pour listes / logs)
+     */
+    public function getDisplayNameAttribute()
+    {
+        $name = $this->name ?? '—';
+
+        return "{$name} ({$this->email})";
+    }
 }

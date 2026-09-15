@@ -8,7 +8,7 @@
             </div>
         </div>
         <div class="card-body">
-            <table class="table table-striped" id="roleTable">
+            <table class="table table-bordered" id="roleTable">
                 <thead>
                     <tr>
                         <th>Name</th>
@@ -18,7 +18,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($data as $role)
+                    @foreach ($roles as $role)
                         <tr>
                             <td>{{ $role->name }}</td>
                             <td>{{ $role->created_at }}</td>
@@ -40,18 +40,11 @@
                     @endforeach
                 </tbody>
             </table>
+            <!-- Pagination Links -->
+            <div class="d-flex justify-content-center mt-3">
+                {{ $roles->links('vendor.pagination.bootstrap-4') }}
+                <!-- Utilisation du style de pagination Bootstrap 4 -->
+            </div>
         </div>
     </div>
-    @section('js')
-        <script>
-            $(function() {
-                $('#roleTable').DataTable({
-                    "paging": true,
-                    "searching": true,
-                    "ordering": true,
-                    "responsive": true,
-                });
-            });
-        </script>
-    @endsection
 </x-admin>

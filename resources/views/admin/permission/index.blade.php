@@ -8,7 +8,7 @@
             </div>
         </div>
         <div class="card-body">
-            <table class="table table-striped" id="collectionTable">
+            <table class="table table-bordered table-striped" id="collectionTable">
                 <thead>
                     <tr>
                         <th>Name</th>
@@ -18,7 +18,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @forelse ($data as $permission)
+                    @forelse ($permissions as $permission)
                         <tr>
                             <td>{{ $permission->name }}</td>
                             <td>{{ $permission->created_at }}</td>
@@ -46,19 +46,12 @@
                     @endforelse
                 </tbody>
             </table>
+            <!-- Pagination Links -->
+            <div class="d-flex justify-content-center mt-3">
+                {{ $permissions->links('vendor.pagination.bootstrap-4') }}
+                <!-- Utilisation du style de pagination Bootstrap 4 -->
+            </div>
         </div>
     </div>
-
-    @section('js')
-        <script>
-            $(function() {
-                $('#collectionTable').DataTable({
-                    "paging": true,
-                    "searching": true,
-                    "ordering": true,
-                    "responsive": true,
-                });
-            });
-        </script>
-    @endsection
+    <br>
 </x-admin>

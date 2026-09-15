@@ -1,4 +1,9 @@
 <x-admin>
-    @section('title','Dashboard')
-    <x-dashboard />
+    @section('title','Tableau de bord')
+    <x-dashboard
+        :stats="$stats"
+        :prochainesSessions="$prochainesSessions"
+        :formationsPopulaires="$formationsPopulaires"
+        :inscriptionsParMois="$inscriptionsParMois"
+    />
 </x-admin>
