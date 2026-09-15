@@ -196,7 +196,17 @@
                                                         {{ strtoupper($piece->format_fichier) }} ·
                                                         {{ $piece->taille_fichier_ko }} Ko
                                                     </a>
+
                                                     @if ($inscription->statut !== 'valide')
+                                                        {{-- Bouton Modifier : uniquement si la pièce n'est PAS conforme --}}
+                                                        @if (!$piece->estConforme())
+                                                            <button type="button" class="btn btn-sm btn-link p-0 mr-2"
+                                                                data-toggle="collapse"
+                                                                data-target="#modifier-{{ $piece->id }}">
+                                                                <i class="fas fa-pen"></i> Modifier
+                                                            </button>
+                                                        @endif
+
                                                         <form
                                                             action="{{ route('admin.inscription.piece.destroy', $piece) }}"
                                                             method="POST"
@@ -211,6 +221,30 @@
                                                         </form>
                                                     @endif
                                                 </div>
+
+                                                {{-- Formulaire de remplacement (masqué par défaut) --}}
+                                                @if ($inscription->statut !== 'valide' && !$piece->estConforme())
+                                                    <div id="modifier-{{ $piece->id }}" class="collapse mt-1 mb-2">
+                                                        <form
+                                                            action="{{ route('admin.inscription.piece.update', $piece) }}"
+                                                            method="POST" enctype="multipart/form-data"
+                                                            class="form-inline">
+                                                            @csrf
+                                                            @method('PUT')
+                                                            <input type="file" name="fichier"
+                                                                class="form-control-file mr-2"
+                                                                accept=".pdf,.jpg,.jpeg,.png" required>
+                                                            <button type="submit"
+                                                                class="btn btn-sm btn-outline-primary">
+                                                                <i class="fas fa-upload"></i> Remplacer
+                                                            </button>
+                                                        </form>
+                                                        @error('fichier')
+                                                            <small
+                                                                class="text-danger d-block mt-1">{{ $message }}</small>
+                                                        @enderror
+                                                    </div>
+                                                @endif
                                             @empty
                                                 <span class="text-muted">—</span>
                                             @endforelse

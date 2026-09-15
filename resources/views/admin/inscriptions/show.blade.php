@@ -18,10 +18,7 @@
             <i class="fas fa-info-circle mr-2"></i>
             {{ session('status') }}
 
-            <button type="button"
-                    class="close"
-                    data-dismiss="alert"
-                    aria-label="Fermer">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Fermer">
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
@@ -41,10 +38,7 @@
                 @endforeach
             </ul>
 
-            <button type="button"
-                    class="close"
-                    data-dismiss="alert"
-                    aria-label="Fermer">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Fermer">
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
@@ -77,9 +71,7 @@
                             Candidat :
                         </strong>
 
-                        {{ $inscription->candidat->name
-                            ?? $inscription->candidat->email
-                            ?? '—' }}
+                        {{ $inscription->candidat->name ?? ($inscription->candidat->email ?? '—') }}
                     </p>
 
                     {{-- Email --}}
@@ -121,13 +113,11 @@
 
                         @if ($inscription->session)
 
-                            {{ \Carbon\Carbon::parse($inscription->session->date_debut)
-                                ->translatedFormat('d M Y') }}
+                            {{ \Carbon\Carbon::parse($inscription->session->date_debut)->translatedFormat('d M Y') }}
 
                             @if ($inscription->session->date_fin)
                                 —
-                                {{ \Carbon\Carbon::parse($inscription->session->date_fin)
-                                    ->translatedFormat('d M Y') }}
+                                {{ \Carbon\Carbon::parse($inscription->session->date_fin)->translatedFormat('d M Y') }}
                             @endif
 
                             <br>
@@ -136,9 +126,7 @@
                                 <i class="fas fa-map-marker-alt mr-1"></i>
                                 {{ $inscription->session->lieu ?? 'Lieu non précisé' }}
                             </small>
-
                         @else
-
                             —
 
                         @endif
@@ -158,7 +146,7 @@
                     <p>
                         <strong>
                             <i class="fas fa-info-circle mr-1"></i>
-                            Statut : 
+                            Statut :
                         </strong>
 
                         <span class="badge statut-badge-{{ $inscription->statut }}">
@@ -168,7 +156,6 @@
 
                     {{-- Motif rejet --}}
                     @if ($inscription->motif_rejet)
-
                         <div class="alert alert-danger mt-3 mb-0">
 
                             <strong>
@@ -181,7 +168,6 @@
                             </div>
 
                         </div>
-
                     @endif
 
                 </div>
@@ -189,26 +175,32 @@
 
                 {{-- Actions administrateur --}}
                 @if ($inscription->statut !== 'valide')
-
                     <div class="card-footer">
 
                         {{-- Valider --}}
-                        <form action="{{ route('admin.inscriptions.valider', $inscription) }}"
-                              method="POST"
-                              class="d-inline">
+                        @php
+                            $toutesPiecesConformes =
+                                $inscription->pieces->isNotEmpty() &&
+                                $inscription->pieces->every(fn($piece) => $piece->statut_verification === 'conforme');
+                        @endphp
 
-                            @csrf
-
-                            <button type="submit"
-                                    class="btn btn-success btn-sm"
-                                    onclick="return confirm('Valider ce dossier ?')">
+                        @if ($toutesPiecesConformes)
+                            <button type="button" class="btn btn-success btn-sm" data-toggle="modal"
+                                data-target="#modalValider">
 
                                 <i class="fas fa-check mr-1"></i>
                                 Valider
 
                             </button>
+                        @else
+                            <button type="button" class="btn btn-success btn-sm" disabled
+                                title="Toutes les pièces doivent être conformes avant de pouvoir valider le dossier">
 
-                        </form>
+                                <i class="fas fa-check mr-1"></i>
+                                Valider
+
+                            </button>
+                        @endif
 
 
                         {{-- Incomplet --}}
@@ -224,10 +216,8 @@
 
 
                         {{-- Rejeter --}}
-                        <button type="button"
-                                class="btn btn-danger btn-sm"
-                                data-toggle="modal"
-                                data-target="#modalRejeter">
+                        <button type="button" class="btn btn-danger btn-sm" data-toggle="modal"
+                            data-target="#modalRejeter">
 
                             <i class="fas fa-times mr-1"></i>
                             Rejeter
@@ -235,7 +225,6 @@
                         </button>
 
                     </div>
-
                 @endif
 
             </div>
@@ -305,11 +294,9 @@
                                             </span>
 
                                             @if ($piece->taille_fichier_ko)
-
                                                 <small class="text-muted d-block">
                                                     {{ $piece->taille_fichier_ko }} Ko
                                                 </small>
-
                                             @endif
 
                                         </td>
@@ -318,8 +305,7 @@
                                         {{-- Date --}}
                                         <td>
 
-                                            {{ optional($piece->created_at)
-                                                ->format('d/m/Y H:i') }}
+                                            {{ optional($piece->created_at)->format('d/m/Y H:i') }}
 
                                         </td>
 
@@ -330,69 +316,60 @@
                                             <span class="badge verif-badge-{{ $piece->statut_verification }}">
 
                                                 @switch($piece->statut_verification)
-
                                                     @case('conforme')
-
                                                         <i class="fas fa-check mr-1"></i>
                                                         Conforme
-
                                                     @break
 
                                                     @case('non_conforme')
-
                                                         <i class="fas fa-times mr-1"></i>
                                                         Non conforme
-
                                                     @break
 
                                                     @default
-
                                                         <i class="fas fa-clock mr-1"></i>
                                                         En attente
-
                                                 @endswitch
 
                                             </span>
 
 
                                             @if ($piece->commentaire)
-
                                                 <small class="text-muted d-block mt-1">
                                                     {{ $piece->commentaire }}
                                                 </small>
-
                                             @endif
 
                                         </td>
 
 
                                         {{-- Actions --}}
+                                        {{-- Actions --}}
                                         <td class="text-center">
 
                                             {{-- Voir / télécharger --}}
                                             <a href="{{ route('admin.inscription.piece.telecharger', $piece) }}"
-                                               class="btn btn-sm btn-info"
-                                               target="_blank"
-                                               title="Voir le fichier">
-
+                                                class="btn btn-sm btn-info" target="_blank" title="Voir le fichier">
                                                 <i class="fas fa-eye"></i>
-
                                             </a>
 
-
-                                            {{-- Vérifier --}}
                                             @if ($inscription->statut !== 'valide')
-
-                                                <button type="button"
-                                                        class="btn btn-sm btn-outline-secondary"
-                                                        data-toggle="modal"
-                                                        data-target="#modalVerifier{{ $piece->id }}"
-                                                        title="Vérifier la pièce">
-
+                                                {{-- Vérifier (conforme / non conforme via select) --}}
+                                                <button type="button" class="btn btn-sm btn-outline-secondary"
+                                                    data-toggle="modal" data-target="#modalVerifier{{ $piece->id }}"
+                                                    title="Vérifier la pièce">
                                                     <i class="fas fa-check-double"></i>
-
                                                 </button>
 
+                                                {{-- Non conforme rapide --}}
+                                                @if ($piece->statut_verification !== 'non_conforme')
+                                                    <button type="button" class="btn btn-sm btn-outline-danger"
+                                                        data-toggle="modal"
+                                                        data-target="#modalNonConforme{{ $piece->id }}"
+                                                        title="Marquer non conforme">
+                                                        <i class="fas fa-times"></i>
+                                                    </button>
+                                                @endif
                                             @endif
 
                                         </td>
@@ -404,19 +381,16 @@
                                     {{-- MODAL VÉRIFICATION DE LA PIÈCE                  --}}
                                     {{-- ================================================= --}}
 
-                                    <div class="modal fade"
-                                         id="modalVerifier{{ $piece->id }}"
-                                         tabindex="-1"
-                                         role="dialog"
-                                         aria-hidden="true">
+                                    <div class="modal fade" id="modalVerifier{{ $piece->id }}" tabindex="-1"
+                                        role="dialog" aria-hidden="true">
 
-                                        <div class="modal-dialog"
-                                             role="document">
+                                        <div class="modal-dialog" role="document">
 
                                             <div class="modal-content">
 
-                                                <form action="{{ route('admin.inscriptions.pieces.verifier', $piece) }}"
-                                                      method="POST">
+                                                <form
+                                                    action="{{ route('admin.inscriptions.pieces.verifier', $piece) }}"
+                                                    method="POST">
 
                                                     @csrf
 
@@ -431,10 +405,8 @@
 
                                                         </h5>
 
-                                                        <button type="button"
-                                                                class="close"
-                                                                data-dismiss="modal"
-                                                                aria-label="Fermer">
+                                                        <button type="button" class="close" data-dismiss="modal"
+                                                            aria-label="Fermer">
 
                                                             <span aria-hidden="true">
                                                                 &times;
@@ -454,9 +426,8 @@
                                                             </label>
 
                                                             <select name="statut_verification"
-                                                                    id="statut_{{ $piece->id }}"
-                                                                    class="form-control"
-                                                                    required>
+                                                                id="statut_{{ $piece->id }}" class="form-control"
+                                                                required>
 
                                                                 <option value="conforme">
                                                                     Conforme
@@ -477,13 +448,8 @@
                                                                 Commentaire
                                                             </label>
 
-                                                            <textarea
-                                                                name="commentaire"
-                                                                id="commentaire_{{ $piece->id }}"
-                                                                class="form-control"
-                                                                rows="3"
-                                                                placeholder="Commentaire optionnel..."
-                                                            ></textarea>
+                                                            <textarea name="commentaire" id="commentaire_{{ $piece->id }}" class="form-control" rows="3"
+                                                                placeholder="Commentaire optionnel..."></textarea>
 
                                                         </div>
 
@@ -492,17 +458,15 @@
 
                                                     <div class="modal-footer">
 
-                                                        <button type="button"
-                                                                class="btn btn-secondary"
-                                                                data-dismiss="modal">
+                                                        <button type="button" class="btn btn-secondary"
+                                                            data-dismiss="modal">
 
                                                             Annuler
 
                                                         </button>
 
 
-                                                        <button type="submit"
-                                                                class="btn btn-primary">
+                                                        <button type="submit" class="btn btn-primary">
 
                                                             <i class="fas fa-save mr-1"></i>
                                                             Enregistrer
@@ -519,26 +483,89 @@
 
                                     </div>
 
-                                @empty
+                                    {{-- ================================================= --}}
+                                    {{-- MODAL NON CONFORME (rapide)                        --}}
+                                    {{-- ================================================= --}}
+                                    <div class="modal fade" id="modalNonConforme{{ $piece->id }}" tabindex="-1"
+                                        role="dialog" aria-hidden="true">
 
-                                    <tr>
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
 
-                                        <td colspan="5"
-                                            class="text-center text-muted py-4">
+                                                <form
+                                                    action="{{ route('admin.inscriptions.pieces.verifier', $piece) }}"
+                                                    method="POST">
+                                                    @csrf
 
-                                            <i class="fas fa-folder-open fa-2x mb-2 d-block"></i>
+                                                    {{-- On force le statut, pas besoin de select --}}
+                                                    <input type="hidden" name="statut_verification"
+                                                        value="non_conforme">
 
-                                            Aucune pièce déposée.
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title">
+                                                            <i class="fas fa-times-circle mr-2 text-danger"></i>
+                                                            Marquer non conforme : {{ $piece->type_piece_libelle }}
+                                                        </h5>
+                                                        <button type="button" class="close" data-dismiss="modal"
+                                                            aria-label="Fermer">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
 
-                                        </td>
+                                                    <div class="modal-body">
+                                                        <div class="alert alert-warning">
+                                                            <i class="fas fa-info-circle mr-1"></i>
+                                                            Le candidat sera informé et pourra déposer un nouveau
+                                                            fichier.
+                                                        </div>
 
-                                    </tr>
+                                                        <div class="form-group">
+                                                            <label for="commentaire_nc_{{ $piece->id }}">
+                                                                Motif (obligatoire)
+                                                            </label>
+                                                            <textarea name="commentaire" id="commentaire_nc_{{ $piece->id }}" class="form-control" rows="3" required
+                                                                placeholder="Exemple : document illisible, mauvais format, date expirée..."></textarea>
+                                                        </div>
+                                                    </div>
 
-                                @endforelse
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary"
+                                                            data-dismiss="modal">
+                                                            Annuler
+                                                        </button>
+                                                        <button type="submit" class="btn btn-danger">
+                                                            <i class="fas fa-times mr-1"></i>
+                                                            Confirmer non conforme
+                                                        </button>
+                                                    </div>
 
-                            </tbody>
+                                                </form>
 
-                        </table>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    @empty
+
+                                        <tr>
+
+                                            <td colspan="5" class="text-center text-muted py-4">
+
+                                                <i class="fas fa-folder-open fa-2x mb-2 d-block"></i>
+
+                                                Aucune pièce déposée.
+
+                                            </td>
+
+                                        </tr>
+
+                                    @endforelse
+
+                                </tbody>
+
+                            </table>
+
+                        </div>
 
                     </div>
 
@@ -548,263 +575,300 @@
 
         </div>
 
-    </div>
 
+        {{-- ============================================================= --}}
+        {{-- MODAL REJETER                                                --}}
+        {{-- ============================================================= --}}
 
-    {{-- ============================================================= --}}
-    {{-- MODAL REJETER                                                --}}
-    {{-- ============================================================= --}}
+        <div class="modal fade" id="modalRejeter" tabindex="-1" role="dialog" aria-hidden="true">
 
-    <div class="modal fade"
-         id="modalRejeter"
-         tabindex="-1"
-         role="dialog"
-         aria-hidden="true">
+            <div class="modal-dialog" role="document">
 
-        <div class="modal-dialog"
-             role="document">
+                <div class="modal-content">
 
-            <div class="modal-content">
+                    <form action="{{ route('admin.inscriptions.rejeter', $inscription) }}" method="POST">
 
-                <form action="{{ route('admin.inscriptions.rejeter', $inscription) }}"
-                      method="POST">
+                        @csrf
 
-                    @csrf
+                        <div class="modal-header">
 
-                    <div class="modal-header">
+                            <h5 class="modal-title">
 
-                        <h5 class="modal-title">
+                                <i class="fas fa-times-circle mr-2"></i>
+                                Rejeter le dossier
 
-                            <i class="fas fa-times-circle mr-2"></i>
-                            Rejeter le dossier
+                            </h5>
 
-                        </h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Fermer">
 
-                        <button type="button"
-                                class="close"
-                                data-dismiss="modal"
-                                aria-label="Fermer">
+                                <span aria-hidden="true">
+                                    &times;
+                                </span>
 
-                            <span aria-hidden="true">
-                                &times;
-                            </span>
-
-                        </button>
-
-                    </div>
-
-
-                    <div class="modal-body">
-
-                        <div class="form-group">
-
-                            <label for="motif_rejet">
-                                Motif du rejet
-                            </label>
-
-                            <textarea
-                                name="motif_rejet"
-                                id="motif_rejet"
-                                class="form-control"
-                                rows="4"
-                                required
-                                placeholder="Indiquez le motif du rejet..."
-                            ></textarea>
+                            </button>
 
                         </div>
 
-                    </div>
+
+                        <div class="modal-body">
+
+                            <div class="form-group">
+
+                                <label for="motif_rejet">
+                                    Motif du rejet
+                                </label>
+
+                                <textarea name="motif_rejet" id="motif_rejet" class="form-control" rows="4" required
+                                    placeholder="Indiquez le motif du rejet..."></textarea>
+
+                            </div>
+
+                        </div>
 
 
-                    <div class="modal-footer">
+                        <div class="modal-footer">
 
-                        <button type="button"
-                                class="btn btn-secondary"
-                                data-dismiss="modal">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">
 
-                            Annuler
+                                Annuler
 
-                        </button>
+                            </button>
 
-                        <button type="submit"
-                                class="btn btn-danger">
+                            <button type="submit" class="btn btn-danger">
 
-                            <i class="fas fa-times mr-1"></i>
-                            Rejeter
+                                <i class="fas fa-times mr-1"></i>
+                                Rejeter
 
-                        </button>
+                            </button>
 
-                    </div>
+                        </div>
 
-                </form>
+                    </form>
+
+                </div>
 
             </div>
 
         </div>
 
-    </div>
+        {{-- ============================================================= --}}
+        {{-- MODAL VALIDER                                                --}}
+        {{-- ============================================================= --}}
 
+        <div class="modal fade" id="modalValider" tabindex="-1" role="dialog" aria-hidden="true">
 
-    {{-- ============================================================= --}}
-    {{-- MODAL DOSSIER INCOMPLET                                      --}}
-    {{-- ============================================================= --}}
+            <div class="modal-dialog" role="document">
 
-    <div class="modal fade"
-         id="modalIncomplet"
-         tabindex="-1"
-         role="dialog"
-         aria-hidden="true">
+                <div class="modal-content">
 
-        <div class="modal-dialog"
-             role="document">
+                    <form action="{{ route('admin.inscriptions.valider', $inscription) }}" method="POST">
 
-            <div class="modal-content">
+                        @csrf
 
-                <form action="{{ route('admin.inscriptions.incomplet', $inscription) }}"
-                      method="POST">
+                        <div class="modal-header">
 
-                    @csrf
+                            <h5 class="modal-title">
+                                <i class="fas fa-check-circle mr-2 text-success"></i>
+                                Valider le dossier
+                            </h5>
 
-                    <div class="modal-header">
-
-                        <h5 class="modal-title">
-
-                            <i class="fas fa-exclamation-triangle mr-2"></i>
-                            Dossier incomplet
-
-                        </h5>
-
-                        <button type="button"
-                                class="close"
-                                data-dismiss="modal"
-                                aria-label="Fermer">
-
-                            <span aria-hidden="true">
-                                &times;
-                            </span>
-
-                        </button>
-
-                    </div>
-
-
-                    <div class="modal-body">
-
-                        <div class="alert alert-warning">
-
-                            <i class="fas fa-info-circle mr-1"></i>
-
-                            Indiquez au candidat les pièces ou informations
-                            qui doivent être complétées.
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Fermer">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
 
                         </div>
 
+                        <div class="modal-body">
 
-                        <div class="form-group">
+                            <div class="alert alert-success">
+                                <i class="fas fa-info-circle mr-1"></i>
+                                Toutes les pièces justificatives ont été vérifiées et sont conformes.
+                            </div>
 
-                            <label for="commentaire_incomplet">
-                                Commentaire
-                            </label>
+                            <p class="mb-1">
+                                <strong>Candidat :</strong>
+                                {{ $inscription->candidat->name ?? ($inscription->candidat->email ?? '—') }}
+                            </p>
 
-                            <textarea
-                                name="commentaire"
-                                id="commentaire_incomplet"
-                                class="form-control"
-                                rows="4"
-                                required
-                                placeholder="Exemple : Veuillez fournir une copie lisible de votre diplôme..."
-                            ></textarea>
+                            <p class="mb-1">
+                                <strong>Formation :</strong>
+                                {{ $inscription->formation->titre ?? '—' }}
+                            </p>
+
+                            <p class="mb-0">
+                                <strong>Dossier :</strong>
+                                {{ $inscription->numero_dossier }}
+                            </p>
+
+                            <p class="mt-3 mb-0 text-muted">
+                                Confirmez-vous la validation définitive de ce dossier ?
+                                Cette action informera le candidat qu'il peut procéder au paiement.
+                            </p>
 
                         </div>
 
-                    </div>
+                        <div class="modal-footer">
 
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                                Annuler
+                            </button>
 
-                    <div class="modal-footer">
+                            <button type="submit" class="btn btn-success">
+                                <i class="fas fa-check mr-1"></i>
+                                Confirmer la validation
+                            </button>
 
-                        <button type="button"
-                                class="btn btn-secondary"
-                                data-dismiss="modal">
+                        </div>
 
-                            Annuler
+                    </form>
 
-                        </button>
-
-
-                        <button type="submit"
-                                class="btn btn-warning">
-
-                            <i class="fas fa-exclamation-triangle mr-1"></i>
-                            Marquer comme incomplet
-
-                        </button>
-
-                    </div>
-
-                </form>
+                </div>
 
             </div>
 
         </div>
 
-    </div>
+
+        {{-- ============================================================= --}}
+        {{-- MODAL DOSSIER INCOMPLET                                      --}}
+        {{-- ============================================================= --}}
+
+        <div class="modal fade" id="modalIncomplet" tabindex="-1" role="dialog" aria-hidden="true">
+
+            <div class="modal-dialog" role="document">
+
+                <div class="modal-content">
+
+                    <form action="{{ route('admin.inscriptions.incomplet', $inscription) }}" method="POST">
+
+                        @csrf
+
+                        <div class="modal-header">
+
+                            <h5 class="modal-title">
+
+                                <i class="fas fa-exclamation-triangle mr-2"></i>
+                                Dossier incomplet
+
+                            </h5>
+
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Fermer">
+
+                                <span aria-hidden="true">
+                                    &times;
+                                </span>
+
+                            </button>
+
+                        </div>
 
 
-    {{-- ============================================================= --}}
-    {{-- STYLES                                                        --}}
-    {{-- ============================================================= --}}
+                        <div class="modal-body">
 
-    <style>
+                            <div class="alert alert-warning">
 
-        .statut-badge-depose {
-            background-color: #17a2b8;
-            color: #fff;
-        }
+                                <i class="fas fa-info-circle mr-1"></i>
 
-        .statut-badge-en_cours {
-            background-color: #007bff;
-            color: #fff;
-        }
+                                Indiquez au candidat les pièces ou informations
+                                qui doivent être complétées.
 
-        .statut-badge-incomplet {
-            background-color: #ffc107;
-            color: #212529;
-        }
+                            </div>
 
-        .statut-badge-valide {
-            background-color: #28a745;
-            color: #fff;
-        }
 
-        .statut-badge-rejete {
-            background-color: #dc3545;
-            color: #fff;
-        }
+                            <div class="form-group">
 
-        .verif-badge-conforme {
-            background-color: #28a745;
-            color: #fff;
-        }
+                                <label for="commentaire_incomplet">
+                                    Commentaire
+                                </label>
 
-        .verif-badge-non_conforme {
-            background-color: #dc3545;
-            color: #fff;
-        }
+                                <textarea name="commentaire" id="commentaire_incomplet" class="form-control" rows="4" required
+                                    placeholder="Exemple : Veuillez fournir une copie lisible de votre diplôme..."></textarea>
 
-        .verif-badge-en_attente {
-            background-color: #ffc107;
-            color: #212529;
-        }
+                            </div>
 
-        .card-title {
-            font-weight: 600;
-        }
+                        </div>
 
-        .table td,
-        .table th {
-            vertical-align: middle;
-        }
 
-    </style>
+                        <div class="modal-footer">
 
-</x-admin>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">
+
+                                Annuler
+
+                            </button>
+
+
+                            <button type="submit" class="btn btn-warning">
+
+                                <i class="fas fa-exclamation-triangle mr-1"></i>
+                                Marquer comme incomplet
+
+                            </button>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        {{-- ============================================================= --}}
+        {{-- STYLES                                                        --}}
+        {{-- ============================================================= --}}
+
+        <style>
+            .statut-badge-depose {
+                background-color: #17a2b8;
+                color: #fff;
+            }
+
+            .statut-badge-en_cours {
+                background-color: #007bff;
+                color: #fff;
+            }
+
+            .statut-badge-incomplet {
+                background-color: #ffc107;
+                color: #212529;
+            }
+
+            .statut-badge-valide {
+                background-color: #28a745;
+                color: #fff;
+            }
+
+            .statut-badge-rejete {
+                background-color: #dc3545;
+                color: #fff;
+            }
+
+            .verif-badge-conforme {
+                background-color: #28a745;
+                color: #fff;
+            }
+
+            .verif-badge-non_conforme {
+                background-color: #dc3545;
+                color: #fff;
+            }
+
+            .verif-badge-en_attente {
+                background-color: #ffc107;
+                color: #212529;
+            }
+
+            .card-title {
+                font-weight: 600;
+            }
+
+            .table td,
+            .table th {
+                vertical-align: middle;
+            }
+        </style>
+
+    </x-admin>

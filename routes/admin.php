@@ -101,6 +101,9 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(
             [InscriptionController::class, 'telechargerPiece']
         )->name('piece.telecharger');
 
+        Route::put('/inscription/piece/{piece}', [InscriptionController::class, 'updatePiece'])
+            ->name('piece.update');
+
         // Supprimer une pièce
         Route::delete(
             'pieces/{piece}',

@@ -29,16 +29,25 @@ class InscriptionAdminController extends Controller
     }
 
     public function valider(Inscription $inscription): RedirectResponse
-    {
-        $inscription->update([
-            'statut' => 'valide',
-            'date_traitement' => now(),
-            'traite_par' => auth()->id(),
-            'motif_rejet' => null,
-        ]);
+{
+    $toutesConformes = $inscription->pieces->isNotEmpty()
+        && $inscription->pieces->every(fn ($piece) => $piece->statut_verification === 'conforme');
 
-        return back()->with('status', 'Dossier validé.');
-    }
+    abort_unless(
+        $toutesConformes,
+        403,
+        'Toutes les pièces doivent être conformes avant de valider ce dossier.'
+    );
+
+    $inscription->update([
+        'statut' => 'valide',
+        'date_traitement' => now(),
+        'traite_par' => auth()->id(),
+        'motif_rejet' => null,
+    ]);
+
+    return back()->with('status', 'Dossier validé.');
+}
 
     public function rejeter(Request $request, Inscription $inscription): RedirectResponse
     {
