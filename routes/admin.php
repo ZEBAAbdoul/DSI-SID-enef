@@ -9,6 +9,7 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\ParametresSiteController;
+use App\Http\Controllers\CategorieFormationController;
 use App\Http\Controllers\SessionFormationController;
 use Illuminate\Support\Facades\Route;
 
@@ -111,7 +112,10 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(
         ->except(['show'])
         ->names('sessions-formation');
 
-
+    // ==================== CATÉGORIES DE FORMATION (back-office) ====================
+    Route::resource('categories-formation', CategorieFormationController::class)
+        ->except(['show'])
+        ->names('categories-formation');
 
     // ==================== CANDIDATURES (back-office) ====================
     Route::prefix('inscriptions')->name('inscriptions.')->group(function () {

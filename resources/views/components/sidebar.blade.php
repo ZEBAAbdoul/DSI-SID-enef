@@ -73,7 +73,8 @@
 
             <ul class="nav nav-treeview">
                 <li class="nav-item">
-                    <a href="" class="nav-link">
+                    <a href="{{ route('admin.categories-formation.index') }}"
+                        class="nav-link {{ Route::is('admin.categories-formation.*') ? 'active' : '' }}">
                         <i class="fas fa-tags nav-icon"></i>
                         <p>Catégories de formation</p>
                     </a>
@@ -85,6 +86,7 @@
                         <p>Sessions de formation</p>
                     </a>
                 </li>
+
                 <li class="nav-item">
                     <a href="" class="nav-link">
                         <i class="fas fa-list nav-icon"></i>
@@ -100,7 +102,7 @@
                 </li>
             </ul>
         </li>
-
+ 
         <!-- Enseignants & Notes -->
         <li class="nav-item">
             <a href="#" class="nav-link">
