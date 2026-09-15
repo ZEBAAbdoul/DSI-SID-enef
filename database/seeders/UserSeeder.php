@@ -26,6 +26,14 @@ class UserSeeder extends Seeder
         );
 
         $this->createUser(
+            prenom: 'Boudasida',
+            nom: 'ROUAMBA',
+            email: 'rouamba@gmail.com',
+            pieceNumero: 'B000000038',
+            role: 'user',
+        );
+
+        $this->createUser(
             prenom: 'Administrateur',
             nom: 'ENEF',
             email: 'admin@enef.bf',

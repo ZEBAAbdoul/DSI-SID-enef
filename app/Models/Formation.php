@@ -34,14 +34,14 @@ class Formation extends Model
 
     // app/Models/Formation.php
 
-protected $appends = [
-    'type_libelle',
-    'statut_libelle',
-    'statut_badge',
-    'cout_formate',
-    'duree_formatee',
-    'mots_cles_array',
-];
+    protected $appends = [
+        'type_libelle',
+        'statut_libelle',
+        'statut_badge',
+        'cout_formate',
+        'duree_formatee',
+        'mots_cles_array',
+    ];
 
     protected $casts = [
         'cout_indicatif' => 'decimal:2',
@@ -161,17 +161,17 @@ protected $appends = [
     }
 
     public function getDureeFormateAttribute(): string
-{
-    if (empty($this->duree)) {
-        return 'Non spécifiée';
+    {
+        if (empty($this->duree)) {
+            return 'Non spécifiée';
+        }
+        // Si c'est un nombre (heures)
+        if (is_numeric($this->duree)) {
+            return $this->duree . ' heure' . ($this->duree > 1 ? 's' : '');
+        }
+        // Sinon (ex: "3 mois"), on renvoie tel quel
+        return $this->duree;
     }
-    // Si c'est un nombre (heures)
-    if (is_numeric($this->duree)) {
-        return $this->duree . ' heure' . ($this->duree > 1 ? 's' : '');
-    }
-    // Sinon (ex: "3 mois"), on renvoie tel quel
-    return $this->duree;
-}
 
     public function getMotsClesArrayAttribute(): array
     {
@@ -218,4 +218,6 @@ protected $appends = [
     {
         return $this->hasMany(SessionFormation::class);
     }
+
+    
 }
