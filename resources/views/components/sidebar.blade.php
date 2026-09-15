@@ -9,7 +9,6 @@
     $formationsActive =
         Route::is('admin.formations.*') ||
         Route::is('admin.sessions-formation.*') ||
-        Route::is('admin.categories-formation.*') ||
         Route::is('admin.inscription.*');
 
     /*
@@ -35,7 +34,8 @@
     */
     $parametresActive =
         Route::is('admin.user.*') ||
-        Route::is('admin.parametres.*');
+        Route::is('admin.parametres.*') ||
+        Route::is('admin.categories-formation.*');
 @endphp
 
 
@@ -95,9 +95,6 @@
 
 
             <ul class="nav nav-treeview">
-
-
-                
 
 
                 {{-- Sessions --}}
@@ -610,21 +607,22 @@
 
                     </li>
 
-                    {{-- Catégories --}}
-                <li class="nav-item">
 
-                    <a href="{{ route('admin.categories-formation.index') }}"
-                       class="nav-link {{ Route::is('admin.categories-formation.*') ? 'active' : '' }}">
+                    {{-- Catégories de formation --}}
+                    <li class="nav-item">
 
-                        <i class="fas fa-tags nav-icon"></i>
+                        <a href="{{ route('admin.categories-formation.index') }}"
+                           class="nav-link {{ Route::is('admin.categories-formation.*') ? 'active' : '' }}">
 
-                        <p>
-                            Catégories de formation
-                        </p>
+                            <i class="fas fa-tags nav-icon"></i>
 
-                    </a>
+                            <p>
+                                Catégories de formation
+                            </p>
 
-                </li>
+                        </a>
+
+                    </li>
 
                 </ul>
 
