@@ -12,6 +12,7 @@ use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\ParametresSiteController;
 use App\Http\Controllers\CategorieFormationController;
 use App\Http\Controllers\SessionFormationController;
+use App\Http\Controllers\TypePieceController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(function () {
@@ -133,6 +134,11 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(
     Route::resource('categories-formation', CategorieFormationController::class)
         ->except(['show'])
         ->names('categories-formation');
+
+    // ==================== TYPES DE PIÈCES (back-office) ====================
+    Route::resource('types-pieces', TypePieceController::class)
+        ->except(['show'])
+        ->names('types-pieces');
 
     // ==================== CANDIDATURES (back-office) ====================
     Route::prefix('inscriptions')->name('inscriptions.')->group(function () {
