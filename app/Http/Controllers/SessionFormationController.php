@@ -15,7 +15,7 @@ class SessionFormationController extends Controller
         $sessions = SessionFormation::with('formation')
             ->when($request->filled('statut'), fn($q) => $q->where('statut', $request->statut))
             ->orderByDesc('date_debut')
-            ->paginate(15)
+            ->paginate(10)
             ->withQueryString();
 
         return view('admin.sessions-formation.index', compact('sessions'));

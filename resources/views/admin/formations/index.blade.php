@@ -1,5 +1,4 @@
-<x-admin>
-    @section('title', 'Formations')
+<x-admin title="Formations">
 
     <div class="container-fluid">
 
@@ -34,9 +33,8 @@
                         Liste des formations
                     </h3>
 
-                    @unless(auth()->user()->hasRole('user'))
-                        <a href="{{ route('admin.formations.create') }}"
-                           class="btn btn-primary btn-sm">
+                    @unless (auth()->user()->hasRole('user'))
+                        <a href="{{ route('admin.formations.create') }}" class="btn btn-primary btn-sm">
                             <i class="fas fa-plus mr-1"></i>
                             Nouvelle formation
                         </a>
@@ -48,9 +46,7 @@
             <div class="card-body">
 
                 {{-- Filtres --}}
-                <form method="GET"
-                      action="{{ route('admin.formations.index') }}"
-                      class="mb-4">
+                <form method="GET" action="{{ route('admin.formations.index') }}" class="mb-4">
 
                     <div class="row">
 
@@ -59,11 +55,8 @@
                             <label>Recherche</label>
 
                             <div class="input-group">
-                                <input type="text"
-                                       name="search"
-                                       class="form-control"
-                                       placeholder="Titre, résumé, mots-clés..."
-                                       value="{{ request('search') }}">
+                                <input type="text" name="search" class="form-control"
+                                    placeholder="Titre, résumé, mots-clés..." value="{{ request('search') }}">
 
                                 <div class="input-group-append">
                                     <button class="btn btn-primary">
@@ -80,8 +73,7 @@
                             <select name="type" class="form-control">
                                 <option value="">Tous</option>
 
-                                <option value="academique"
-                                    {{ request('type') == 'academique' ? 'selected' : '' }}>
+                                <option value="academique" {{ request('type') == 'academique' ? 'selected' : '' }}>
                                     Académique
                                 </option>
 
@@ -136,18 +128,15 @@
                             <select name="statut" class="form-control">
                                 <option value="">Tous</option>
 
-                                <option value="ouverte"
-                                    {{ request('statut') == 'ouverte' ? 'selected' : '' }}>
+                                <option value="ouverte" {{ request('statut') == 'ouverte' ? 'selected' : '' }}>
                                     Ouverte
                                 </option>
 
-                                <option value="cloturee"
-                                    {{ request('statut') == 'cloturee' ? 'selected' : '' }}>
+                                <option value="cloturee" {{ request('statut') == 'cloturee' ? 'selected' : '' }}>
                                     Clôturée
                                 </option>
 
-                                <option value="brouillon"
-                                    {{ request('statut') == 'brouillon' ? 'selected' : '' }}>
+                                <option value="brouillon" {{ request('statut') == 'brouillon' ? 'selected' : '' }}>
                                     Brouillon
                                 </option>
                             </select>
@@ -161,8 +150,7 @@
                             Filtrer
                         </button>
 
-                        <a href="{{ route('admin.formations.index') }}"
-                           class="btn btn-secondary btn-sm">
+                        <a href="{{ route('admin.formations.index') }}" class="btn btn-secondary btn-sm">
                             <i class="fas fa-redo mr-1"></i>
                             Réinitialiser
                         </a>
@@ -192,7 +180,6 @@
                         <tbody>
 
                             @forelse ($formations as $formation)
-
                                 <tr>
 
                                     <td>
@@ -245,37 +232,22 @@
 
                                             {{-- Voir --}}
                                             <a href="{{ route('admin.formations.show', $formation) }}"
-                                               class="btn btn-info btn-sm"
-                                               title="Voir">
+                                                class="btn btn-info btn-sm" title="Voir">
                                                 <i class="fas fa-eye"></i>
                                             </a>
 
-                                            @unless(auth()->user()->hasRole('user'))
-
+                                            @unless (auth()->user()->hasRole('user'))
                                                 {{-- Modifier --}}
                                                 <a href="{{ route('admin.formations.edit', $formation) }}"
-                                                   class="btn btn-warning btn-sm"
-                                                   title="Modifier">
+                                                    class="btn btn-warning btn-sm" title="Modifier">
                                                     <i class="fas fa-edit"></i>
                                                 </a>
 
-                                                {{-- Supprimer --}}
-                                                <form action="{{ route('admin.formations.destroy', $formation) }}"
-                                                      method="POST"
-                                                      class="d-inline"
-                                                      onsubmit="return confirm('Voulez-vous vraiment supprimer cette formation ?');">
-
-                                                    @csrf
-                                                    @method('DELETE')
-
-                                                    <button type="submit"
-                                                            class="btn btn-danger btn-sm"
-                                                            title="Supprimer">
-                                                        <i class="fas fa-trash"></i>
-                                                    </button>
-
-                                                </form>
-
+                                                {{-- Supprimer (ouvre la modal) --}}
+                                                <button type="button" class="btn btn-danger btn-sm" data-toggle="modal"
+                                                    data-target="#modalSuppression{{ $formation->id }}" title="Supprimer">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
                                             @endunless
 
                                         </div>
@@ -299,7 +271,6 @@
 
                                     </td>
                                 </tr>
-
                             @endforelse
 
                         </tbody>
@@ -319,4 +290,66 @@
         </div>
 
     </div>
+
+    {{-- ============================================================
+         MODALS DE CONFIRMATION — SUPPRESSION
+         (une par formation, générées côté serveur)
+    ============================================================ --}}
+    @unless (auth()->user()->hasRole('user'))
+        @foreach ($formations as $formation)
+            <div class="modal fade" id="modalSuppression{{ $formation->id }}" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+
+                        <div class="modal-header">
+                            <h5 class="modal-title">
+                                <i class="fas fa-exclamation-triangle text-danger mr-2"></i>
+                                Confirmer la suppression
+                            </h5>
+                            <button type="button" class="close" data-dismiss="modal">
+                                <span>&times;</span>
+                            </button>
+                        </div>
+
+                        <div class="modal-body">
+                            <p class="mb-0">
+                                Voulez-vous vraiment supprimer la formation
+                                « <strong>{{ $formation->titre }}</strong> » ?
+                            </p>
+
+                            @if ($formation->sessions()->exists())
+                                <div class="alert alert-warning mt-3 mb-0">
+                                    <i class="fas fa-triangle-exclamation mr-1"></i>
+                                    Cette formation possède des sessions actives.
+                                    La suppression sera refusée tant qu'elles n'auront pas été retirées.
+                                </div>
+                            @else
+                                <p class="text-muted small mb-0 mt-2">
+                                    Cette action est irréversible.
+                                </p>
+                            @endif
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                                Annuler
+                            </button>
+
+                            <form action="{{ route('admin.formations.destroy', $formation) }}" method="POST">
+                                @csrf
+                                @method('DELETE')
+
+                                <button type="submit" class="btn btn-danger">
+                                    <i class="fas fa-trash mr-1"></i>
+                                    Supprimer définitivement
+                                </button>
+                            </form>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        @endforeach
+    @endunless
+
 </x-admin>

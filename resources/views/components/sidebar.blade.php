@@ -7,9 +7,7 @@
     |--------------------------------------------------------------------------
     */
     $formationsActive =
-        Route::is('admin.formations.*') ||
-        Route::is('admin.sessions-formation.*') ||
-        Route::is('admin.inscription.*');
+        Route::is('admin.formations.*') || Route::is('admin.sessions-formation.*') || Route::is('admin.inscription.*');
 
     /*
     |--------------------------------------------------------------------------
@@ -23,9 +21,7 @@
     | Bibliothèque
     |--------------------------------------------------------------------------
     */
-    $bibliothequeActive =
-        Route::is('admin.documents.*') ||
-        Route::is('admin.categories-documents.*');
+    $bibliothequeActive = Route::is('admin.documents.*') || Route::is('admin.categories-documents.*');
 
     /*
     |--------------------------------------------------------------------------
@@ -42,10 +38,7 @@
 
 <nav class="mt-2">
 
-    <ul class="nav nav-pills nav-sidebar flex-column"
-        data-widget="treeview"
-        role="menu"
-        data-accordion="false">
+    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
 
 
         {{-- ========================================================= --}}
@@ -54,11 +47,10 @@
         {{-- ========================================================= --}}
 
         @if (!$isUser)
-
             <li class="nav-item">
 
                 <a href="{{ route('admin.dashboard') }}"
-                   class="nav-link {{ Route::is('admin.dashboard') ? 'active' : '' }}">
+                    class="nav-link {{ Route::is('admin.dashboard') ? 'active' : '' }}">
 
                     <i class="nav-icon fas fa-tachometer-alt"></i>
 
@@ -69,7 +61,6 @@
                 </a>
 
             </li>
-
         @endif
 
 
@@ -82,8 +73,7 @@
 
         <li class="nav-item {{ $formationsActive ? 'menu-open' : '' }}">
 
-            <a href="#"
-               class="nav-link {{ $formationsActive ? 'active' : '' }}">
+            <a href="#" class="nav-link {{ $formationsActive ? 'active' : '' }}">
 
                 <i class="nav-icon fas fa-book-open"></i>
 
@@ -102,7 +92,7 @@
                 <li class="nav-item">
 
                     <a href="{{ route('admin.sessions-formation.index') }}"
-                       class="nav-link {{ Route::is('admin.sessions-formation.*') ? 'active' : '' }}">
+                        class="nav-link {{ Route::is('admin.sessions-formation.*') ? 'active' : '' }}">
 
                         <i class="fas fa-calendar-alt nav-icon"></i>
 
@@ -119,7 +109,7 @@
                 <li class="nav-item">
 
                     <a href="{{ route('admin.formations.index') }}"
-                       class="nav-link {{ Route::is('admin.formations.*') ? 'active' : '' }}">
+                        class="nav-link {{ Route::is('admin.formations.*') ? 'active' : '' }}">
 
                         <i class="fas fa-list nav-icon"></i>
 
@@ -135,11 +125,10 @@
                 {{-- Inscriptions --}}
                 {{-- Visible uniquement pour le rôle USER --}}
                 @if ($isUser)
-
                     <li class="nav-item">
 
                         <a href="{{ route('admin.inscription.create') }}"
-                           class="nav-link {{ Route::is('admin.inscription.*') ? 'active' : '' }}">
+                            class="nav-link {{ Route::is('admin.inscription.*') ? 'active' : '' }}">
 
                             <i class="fas fa-user-plus nav-icon"></i>
 
@@ -150,7 +139,6 @@
                         </a>
 
                     </li>
-
                 @endif
 
             </ul>
@@ -165,16 +153,13 @@
         {{-- ========================================================= --}}
 
         @if (!$isUser)
-
-
             {{-- ===================================================== --}}
             {{-- ACTUALITÉS                                           --}}
             {{-- ===================================================== --}}
 
-            <li class="nav-item">
+            <li class="nav-item {{ request()->routeIs('admin.actualites.*') ? 'menu-open' : '' }}">
 
-                <a href="#"
-                   class="nav-link">
+                <a href="#" class="nav-link {{ request()->routeIs('admin.actualites.*') ? 'active' : '' }}">
 
                     <i class="nav-icon fas fa-newspaper"></i>
 
@@ -185,39 +170,36 @@
 
                 </a>
 
-
                 <ul class="nav nav-treeview">
 
+                    {{-- Liste des actualités --}}
                     <li class="nav-item">
+                        <a href="{{ route('admin.actualites.index') }}"
+                            class="nav-link {{ request()->routeIs('admin.actualites.index') ? 'active' : '' }}">
 
-                        <a href=""
-                           class="nav-link">
-
-                            <i class="fas fa-plus-circle nav-icon"></i>
-
-                            <p>
-                                Nouvelle actualité
-                            </p>
-
-                        </a>
-
-                    </li>
-
-
-                    <li class="nav-item">
-
-                        <a href=""
-                           class="nav-link">
-
-                            <i class="fas fa-list nav-icon"></i>
+                            <i class="far fa-circle nav-icon"></i>
 
                             <p>
                                 Liste des actualités
                             </p>
 
                         </a>
-
                     </li>
+
+
+                    {{-- Ajouter une actualité --}}
+                    {{-- <li class="nav-item">
+            <a href="{{ route('admin.actualites.create') }}"
+               class="nav-link {{ request()->routeIs('admin.actualites.create') ? 'active' : '' }}">
+
+                <i class="far fa-circle nav-icon"></i>
+
+                <p>
+                    Ajouter une actualité
+                </p>
+
+            </a>
+        </li> --}}
 
                 </ul>
 
@@ -231,8 +213,7 @@
 
             <li class="nav-item">
 
-                <a href="#"
-                   class="nav-link">
+                <a href="#" class="nav-link">
 
                     <i class="nav-icon fas fa-sitemap"></i>
 
@@ -248,8 +229,7 @@
 
                     <li class="nav-item">
 
-                        <a href=""
-                           class="nav-link">
+                        <a href="" class="nav-link">
 
                             <i class="fas fa-plus-circle nav-icon"></i>
 
@@ -264,8 +244,7 @@
 
                     <li class="nav-item">
 
-                        <a href=""
-                           class="nav-link">
+                        <a href="" class="nav-link">
 
                             <i class="fas fa-list nav-icon"></i>
 
@@ -284,60 +263,70 @@
 
 
             {{-- ===================================================== --}}
-            {{-- ENSEIGNANTS & NOTES                                  --}}
-            {{-- ===================================================== --}}
+{{-- ENSEIGNANTS & NOTES                                  --}}
+{{-- ===================================================== --}}
+
+@php
+    $enseignantsActive = request()->routeIs('admin.enseignants.*') || request()->routeIs('admin.notes.*') || request()->routeIs('admin.enseignant.notes.*');
+@endphp
+
+<li class="nav-item {{ $enseignantsActive ? 'menu-open' : '' }}">
+
+    <a href="#" class="nav-link {{ $enseignantsActive ? 'active' : '' }}">
+
+        <i class="nav-icon fas fa-chalkboard-teacher"></i>
+
+        <p>
+            Enseignants
+            <i class="fas fa-angle-left right"></i>
+        </p>
+
+    </a>
+
+
+    <ul class="nav nav-treeview">
+
+        <li class="nav-item">
+            <a href="{{ route('admin.enseignants.index') }}"
+                class="nav-link {{ request()->routeIs('admin.enseignants.index') ? 'active' : '' }}">
+                <i class="fas fa-list nav-icon"></i>
+                <p>Liste des enseignants</p>
+            </a>
+        </li>
+
+        {{-- Visible pour l'enseignant : dépôt de ses fichiers --}}
+        @if (auth()->user()->hasRole('enseignant'))
+            <li class="nav-item">
+                <a href="{{ route('admin.enseignant.notes.index') }}"
+                    class="nav-link {{ request()->routeIs('admin.enseignant.notes.index') ? 'active' : '' }}">
+                    <i class="fas fa-folder-open nav-icon"></i>
+                    <p>Mes notes</p>
+                </a>
+            </li>
 
             <li class="nav-item">
-
-                <a href="#"
-                   class="nav-link">
-
-                    <i class="nav-icon fas fa-chalkboard-teacher"></i>
-
-                    <p>
-                        Enseignants
-                        <i class="fas fa-angle-left right"></i>
-                    </p>
-
+                <a href="{{ route('admin.enseignant.notes.create') }}"
+                    class="nav-link {{ request()->routeIs('admin.enseignant.notes.create') ? 'active' : '' }}">
+                    <i class="fas fa-upload nav-icon"></i>
+                    <p>Déposer un fichier</p>
                 </a>
-
-
-                <ul class="nav nav-treeview">
-
-                    <li class="nav-item">
-
-                        <a href=""
-                           class="nav-link">
-
-                            <i class="fas fa-list nav-icon"></i>
-
-                            <p>
-                                Liste des enseignants
-                            </p>
-
-                        </a>
-
-                    </li>
-
-
-                    <li class="nav-item">
-
-                        <a href=""
-                           class="nav-link">
-
-                            <i class="fas fa-clipboard-list nav-icon"></i>
-
-                            <p>
-                                Saisie des notes
-                            </p>
-
-                        </a>
-
-                    </li>
-
-                </ul>
-
             </li>
+        @endif
+
+        {{-- Visible pour l'admin/gérant : consultation --}}
+        @if (!auth()->user()->hasRole('enseignant'))
+            <li class="nav-item">
+                <a href="{{ route('admin.notes.index') }}"
+                    class="nav-link {{ request()->routeIs('admin.notes.index') ? 'active' : '' }}">
+                    <i class="fas fa-file-download nav-icon"></i>
+                    <p>Consultation des notes</p>
+                </a>
+            </li>
+        @endif
+
+    </ul>
+
+</li>
 
 
 
@@ -347,8 +336,7 @@
 
             <li class="nav-item {{ $candidaturesActive ? 'menu-open' : '' }}">
 
-                <a href="#"
-                   class="nav-link {{ $candidaturesActive ? 'active' : '' }}">
+                <a href="#" class="nav-link {{ $candidaturesActive ? 'active' : '' }}">
 
                     <i class="nav-icon fas fa-user-graduate"></i>
 
@@ -367,7 +355,7 @@
                     <li class="nav-item">
 
                         <a href="{{ route('admin.inscriptions.index') }}"
-                           class="nav-link {{ Route::is('admin.inscriptions.index') && !request('statut') ? 'active' : '' }}">
+                            class="nav-link {{ Route::is('admin.inscriptions.index') && !request('statut') ? 'active' : '' }}">
 
                             <i class="fas fa-list nav-icon"></i>
 
@@ -384,7 +372,7 @@
                     <li class="nav-item">
 
                         <a href="{{ route('admin.inscriptions.index', ['statut' => 'valide']) }}"
-                           class="nav-link {{ request('statut') === 'valide' ? 'active' : '' }}">
+                            class="nav-link {{ request('statut') === 'valide' ? 'active' : '' }}">
 
                             <i class="fas fa-check-circle nav-icon"></i>
 
@@ -408,8 +396,7 @@
 
             <li class="nav-item {{ $bibliothequeActive ? 'menu-open' : '' }}">
 
-                <a href="#"
-                   class="nav-link {{ $bibliothequeActive ? 'active' : '' }}">
+                <a href="#" class="nav-link {{ $bibliothequeActive ? 'active' : '' }}">
 
                     <i class="nav-icon fas fa-book"></i>
 
@@ -428,7 +415,7 @@
                     <li class="nav-item">
 
                         <a href="{{ route('admin.documents.index') }}"
-                           class="nav-link {{ Route::is('admin.documents.*') ? 'active' : '' }}">
+                            class="nav-link {{ Route::is('admin.documents.*') ? 'active' : '' }}">
 
                             <i class="fas fa-list nav-icon"></i>
 
@@ -445,7 +432,7 @@
                     <li class="nav-item">
 
                         <a href="{{ route('admin.categories-documents.index') }}"
-                           class="nav-link {{ Route::is('admin.categories-documents.*') ? 'active' : '' }}">
+                            class="nav-link {{ Route::is('admin.categories-documents.*') ? 'active' : '' }}">
 
                             <i class="fas fa-tags nav-icon"></i>
 
@@ -469,8 +456,7 @@
 
             <li class="nav-item">
 
-                <a href="#"
-                   class="nav-link">
+                <a href="#" class="nav-link">
 
                     <i class="nav-icon fas fa-images"></i>
 
@@ -487,8 +473,7 @@
 
                     <li class="nav-item">
 
-                        <a href=""
-                           class="nav-link">
+                        <a href="" class="nav-link">
 
                             <i class="fas fa-camera nav-icon"></i>
 
@@ -503,8 +488,7 @@
 
                     <li class="nav-item">
 
-                        <a href=""
-                           class="nav-link">
+                        <a href="" class="nav-link">
 
                             <i class="fas fa-video nav-icon"></i>
 
@@ -528,8 +512,7 @@
 
             <li class="nav-item">
 
-                <a href=""
-                   class="nav-link">
+                <a href="" class="nav-link">
 
                     <i class="nav-icon fas fa-chart-bar"></i>
 
@@ -559,8 +542,7 @@
 
             <li class="nav-item {{ $parametresActive ? 'menu-open' : '' }}">
 
-                <a href="#"
-                   class="nav-link {{ $parametresActive ? 'active' : '' }}">
+                <a href="#" class="nav-link {{ $parametresActive ? 'active' : '' }}">
 
                     <i class="nav-icon fas fa-cogs"></i>
 
@@ -579,7 +561,7 @@
                     <li class="nav-item">
 
                         <a href="{{ route('admin.user.index') }}"
-                           class="nav-link {{ Route::is('admin.user.*') ? 'active' : '' }}">
+                            class="nav-link {{ Route::is('admin.user.*') ? 'active' : '' }}">
 
                             <i class="fas fa-users nav-icon"></i>
 
@@ -596,7 +578,7 @@
                     <li class="nav-item">
 
                         <a href="{{ route('admin.parametres.index') }}"
-                           class="nav-link {{ Route::is('admin.parametres.*') ? 'active' : '' }}">
+                            class="nav-link {{ Route::is('admin.parametres.*') ? 'active' : '' }}">
 
                             <i class="fas fa-sliders-h nav-icon"></i>
 
@@ -613,7 +595,7 @@
                     <li class="nav-item">
 
                         <a href="{{ route('admin.categories-formation.index') }}"
-                           class="nav-link {{ Route::is('admin.categories-formation.*') ? 'active' : '' }}">
+                            class="nav-link {{ Route::is('admin.categories-formation.*') ? 'active' : '' }}">
 
                             <i class="fas fa-tags nav-icon"></i>
 
@@ -630,7 +612,7 @@
                     <li class="nav-item">
 
                         <a href="{{ route('admin.types-pieces.index') }}"
-                           class="nav-link {{ Route::is('admin.types-pieces.*') ? 'active' : '' }}">
+                            class="nav-link {{ Route::is('admin.types-pieces.*') ? 'active' : '' }}">
 
                             <i class="fas fa-id-card nav-icon"></i>
 
@@ -655,7 +637,7 @@
             <li class="nav-item">
 
                 <a href="{{ route('manual.index') }}"
-                   class="nav-link {{ Route::is('manual.index') ? 'active' : '' }}">
+                    class="nav-link {{ Route::is('manual.index') ? 'active' : '' }}">
 
                     <i class="nav-icon fas fa-book-journal-whills"></i>
 
@@ -666,8 +648,6 @@
                 </a>
 
             </li>
-
-
         @endif
 
     </ul>
