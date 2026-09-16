@@ -50,42 +50,94 @@
                 <h3 class="card-title mb-0">
                     Dossier {{ $inscription->numero_dossier ?? '—' }}
                 </h3>
+
                 <span class="badge {{ $badgesStatut[$inscription->statut] ?? 'badge-secondary' }}">
                     {{ $labelsStatut[$inscription->statut] ?? $inscription->statut }}
                 </span>
             </div>
+
             <div class="card-body">
+
+                {{-- Message affiché uniquement si la candidature est validée --}}
+                @if ($inscription->statut === 'valide')
+                    <div class="alert alert-success shadow-sm mb-4">
+                        <div class="d-flex align-items-start">
+                            <div class="mr-3">
+                                <i class="fas fa-check-circle fa-2x"></i>
+                            </div>
+
+                            <div>
+                                <h5 class="mb-2">
+                                    <strong>Félicitations ! Votre inscription a été validée.</strong>
+                                </h5>
+
+                                <p class="mb-2">
+                                    Votre candidature a été retenue pour cette formation.
+                                </p>
+
+                                <p class="mb-0">
+                                    Pour procéder au <strong>paiement des frais de scolarité</strong>,
+                                    veuillez contacter le
+                                    <strong>Service des Ressources Humaines</strong> au numéro :
+                                </p>
+
+                                <div class="mt-3">
+                                    <a href="tel:+22670000000" class="btn btn-success btn-sm">
+                                        <i class="fas fa-phone-alt"></i>
+                                        +226 70 00 00 00
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                @endif
+
                 <div class="row">
                     <div class="col-md-6">
-                        <p class="mb-1"><strong>Formation :</strong>
-                            {{ $inscription->formation->titre ?? 'Formation supprimée' }}</p>
-                        <p class="mb-1"><strong>Lieu :</strong> {{ $inscription->session->lieu ?? '—' }}</p>
+                        <p class="mb-1">
+                            <strong>Formation :</strong>
+                            {{ $inscription->formation->titre ?? 'Formation supprimée' }}
+                        </p>
+
+                        <p class="mb-1">
+                            <strong>Lieu :</strong>
+                            {{ $inscription->session->lieu ?? '—' }}
+                        </p>
                     </div>
+
                     <div class="col-md-6">
                         <p class="mb-1">
                             <strong>Session :</strong>
+
                             @if ($inscription->session)
                                 {{ \Carbon\Carbon::parse($inscription->session->date_debut)->format('d/m/Y') }}
                                 →
-                                {{ $inscription->session->date_fin ? \Carbon\Carbon::parse($inscription->session->date_fin)->format('d/m/Y') : '—' }}
+                                {{ $inscription->session->date_fin
+                                    ? \Carbon\Carbon::parse($inscription->session->date_fin)->format('d/m/Y')
+                                    : '—' }}
                             @else
                                 —
                             @endif
                         </p>
+
                         <p class="mb-1">
                             <strong>Soumis le :</strong>
-                            {{ $inscription->date_soumission ? \Carbon\Carbon::parse($inscription->date_soumission)->format('d/m/Y à H:i') : '—' }}
+                            {{ $inscription->date_soumission
+                                ? \Carbon\Carbon::parse($inscription->date_soumission)->format('d/m/Y à H:i')
+                                : '—' }}
                         </p>
                     </div>
                 </div>
 
                 @if ($inscription->statut === 'rejete' && $inscription->motif_rejet)
                     <div class="alert alert-danger mt-3 mb-0">
-                        <strong>Motif du rejet :</strong> {{ $inscription->motif_rejet }}
+                        <strong>Motif du rejet :</strong>
+                        {{ $inscription->motif_rejet }}
                     </div>
                 @endif
             </div>
         </div>
+
 
         {{-- Pièces justificatives --}}
         <div class="card">
@@ -103,7 +155,7 @@
                                     <th>PIÈCE</th>
                                     <th>STATUT</th>
                                     <th>FICHIER(S)</th>
-                                    <th style="width: 220px;"></th>
+                                    {{-- <th style="width: 220px;"></th> --}}
                                 </tr>
                             </thead>
                             <tbody>
@@ -144,7 +196,17 @@
                                                         {{ strtoupper($piece->format_fichier) }} ·
                                                         {{ $piece->taille_fichier_ko }} Ko
                                                     </a>
+
                                                     @if ($inscription->statut !== 'valide')
+                                                        {{-- Bouton Modifier : uniquement si la pièce n'est PAS conforme --}}
+                                                        @if (!$piece->estConforme())
+                                                            <button type="button" class="btn btn-sm btn-link p-0 mr-2"
+                                                                data-toggle="collapse"
+                                                                data-target="#modifier-{{ $piece->id }}">
+                                                                <i class="fas fa-pen"></i> Modifier
+                                                            </button>
+                                                        @endif
+
                                                         <form
                                                             action="{{ route('admin.inscription.piece.destroy', $piece) }}"
                                                             method="POST"
@@ -159,11 +221,35 @@
                                                         </form>
                                                     @endif
                                                 </div>
+
+                                                {{-- Formulaire de remplacement (masqué par défaut) --}}
+                                                @if ($inscription->statut !== 'valide' && !$piece->estConforme())
+                                                    <div id="modifier-{{ $piece->id }}" class="collapse mt-1 mb-2">
+                                                        <form
+                                                            action="{{ route('admin.inscription.piece.update', $piece) }}"
+                                                            method="POST" enctype="multipart/form-data"
+                                                            class="form-inline">
+                                                            @csrf
+                                                            @method('PUT')
+                                                            <input type="file" name="fichier"
+                                                                class="form-control-file mr-2"
+                                                                accept=".pdf,.jpg,.jpeg,.png" required>
+                                                            <button type="submit"
+                                                                class="btn btn-sm btn-outline-primary">
+                                                                <i class="fas fa-upload"></i> Remplacer
+                                                            </button>
+                                                        </form>
+                                                        @error('fichier')
+                                                            <small
+                                                                class="text-danger d-block mt-1">{{ $message }}</small>
+                                                        @enderror
+                                                    </div>
+                                                @endif
                                             @empty
                                                 <span class="text-muted">—</span>
                                             @endforelse
                                         </td>
-                                        <td>
+                                        {{-- <td>
                                             @if ($inscription->statut !== 'valide' && (!$derniere || $derniere->estNonConforme()))
                                                 <form
                                                     action="{{ route('admin.inscription.piece.store', $inscription) }}"
@@ -181,7 +267,7 @@
                                                     <small class="text-danger d-block mt-1">{{ $message }}</small>
                                                 @enderror
                                             @endif
-                                        </td>
+                                        </td> --}}
                                     </tr>
                                 @endforeach
                             </tbody>

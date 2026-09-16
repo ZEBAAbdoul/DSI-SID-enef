@@ -259,6 +259,41 @@ class InscriptionController extends Controller
         return Storage::disk('local')->response($piece->fichier_url);
     }
 
+
+    public function updatePiece(Request $request, PieceInscription $piece): RedirectResponse
+{
+    $inscription = $piece->inscription;
+
+    // Sécurité : seul le propriétaire peut modifier
+    abort_if($inscription->candidat_id !== auth()->id(), 403);
+
+    // Interdire la modif si la pièce est déjà conforme ou le dossier validé
+    abort_if($piece->estConforme(), 403, 'Cette pièce est déjà validée, vous ne pouvez plus la modifier.');
+    abort_if($inscription->statut === 'valide', 403, 'Impossible de modifier un dossier déjà validé.');
+
+    $request->validate([
+        'fichier' => ['required', 'file', 'mimes:pdf,jpg,jpeg,png', 'max:5120'],
+    ]);
+
+    // Supprimer l'ancien fichier physique (uniquement s'il existe réellement)
+    if ($piece->fichier_url && Storage::disk('local')->exists($piece->fichier_url)) {
+        Storage::disk('local')->delete($piece->fichier_url);
+    }
+
+    $fichier = $request->file('fichier');
+    $chemin = $fichier->store('inscriptions/' . $inscription->id, 'local');
+
+    $piece->update([
+        'fichier_url' => $chemin,
+        'format_fichier' => $fichier->getClientOriginalExtension(),
+        'taille_fichier_ko' => round($fichier->getSize() / 1024),
+        'statut_verification' => 'en_attente', // remet en vérification
+        'commentaire' => null,
+    ]);
+
+    return back()->with('status', 'Fichier remplacé avec succès, en attente de vérification.');
+}
+
     public function destroyPiece(PieceInscription $piece): RedirectResponse
     {
         $inscription = $piece->inscription;

@@ -93,6 +93,7 @@
                     <a href="#presentation" class="btn btn-outline btn-sm">Lire le message intégral</a>
                     <a href="#presentation" class="btn btn-outline btn-sm">Découvrir l'organisation</a>
                 </div>
+                
             </div>
         </div>
     </section>

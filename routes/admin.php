@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CategorieDocumentController;
 use App\Http\Controllers\DocumentController;
+use App\Http\Controllers\FormationController;
 use App\Http\Controllers\InscriptionAdminController;
 use App\Http\Controllers\InscriptionController;
 use App\Http\Controllers\ProfileController;
@@ -9,7 +10,9 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\ParametresSiteController;
+use App\Http\Controllers\CategorieFormationController;
 use App\Http\Controllers\SessionFormationController;
+use App\Http\Controllers\TypePieceController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(function () {
@@ -99,6 +102,9 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(
             [InscriptionController::class, 'telechargerPiece']
         )->name('piece.telecharger');
 
+        Route::put('/inscription/piece/{piece}', [InscriptionController::class, 'updatePiece'])
+            ->name('piece.update');
+
         // Supprimer une pièce
         Route::delete(
             'pieces/{piece}',
@@ -106,12 +112,36 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(
         )->name('piece.destroy');
     });
 
+
+    /*
+|--------------------------------------------------------------------------
+| Formations
+|--------------------------------------------------------------------------
+*/
+
+    Route::resource('formations', FormationController::class)
+        ->names('formations');
+
+    Route::patch(
+        'formations/{formation}/statut',
+        [FormationController::class, 'changerStatut']
+    )->name('formations.statut');
+
+
     // ==================== SESSIONS DE FORMATION (back-office) ====================
     Route::resource('sessions-formation', SessionFormationController::class)
         ->except(['show'])
         ->names('sessions-formation');
 
+    // ==================== CATÉGORIES DE FORMATION (back-office) ====================
+    Route::resource('categories-formation', CategorieFormationController::class)
+        ->except(['show'])
+        ->names('categories-formation');
 
+    // ==================== TYPES DE PIÈCES (back-office) ====================
+    Route::resource('types-pieces', TypePieceController::class)
+        ->except(['show'])
+        ->names('types-pieces');
 
     // ==================== CANDIDATURES (back-office) ====================
     Route::prefix('inscriptions')->name('inscriptions.')->group(function () {
