@@ -33,7 +33,8 @@
         Route::is('admin.user.*') ||
         Route::is('admin.parametres.*') ||
         Route::is('admin.categories-formation.*') ||
-        Route::is('admin.types-pieces.*');
+        Route::is('admin.types-pieces.*') ||
+        Route::is('admin.partenaires.*');
 
     /*
     |--------------------------------------------------------------------------
@@ -640,6 +641,23 @@
 
                             <p>
                                 Types de pièces
+                            </p>
+
+                        </a>
+
+                    </li>
+
+
+                    {{-- Partenaires --}}
+                    <li class="nav-item">
+
+                        <a href="{{ route('admin.partenaires.index') }}"
+                            class="nav-link {{ Route::is('admin.partenaires.*') ? 'active' : '' }}">
+
+                            <i class="fas fa-handshake nav-icon"></i>
+
+                            <p>
+                                Partenaires
                             </p>
 
                         </a>
