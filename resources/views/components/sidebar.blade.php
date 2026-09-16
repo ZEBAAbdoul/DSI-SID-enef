@@ -33,6 +33,13 @@
         Route::is('admin.parametres.*') ||
         Route::is('admin.categories-formation.*') ||
         Route::is('admin.types-pieces.*');
+
+    /*
+    |--------------------------------------------------------------------------
+    | Filières
+    |--------------------------------------------------------------------------
+    */
+    $filieresActive = Route::is('admin.filieres.*');
 @endphp
 
 
@@ -211,9 +218,9 @@
             {{-- FILIÈRES                                             --}}
             {{-- ===================================================== --}}
 
-            <li class="nav-item">
+            <li class="nav-item {{ $filieresActive ? 'menu-open' : '' }}">
 
-                <a href="#" class="nav-link">
+                <a href="#" class="nav-link {{ $filieresActive ? 'active' : '' }}">
 
                     <i class="nav-icon fas fa-sitemap"></i>
 
@@ -229,7 +236,8 @@
 
                     <li class="nav-item">
 
-                        <a href="" class="nav-link">
+                        <a href="{{ route('admin.filieres.create') }}"
+                           class="nav-link {{ Route::is('admin.filieres.create') ? 'active' : '' }}">
 
                             <i class="fas fa-plus-circle nav-icon"></i>
 
@@ -244,7 +252,8 @@
 
                     <li class="nav-item">
 
-                        <a href="" class="nav-link">
+                        <a href="{{ route('admin.filieres.index') }}"
+                           class="nav-link {{ Route::is('admin.filieres.index') || Route::is('admin.filieres.edit') ? 'active' : '' }}">
 
                             <i class="fas fa-list nav-icon"></i>
 
