@@ -21,7 +21,7 @@ class FiliereController extends Controller
                 })
             )
             ->orderBy('nom')
-            ->paginate(15)
+            ->paginate(10)
             ->withQueryString();
 
         return view('admin.filieres.index', compact('filieres'));
