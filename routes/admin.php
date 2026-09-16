@@ -8,6 +8,7 @@ use App\Http\Controllers\FiliereController;
 use App\Http\Controllers\FormationController;
 use App\Http\Controllers\InscriptionAdminController;
 use App\Http\Controllers\InscriptionController;
+use App\Http\Controllers\MatiereController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
@@ -303,6 +304,13 @@ Route::prefix('notes')->name('notes.')->group(function () {
     Route::resource('types-pieces', TypePieceController::class)
         ->except(['show'])
         ->names('types-pieces');
+
+
+    // ==================== MATIÈRES ====================
+
+    Route::resource('matieres', MatiereController::class)
+        ->except(['show'])
+        ->names('matieres');
 
 
     // ==================== CANDIDATURES BACK-OFFICE ====================

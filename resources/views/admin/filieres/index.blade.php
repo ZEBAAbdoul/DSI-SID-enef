@@ -15,16 +15,21 @@
             <h3 class="card-title">Liste des filières</h3>
             <div class="card-tools">
                 <form action="{{ route('admin.filieres.index') }}" method="GET" class="form-inline" style="display:inline-block;margin-right:10px;">
-                    <div class="input-group input-group-sm" style="width:260px;">
-                        <input type="text" name="recherche" value="{{ request('recherche') }}" class="form-control"
-                            placeholder="Rechercher une filière…">
-                        <span class="input-group-append">
-                            <button type="submit" class="btn btn-default">
-                                <i class="fas fa-search"></i>
-                            </button>
-                        </span>
-                    </div>
-                </form>
+    <div class="input-group input-group-sm" style="width:260px;">
+        <input type="text" name="recherche" value="{{ request('recherche') }}" class="form-control"
+            placeholder="Rechercher une filière…">
+        <span class="input-group-append">
+            <button type="submit" class="btn btn-default" title="Rechercher">
+                <i class="fas fa-search"></i>
+            </button>
+            @if (request('recherche'))
+                <a href="{{ route('admin.filieres.index') }}" class="btn btn-default" title="Réinitialiser la recherche">
+                    <i class="fas fa-times"></i>
+                </a>
+            @endif
+        </span>
+    </div>
+</form>
                 <a href="{{ route('admin.filieres.create') }}" class="btn btn-primary btn-sm">
                     <i class="fas fa-plus"></i> Nouvelle filière
                 </a>

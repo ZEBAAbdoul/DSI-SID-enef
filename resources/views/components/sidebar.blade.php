@@ -33,7 +33,8 @@
         Route::is('admin.user.*') ||
         Route::is('admin.parametres.*') ||
         Route::is('admin.categories-formation.*') ||
-        Route::is('admin.types-pieces.*');
+        Route::is('admin.types-pieces.*') ||
+        Route::is('admin.matieres.*');
 
     /*
     |--------------------------------------------------------------------------
@@ -640,6 +641,23 @@
 
                             <p>
                                 Types de pièces
+                            </p>
+
+                        </a>
+
+                    </li>
+
+
+                    {{-- Matières --}}
+                    <li class="nav-item">
+
+                        <a href="{{ route('admin.matieres.index') }}"
+                            class="nav-link {{ Route::is('admin.matieres.*') ? 'active' : '' }}">
+
+                            <i class="fas fa-book nav-icon"></i>
+
+                            <p>
+                                Matières
                             </p>
 
                         </a>
