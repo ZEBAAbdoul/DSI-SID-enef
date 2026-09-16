@@ -17,6 +17,7 @@ use App\Http\Controllers\NoteAdminController;
 use App\Http\Controllers\NoteController;
 use App\Http\Controllers\SessionFormationController;
 use App\Http\Controllers\TypePieceController;
+use App\Http\Controllers\PartenaireController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(function () {
@@ -295,6 +296,12 @@ Route::prefix('notes')->name('notes.')->group(function () {
     Route::resource('types-pieces', TypePieceController::class)
         ->except(['show'])
         ->names('types-pieces');
+
+
+    // ==================== PARTENAIRES ====================
+
+    Route::resource('partenaires', PartenaireController::class)
+        ->names('partenaires');
 
 
     // ==================== CANDIDATURES BACK-OFFICE ====================
