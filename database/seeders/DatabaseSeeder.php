@@ -29,7 +29,7 @@ class DatabaseSeeder extends Seeder
         $this->call(PartenaireSeeder::class);
         $this->call(MatiereSeeder::class);
         $this->call(EnseignantSeeder::class);
-        $this->call(NoteSeeder::class);
+        // $this->call(NoteSeeder::class);
         $this->call(TypePieceSeeder::class);
     }
 }

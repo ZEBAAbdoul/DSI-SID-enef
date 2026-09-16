@@ -1,16 +1,19 @@
 <?php
-
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-
+use Illuminate\Support\Str;
 
 class Formation extends Model
 {
+    use HasUuids;
+
     protected $table = 'formations';
+
+    protected $primaryKey = 'id';
     public $incrementing = false;
     protected $keyType = 'string';
 
@@ -29,7 +32,7 @@ class Formation extends Model
         'image_url',
         'mots_cles',
         'statut',
-        'created_by'
+        'created_by',
     ];
 
     // app/Models/Formation.php
@@ -218,6 +221,4 @@ class Formation extends Model
     {
         return $this->hasMany(SessionFormation::class);
     }
-
-    
 }

@@ -84,7 +84,7 @@ class User extends Authenticatable
     public function scopeByRole($query, $role)
     {
         if ($role) {
-            $query->whereHas('roles', fn ($q) => $q->where('name', $role));
+            $query->whereHas('roles', fn($q) => $q->where('name', $role));
         }
         return $query;
     }
@@ -114,8 +114,9 @@ class User extends Authenticatable
         }
 
         return $this->roles
-            ->map(fn ($role) =>
-                '<span class="badge bg-info mr-1">'.e($role->name).'</span>'
+            ->map(
+                fn($role) =>
+                '<span class="badge bg-info mr-1">' . e($role->name) . '</span>'
             )
             ->implode(' ');
     }
@@ -139,4 +140,10 @@ class User extends Authenticatable
 
         return "{$name} ({$this->email})";
     }
+
+    public function enseignant()
+    {
+        return $this->hasOne(Enseignant::class);
+    }
+    
 }
