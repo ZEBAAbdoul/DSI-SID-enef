@@ -1,5 +1,6 @@
 @php
     $isUser = auth()->check() && auth()->user()->hasRole('user');
+    $isEnseignant = auth()->check() && auth()->user()->hasRole('enseignant');
 
     /*
     |--------------------------------------------------------------------------
@@ -43,10 +44,10 @@
 
         {{-- ========================================================= --}}
         {{-- ACCUEIL                                                  --}}
-        {{-- INVISIBLE POUR LE ROLE USER                              --}}
+        {{-- INVISIBLE POUR LES RÔLES USER ET ENSEIGNANT              --}}
         {{-- ========================================================= --}}
 
-        @if (!$isUser)
+        @if (!$isUser && !$isEnseignant)
             <li class="nav-item">
 
                 <a href="{{ route('admin.dashboard') }}"
@@ -68,91 +69,171 @@
         {{-- ========================================================= --}}
         {{-- FORMATIONS                                               --}}
         {{-- Accessible également au rôle USER                        --}}
-        {{-- Positionné juste après le Dashboard                     --}}
+        {{-- INVISIBLE POUR LE RÔLE ENSEIGNANT                        --}}
         {{-- ========================================================= --}}
 
-        <li class="nav-item {{ $formationsActive ? 'menu-open' : '' }}">
+        @if (!$isEnseignant)
+            <li class="nav-item {{ $formationsActive ? 'menu-open' : '' }}">
 
-            <a href="#" class="nav-link {{ $formationsActive ? 'active' : '' }}">
+                <a href="#" class="nav-link {{ $formationsActive ? 'active' : '' }}">
 
-                <i class="nav-icon fas fa-book-open"></i>
+                    <i class="nav-icon fas fa-book-open"></i>
 
-                <p>
-                    Formations
-                    <i class="fas fa-angle-left right"></i>
-                </p>
+                    <p>
+                        Formations
+                        <i class="fas fa-angle-left right"></i>
+                    </p>
 
-            </a>
-
-
-            <ul class="nav nav-treeview">
+                </a>
 
 
-                {{-- Sessions --}}
-                <li class="nav-item">
-
-                    <a href="{{ route('admin.sessions-formation.index') }}"
-                        class="nav-link {{ Route::is('admin.sessions-formation.*') ? 'active' : '' }}">
-
-                        <i class="fas fa-calendar-alt nav-icon"></i>
-
-                        <p>
-                            Sessions de formation
-                        </p>
-
-                    </a>
-
-                </li>
+                <ul class="nav nav-treeview">
 
 
-                {{-- Liste des formations --}}
-                <li class="nav-item">
-
-                    <a href="{{ route('admin.formations.index') }}"
-                        class="nav-link {{ Route::is('admin.formations.*') ? 'active' : '' }}">
-
-                        <i class="fas fa-list nav-icon"></i>
-
-                        <p>
-                            Liste des formations
-                        </p>
-
-                    </a>
-
-                </li>
-
-
-                {{-- Inscriptions --}}
-                {{-- Visible uniquement pour le rôle USER --}}
-                @if ($isUser)
+                    {{-- Sessions --}}
                     <li class="nav-item">
 
-                        <a href="{{ route('admin.inscription.create') }}"
-                            class="nav-link {{ Route::is('admin.inscription.*') ? 'active' : '' }}">
+                        <a href="{{ route('admin.sessions-formation.index') }}"
+                            class="nav-link {{ Route::is('admin.sessions-formation.*') ? 'active' : '' }}">
 
-                            <i class="fas fa-user-plus nav-icon"></i>
+                            <i class="fas fa-calendar-alt nav-icon"></i>
 
                             <p>
-                                Inscriptions
+                                Sessions de formation
                             </p>
 
                         </a>
 
                     </li>
-                @endif
 
-            </ul>
 
-        </li>
+                    {{-- Liste des formations --}}
+                    <li class="nav-item">
+
+                        <a href="{{ route('admin.formations.index') }}"
+                            class="nav-link {{ Route::is('admin.formations.*') ? 'active' : '' }}">
+
+                            <i class="fas fa-list nav-icon"></i>
+
+                            <p>
+                                Liste des formations
+                            </p>
+
+                        </a>
+
+                    </li>
+
+
+                    {{-- Inscriptions --}}
+                    {{-- Visible uniquement pour le rôle USER --}}
+                    @if ($isUser)
+                        <li class="nav-item">
+
+                            <a href="{{ route('admin.inscription.create') }}"
+                                class="nav-link {{ Route::is('admin.inscription.*') ? 'active' : '' }}">
+
+                                <i class="fas fa-user-plus nav-icon"></i>
+
+                                <p>
+                                    Inscriptions
+                                </p>
+
+                            </a>
+
+                        </li>
+                    @endif
+
+                </ul>
+
+            </li>
+        @endif
+
+
+
+        {{-- ========================================================= --}}
+        {{-- ENSEIGNANTS & NOTES                                      --}}
+        {{-- Visible pour l'enseignant (lui seul voit ce bloc) et     --}}
+        {{-- pour l'admin/gérant. Invisible pour le rôle USER.        --}}
+        {{-- ========================================================= --}}
+
+        @if (!$isUser)
+            @php
+                $enseignantsActive =
+                    request()->routeIs('admin.enseignants.*') ||
+                    request()->routeIs('admin.notes.*') ||
+                    request()->routeIs('admin.enseignant.notes.*');
+            @endphp
+
+            <li class="nav-item {{ $enseignantsActive ? 'menu-open' : '' }}">
+
+                <a href="#" class="nav-link {{ $enseignantsActive ? 'active' : '' }}">
+
+                    <i class="nav-icon fas fa-chalkboard-teacher"></i>
+
+                    <p>
+                        Enseignants
+                        <i class="fas fa-angle-left right"></i>
+                    </p>
+
+                </a>
+
+
+                <ul class="nav nav-treeview">
+
+                    {{-- Visible pour l'admin/gérant uniquement --}}
+                    @if (!$isEnseignant)
+                        <li class="nav-item">
+                            <a href="{{ route('admin.enseignants.index') }}"
+                                class="nav-link {{ request()->routeIs('admin.enseignants.index') ? 'active' : '' }}">
+                                <i class="fas fa-list nav-icon"></i>
+                                <p>Liste des enseignants</p>
+                            </a>
+                        </li>
+                    @endif
+
+                    {{-- Visible pour l'enseignant : dépôt de ses fichiers --}}
+                    @if ($isEnseignant)
+                        <li class="nav-item">
+                            <a href="{{ route('admin.enseignant.notes.index') }}"
+                                class="nav-link {{ request()->routeIs('admin.enseignant.notes.index') ? 'active' : '' }}">
+                                <i class="fas fa-folder-open nav-icon"></i>
+                                <p>Mes notes</p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="{{ route('admin.enseignant.notes.create') }}"
+                                class="nav-link {{ request()->routeIs('admin.enseignant.notes.create') ? 'active' : '' }}">
+                                <i class="fas fa-upload nav-icon"></i>
+                                <p>Déposer un fichier</p>
+                            </a>
+                        </li>
+                    @endif
+
+                    {{-- Visible pour l'admin/gérant : consultation --}}
+                    @if (!$isEnseignant)
+                        <li class="nav-item">
+                            <a href="{{ route('admin.notes.index') }}"
+                                class="nav-link {{ request()->routeIs('admin.notes.index') ? 'active' : '' }}">
+                                <i class="fas fa-file-download nav-icon"></i>
+                                <p>Consultation des notes</p>
+                            </a>
+                        </li>
+                    @endif
+
+                </ul>
+
+            </li>
+        @endif
 
 
 
         {{-- ========================================================= --}}
         {{-- TOUT LE RESTE DU MENU                                    --}}
-        {{-- INVISIBLE POUR LE ROLE USER                              --}}
+        {{-- INVISIBLE POUR LES RÔLES USER ET ENSEIGNANT              --}}
         {{-- ========================================================= --}}
 
-        @if (!$isUser)
+        @if (!$isUser && !$isEnseignant)
             {{-- ===================================================== --}}
             {{-- ACTUALITÉS                                           --}}
             {{-- ===================================================== --}}
@@ -259,74 +340,6 @@
                 </ul>
 
             </li>
-
-
-
-            {{-- ===================================================== --}}
-{{-- ENSEIGNANTS & NOTES                                  --}}
-{{-- ===================================================== --}}
-
-@php
-    $enseignantsActive = request()->routeIs('admin.enseignants.*') || request()->routeIs('admin.notes.*') || request()->routeIs('admin.enseignant.notes.*');
-@endphp
-
-<li class="nav-item {{ $enseignantsActive ? 'menu-open' : '' }}">
-
-    <a href="#" class="nav-link {{ $enseignantsActive ? 'active' : '' }}">
-
-        <i class="nav-icon fas fa-chalkboard-teacher"></i>
-
-        <p>
-            Enseignants
-            <i class="fas fa-angle-left right"></i>
-        </p>
-
-    </a>
-
-
-    <ul class="nav nav-treeview">
-
-        <li class="nav-item">
-            <a href="{{ route('admin.enseignants.index') }}"
-                class="nav-link {{ request()->routeIs('admin.enseignants.index') ? 'active' : '' }}">
-                <i class="fas fa-list nav-icon"></i>
-                <p>Liste des enseignants</p>
-            </a>
-        </li>
-
-        {{-- Visible pour l'enseignant : dépôt de ses fichiers --}}
-        @if (auth()->user()->hasRole('enseignant'))
-            <li class="nav-item">
-                <a href="{{ route('admin.enseignant.notes.index') }}"
-                    class="nav-link {{ request()->routeIs('admin.enseignant.notes.index') ? 'active' : '' }}">
-                    <i class="fas fa-folder-open nav-icon"></i>
-                    <p>Mes notes</p>
-                </a>
-            </li>
-
-            <li class="nav-item">
-                <a href="{{ route('admin.enseignant.notes.create') }}"
-                    class="nav-link {{ request()->routeIs('admin.enseignant.notes.create') ? 'active' : '' }}">
-                    <i class="fas fa-upload nav-icon"></i>
-                    <p>Déposer un fichier</p>
-                </a>
-            </li>
-        @endif
-
-        {{-- Visible pour l'admin/gérant : consultation --}}
-        @if (!auth()->user()->hasRole('enseignant'))
-            <li class="nav-item">
-                <a href="{{ route('admin.notes.index') }}"
-                    class="nav-link {{ request()->routeIs('admin.notes.index') ? 'active' : '' }}">
-                    <i class="fas fa-file-download nav-icon"></i>
-                    <p>Consultation des notes</p>
-                </a>
-            </li>
-        @endif
-
-    </ul>
-
-</li>
 
 
 

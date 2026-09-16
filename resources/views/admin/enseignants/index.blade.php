@@ -11,10 +11,12 @@
                 </p>
             </div>
 
-            <a href="{{ route('admin.enseignants.create') }}" class="btn btn-success">
-                <i class="fas fa-plus me-1"></i>
-                Nouvel enseignant
-            </a>
+            @if(!auth()->user()->hasRole('enseignant'))
+    <a href="{{ route('admin.enseignants.create') }}" class="btn btn-success">
+        <i class="fas fa-plus me-1"></i>
+        Nouvel enseignant
+    </a>
+@endif
         </div>
 
         @if(session('success'))
@@ -72,6 +74,7 @@
                             <tr>
                                 <th>Matricule</th>
                                 <th>Nom complet</th>
+                                <th>Email</th>
                                 <th>Spécialité</th>
                                 <th>Téléphone</th>
                                 <th>Statut</th>
@@ -83,6 +86,7 @@
                             <tr>
                                 <td class="font-monospace small">{{ $enseignant->matricule }}</td>
                                 <td class="fw-semibold">{{ $enseignant->nom_complet }}</td>
+                                <td class="fw-semibold">{{ $enseignant->user->email }}</td>
                                 <td>{{ $enseignant->specialite ?? '—' }}</td>
                                 <td>{{ $enseignant->telephone ?? '—' }}</td>
                                 <td>
