@@ -4,6 +4,7 @@ use App\Http\Controllers\ActualiteController;
 use App\Http\Controllers\CategorieDocumentController;
 use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\EnseignantController;
+use App\Http\Controllers\FiliereController;
 use App\Http\Controllers\FormationController;
 use App\Http\Controllers\InscriptionAdminController;
 use App\Http\Controllers\InscriptionController;
@@ -235,6 +236,13 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(
     Route::resource('enseignants', EnseignantController::class)
         ->except(['show'])
         ->names('enseignants');
+
+
+    // ==================== FILIÈRES ====================
+
+    Route::resource('filieres', FiliereController::class)
+        ->except(['show'])
+        ->names('filieres');
 
 
 
