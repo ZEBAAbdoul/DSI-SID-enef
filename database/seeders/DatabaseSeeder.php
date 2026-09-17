@@ -31,5 +31,6 @@ class DatabaseSeeder extends Seeder
         $this->call(EnseignantSeeder::class);
         // $this->call(NoteSeeder::class);
         $this->call(TypePieceSeeder::class);
+        $this->call(FormationsCatalogueSeeder::class);
     }
 }

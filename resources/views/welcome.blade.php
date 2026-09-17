@@ -14,7 +14,7 @@
                 <p class="hero-lede">{{ $param_site->meta_description ?? '' }}</p>
                 <div class="hero-ctas">
                     <a href="#admissions" class="btn btn-primary">Candidater en ligne</a>
-                    <a href="#catalogue" class="btn btn-ghost-light">Découvrir le catalogue de formations</a>
+                    <a href="{{ route('catalogue.formations')}}" class="btn btn-ghost-light">Découvrir le catalogue de formations</a>
                 </div>
                 <div class="hero-stats">
                     <div><span class="num">{{ $param_site->annee_creation ?? '—' }}</span><span class="lbl">Année
@@ -185,7 +185,7 @@
                     <p class="desc">Formations programmées à dates fixes ou modules à la carte, conçus pour les
                         professionnels de l'environnement et des ressources naturelles.</p>
                 </div>
-                <a href="#catalogue" class="btn btn-outline btn-sm">Demander un devis</a>
+                {{-- <a href="#catalogue" class="btn btn-outline btn-sm">Demander un devis</a> --}}
             </div>
 
             <div class="tabs" role="tablist">
@@ -259,7 +259,7 @@
                         @endif
 
                         @if ($estALaCarte)
-                            <a href="#catalogue" class="btn btn-outline btn-sm">Demander ce module</a>
+                            {{-- <a href="#catalogue" class="btn btn-outline btn-sm">Demander ce module</a> --}}
                         @else
                             <a href="{{ route('formations.show', $item->slug) }}" class="btn btn-outline btn-sm">Voir la
                                 fiche du module</a>
