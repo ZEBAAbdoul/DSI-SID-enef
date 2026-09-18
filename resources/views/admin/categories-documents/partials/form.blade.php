@@ -15,6 +15,7 @@
         placeholder="Ex : Documents administratifs"
         maxlength="150"
         required
+        autofocus
     >
 
     @error('nom')
@@ -24,42 +25,7 @@
     @enderror
 </div>
 
-<div class="form-group">
-    <label for="parent_id">
-        Catégorie parente
-    </label>
-
-    <select
-        name="parent_id"
-        id="parent_id"
-        class="form-control @error('parent_id') is-invalid @enderror"
-    >
-        <option value="">-- Catégorie principale --</option>
-
-        @foreach ($categories as $parent)
-            <option
-                value="{{ $parent->id }}"
-                {{ old('parent_id', $categorie->parent_id ?? '') == $parent->id ? 'selected' : '' }}
-            >
-                {{ $parent->nom }}
-            </option>
-        @endforeach
-    </select>
-
-    @error('parent_id')
-        <span class="invalid-feedback">
-            {{ $message }}
-        </span>
-    @enderror
-
-    <small class="form-text text-muted">
-        Laissez vide si cette catégorie est une catégorie principale.
-    </small>
-</div>
-
-<hr>
-
-<div class="d-flex justify-content-between align-items-center">
+<div class="d-flex justify-content-between mt-4">
 
     <a
         href="{{ route('admin.categories-documents.index') }}"
@@ -71,7 +37,11 @@
 
     <button type="submit" class="btn btn-primary">
         <i class="fas fa-save mr-1"></i>
-        {{ isset($categorie) ? 'Enregistrer les modifications' : 'Créer la catégorie' }}
+
+        {{ isset($categorie)
+            ? 'Enregistrer les modifications'
+            : 'Créer la catégorie'
+        }}
     </button>
 
 </div>

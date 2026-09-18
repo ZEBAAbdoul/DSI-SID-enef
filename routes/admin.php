@@ -344,6 +344,12 @@ Route::prefix('notes')->name('notes.')->group(function () {
     });
 
     // ==================== CATEGORIES-DOCUMENTS ====================
-Route::resource('categories-documents', CategorieDocumentController::class);
+// Route::resource('categories-documents', CategorieDocumentController::class);
+Route::resource(
+    'categories-documents',
+    CategorieDocumentController::class
+)->parameters([
+    'categories-documents' => 'categorie',
+]);
 
 });

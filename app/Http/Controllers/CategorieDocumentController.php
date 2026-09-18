@@ -12,14 +12,27 @@ class CategorieDocumentController extends Controller
     /**
      * Liste des catégories
      */
-    public function index(): View
+    public function index(Request $request): View
     {
-        $categories = CategorieDocument::with('enfants')
-            ->whereNull('parent_id')
-            ->orderBy('nom')
-            ->get();
+        $query = CategorieDocument::query();
 
-        return view('admin.categories-documents.index', compact('categories'));
+        // Recherche
+        if ($request->filled('recherche')) {
+            $query->where(
+                'nom',
+                'ilike',
+                '%' . $request->recherche . '%'
+            );
+        }
+
+        $categories = $query
+            ->orderBy('nom')
+            ->paginate(10);
+
+        return view(
+            'admin.categories-documents.index',
+            compact('categories')
+        );
     }
 
     /**
@@ -27,11 +40,9 @@ class CategorieDocumentController extends Controller
      */
     public function create(): View
     {
-        $categories = CategorieDocument::whereNull('parent_id')
-            ->orderBy('nom')
-            ->get();
-
-        return view('admin.categories-documents.create', compact('categories'));
+        return view(
+            'admin.categories-documents.create'
+        );
     }
 
     /**
@@ -40,22 +51,25 @@ class CategorieDocumentController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $validated = $request->validate([
-            'nom' => ['required', 'string', 'max:150'],
-            'parent_id' => [
-                'nullable',
-                'exists:categories_documents,id',
+            'nom' => [
+                'required',
+                'string',
+                'max:150',
             ],
         ], [
             'nom.required' => 'Le nom de la catégorie est obligatoire.',
+            'nom.string' => 'Le nom de la catégorie doit être une chaîne de caractères.',
             'nom.max' => 'Le nom ne doit pas dépasser 150 caractères.',
-            'parent_id.exists' => 'La catégorie parente sélectionnée est invalide.',
         ]);
 
         CategorieDocument::create($validated);
 
         return redirect()
             ->route('admin.categories-documents.index')
-            ->with('success', 'Catégorie de document créée avec succès.');
+            ->with(
+                'success',
+                'Catégorie de document créée avec succès.'
+            );
     }
 
     /**
@@ -63,11 +77,6 @@ class CategorieDocumentController extends Controller
      */
     public function show(CategorieDocument $categorie): View
     {
-        $categorie->load([
-            'enfants',
-            'documents',
-        ]);
-
         return view(
             'admin.categories-documents.show',
             compact('categorie')
@@ -79,14 +88,9 @@ class CategorieDocumentController extends Controller
      */
     public function edit(CategorieDocument $categorie): View
     {
-        $categories = CategorieDocument::whereNull('parent_id')
-            ->where('id', '!=', $categorie->id)
-            ->orderBy('nom')
-            ->get();
-
         return view(
             'admin.categories-documents.edit',
-            compact('categorie', 'categories')
+            compact('categorie')
         );
     }
 
@@ -99,22 +103,25 @@ class CategorieDocumentController extends Controller
     ): RedirectResponse {
 
         $validated = $request->validate([
-            'nom' => ['required', 'string', 'max:150'],
-            'parent_id' => [
-                'nullable',
-                'exists:categories_documents,id',
+            'nom' => [
+                'required',
+                'string',
+                'max:150',
             ],
         ], [
             'nom.required' => 'Le nom de la catégorie est obligatoire.',
+            'nom.string' => 'Le nom de la catégorie doit être une chaîne de caractères.',
             'nom.max' => 'Le nom ne doit pas dépasser 150 caractères.',
-            'parent_id.exists' => 'La catégorie parente sélectionnée est invalide.',
         ]);
 
         $categorie->update($validated);
 
         return redirect()
             ->route('admin.categories-documents.index')
-            ->with('success', 'Catégorie de document modifiée avec succès.');
+            ->with(
+                'success',
+                'Catégorie de document modifiée avec succès.'
+            );
     }
 
     /**
@@ -128,7 +135,9 @@ class CategorieDocumentController extends Controller
 
         return redirect()
             ->route('admin.categories-documents.index')
-            ->with('success', 'Catégorie de document supprimée avec succès.');
+            ->with(
+                'success',
+                'Catégorie de document supprimée avec succès.'
+            );
     }
 }
-

@@ -84,9 +84,7 @@
                         <tr>
                             <th style="width:60px;">#</th>
                             <th>NOM</th>
-                            <th>CATÉGORIE PARENTE</th>
-                            <th>SOUS-CATÉGORIES</th>
-                            <th>DOCUMENTS</th>
+
                             <th style="width:140px;">ACTIONS</th>
                         </tr>
                     </thead>
@@ -113,56 +111,8 @@
                                 </td>
 
 
-                                {{-- Parent --}}
-                                <td>
-                                    @if ($categorie->parent)
-                                        <span class="badge badge-secondary">
-                                            <i class="fas fa-folder mr-1"></i>
-                                            {{ $categorie->parent->nom }}
-                                        </span>
-                                    @else
-                                        <span class="text-muted">
-                                            Catégorie principale
-                                        </span>
-                                    @endif
-                                </td>
-
-
-                                {{-- Enfants --}}
-                                <td>
-                                    <span class="badge badge-info">
-                                        {{ $categorie->enfants->count() }}
-                                    </span>
-                                </td>
-
-
-                                {{-- Documents --}}
-                                <td>
-                                    @if ($categorie->documents_count ?? false)
-                                        <span class="badge badge-success">
-                                            {{ $categorie->documents_count }}
-                                        </span>
-                                    @else
-                                        <span class="badge badge-secondary">
-                                            0
-                                        </span>
-                                    @endif
-                                </td>
-
-
                                 {{-- Actions --}}
                                 <td>
-
-                                    {{-- Voir --}}
-                                    <a
-                                        href="{{ route('admin.categories-documents.show', $categorie) }}"
-                                        class="btn btn-sm btn-info"
-                                        title="Voir"
-                                    >
-                                        <i class="fas fa-eye"></i>
-                                    </a>
-
-
                                     {{-- Modifier --}}
                                     <a
                                         href="{{ route('admin.categories-documents.edit', $categorie) }}"

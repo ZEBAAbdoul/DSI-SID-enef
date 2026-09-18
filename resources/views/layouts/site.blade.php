@@ -1832,10 +1832,10 @@
                         </svg></button>
                     <ul class="dropdown">
                         <li><a href="{{ url('/') }}#dg">Mot du Directeur Général</a></li>
-                        <li><a href="{{ url('/') }}#presentation">Présentation &amp; historique</a></li>
-                        <li><a href="{{ url('/') }}#presentation">Organisation / organigramme</a></li>
+                        {{-- <li><a href="{{ url('/') }}#presentation">Présentation &amp; historique</a></li> --}}
+                        <li><a href="{{ route('unites-pedagogiques') }}">Unités pédagogiques</a></li>
                         <li><a href="{{ url('/') }}#partenaires">Nos partenaires</a></li>
-                        <li><a href="{{ url('/') }}#recherche">Recherche &amp; innovation</a></li>
+                        {{-- <li><a href="{{ url('/') }}#recherche">Recherche &amp; innovation</a></li> --}}
                         <li><a href="{{ url('/') }}#galerie">Galerie photos / vidéos</a></li>
 
                     </ul>
@@ -1849,8 +1849,8 @@
                     <ul class="dropdown">
                         <li><a href="{{ url('/') }}#catalogue">Formations programmées</a></li>
                         <li><a href="{{ url('/') }}#catalogue">Formations à la carte</a></li>
-                        <li><a href="{{ url('/') }}#catalogue">Demande de formation à la carte</a></li>
-                        <li><a href="{{ url('/') }}#catalogue">Devis en ligne</a></li>
+                        <li><a href="mailto:infos@enef.gov.bf?subject=Demande%20de%20formation%20%C3%A0%20la%20carte">Demande
+                                de formation à la carte</a></li> {{-- <li><a href="{{ url('/') }}#catalogue">Devis en ligne</a></li> --}}
                     </ul>
                 </li>
 
@@ -1861,7 +1861,7 @@
                         </svg></button>
                     <ul class="dropdown">
                         <li><a href="{{ url('/') }}#prestations">Prestations &amp; appui-conseil</a></li>
-                        <li><a href="{{ url('/') }}#bibliotheque">Bibliothèque</a></li>
+                        <li><a href="{{ url('/bibliotheque') }}#bibliotheque">Bibliothèque</a></li>
 
                     </ul>
                 </li>

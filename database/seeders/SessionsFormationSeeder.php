@@ -96,8 +96,8 @@ class SessionsFormationSeeder extends Seeder
             // === Aménagement Forestier Durable ===
             [
                 'formation_titre'    => 'Aménagement Forestier Durable',
-                'date_debut'         => '2025-09-01',
-                'date_fin'           => '2025-10-15',
+                'date_debut'         => '2026-12-01',
+                'date_fin'           => '2026-12-15',
                 'lieu'               => 'Ouagadougou - Centre forestier',
                 'places_totales'     => 20,
                 'places_disponibles' => 0,
@@ -105,8 +105,8 @@ class SessionsFormationSeeder extends Seeder
             ],
             [
                 'formation_titre'    => 'Aménagement Forestier Durable',
-                'date_debut'         => '2026-09-01',
-                'date_fin'           => '2026-10-15',
+                'date_debut'         => '2026-12-01',
+                'date_fin'           => '2026-12-15',
                 'lieu'               => 'Ouagadougou - Centre forestier',
                 'places_totales'     => 25,
                 'places_disponibles' => 25,
