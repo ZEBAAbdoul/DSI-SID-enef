@@ -11,12 +11,12 @@
                 </p>
             </div>
 
-            @if(auth()->user()->hasRole('enseignant'))
-    <a href="{{ route('admin.enseignant.notes.create') }}" class="btn btn-success">
-        <i class="fas fa-upload me-1"></i>
-        Déposer des notes
-    </a>
-@endif
+            @if (auth()->user()->hasRole('enseignant'))
+                <a href="{{ route('admin.enseignant.notes.create') }}" class="btn btn-success">
+                    <i class="fas fa-upload me-1"></i>
+                    Déposer des notes
+                </a>
+            @endif
         </div>
 
         {{-- Message de succès --}}
@@ -112,6 +112,7 @@
                         <thead class="table-light">
                             <tr>
                                 <th>Formation</th>
+                                <th>Enseignant</th>
                                 <th>Session</th>
                                 <th>Matière</th>
                                 <th>Type</th>
@@ -151,6 +152,10 @@
 
                                     <td>
                                         {{ $note->formation->nom ?? ($note->formation->titre ?? '—') }}
+                                    </td>
+
+                                    <td>
+                                        {{ $note->enseignant->user->personne->nom_complet ?? '—' }}
                                     </td>
 
                                     <td>
@@ -226,11 +231,11 @@
                                             <i class="fas fa-folder-open fa-3x mb-3 opacity-50"></i>
                                             <h5>Aucun fichier déposé</h5>
                                             <p class="mb-3">Vous n'avez encore déposé aucune note.</p>
-                                            <a href="{{ route('admin.enseignant.notes.create') }}"
+                                            {{-- <a href="{{ route('admin.enseignant.notes.create') }}"
                                                 class="btn btn-success">
                                                 <i class="fas fa-upload me-1"></i>
                                                 Déposer une note
-                                            </a>
+                                            </a> --}}
                                         </div>
                                     </td>
                                 </tr>

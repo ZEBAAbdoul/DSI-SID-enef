@@ -19,6 +19,7 @@ use App\Http\Controllers\NoteAdminController;
 use App\Http\Controllers\NoteController;
 use App\Http\Controllers\SessionFormationController;
 use App\Http\Controllers\TypePieceController;
+use App\Http\Controllers\PartenaireController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(function () {

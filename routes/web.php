@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\BibliothequeController;
+use App\Http\Controllers\CatalogueController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LoginWithOTPController;
 use App\Http\Controllers\ManualController;
@@ -66,6 +67,12 @@ Route::get('/formations/{formation:slug}', function (\App\Models\Formation $form
     return view('formations.show', compact('formation', 'param_site'));
 })->name('formations.show');
 
+
+
+Route::get('/catalogue-formations', [CatalogueController::class, 'index'])
+    ->name('catalogue.formations');
+
+    
 Route::get('/actualites/{actualite:slug}', function (Actualite $actualite) {
     return view('actualites.show', compact('actualite'));
 })->name('actualites.show');
