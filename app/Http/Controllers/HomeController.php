@@ -98,5 +98,23 @@ class HomeController extends Controller
             'typeLabels'          => $typeLabels,
             'partenaires'         => $partenaires,
         ]);
+
+        
+    }
+
+    // Mot du Directeur
+    public function motDuDirecteur()
+    {
+        $param_site = ParametresSite::first();
+ 
+        return view('mot_directeur.index', [
+            'param_site' => $param_site,
+        ]);
+    }
+
+    // Unites Pedagogiques
+    public function unitesPedagogiques()
+    {
+        return view('unites-pedagogiques.index');
     }
 }

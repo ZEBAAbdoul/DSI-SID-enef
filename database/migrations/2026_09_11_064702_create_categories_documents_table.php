@@ -11,10 +11,7 @@ return new class extends Migration
         Schema::create('categories_documents', function (Blueprint $table) {
             $table->id();
             $table->string('nom', 150);
-            $table->foreignId('parent_id')
-                ->nullable()
-                ->constrained('categories_documents')
-                ->nullOnDelete();
+            
         });
     }
 

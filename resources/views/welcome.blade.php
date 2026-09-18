@@ -84,14 +84,14 @@
             </div>
             <div>
                 <span class="section-head kicker" style="display:block;">Mot du Directeur Général</span>
-                <blockquote>« {{ $param_site->mot_dg_contenu ?? '' }} »</blockquote>
+                <blockquote>« {{ \Illuminate\Support\Str::limit($param_site->mot_dg_contenu ?? '', 320) }} »</blockquote>
                 <div class="dg-signoff">
                     <b>{{ $param_site->mot_dg_nom ?? 'Cdt R. SAWADOGO' }}</b>
                     Directeur Général de l'École Nationale des Eaux et Forêts
                 </div>
                 <div style="margin-top:24px;display:flex;gap:14px;flex-wrap:wrap;">
-                    <a href="#presentation" class="btn btn-outline btn-sm">Lire le message intégral</a>
-                    <a href="#presentation" class="btn btn-outline btn-sm">Découvrir l'organisation</a>
+                    <a href="{{ route('mot-directeur') }}" class="btn btn-outline btn-sm">Lire le message intégral</a>
+                    <a href="{{ route('unites-pedagogiques')}}" class="btn btn-outline btn-sm">Découvrir nos unités pédagogiques</a>
                 </div>
                 
             </div>
@@ -368,8 +368,7 @@
                     <h4>Demande de prestation</h4>
                     <p>Formulaire dédié pour formuler une demande d'étude ou d'appui-conseil, distinct de la demande
                         de formation.</p>
-                    <a href="#prestations" class="btn btn-primary btn-sm">Faire une demande</a>
-                </div>
+<a href="mailto:infos@enef.gov.bf?subject=Demande%20de%20formation%20%C3%A0%20la%20carte" class="btn btn-primary btn-sm">Faire une demande</a>                </div>
             </div>
         </div>
     </section>

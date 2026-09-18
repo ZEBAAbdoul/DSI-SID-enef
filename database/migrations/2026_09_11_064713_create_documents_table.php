@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('titre', 255);
             $table->text('description')->nullable();
             $table->string('type', 30);
-            $table->string('fichier_url', 255);
+            $table->string('fichier_url', 255)->nullable();
             $table->string('format_fichier', 10)->nullable();
             $table->integer('taille_fichier_ko')->nullable();
             $table->string('acces', 20)->default('public');
