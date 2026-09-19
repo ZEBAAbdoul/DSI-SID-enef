@@ -1836,7 +1836,7 @@
                         <li><a href="{{ route('unites-pedagogiques') }}">Unités pédagogiques</a></li>
                         <li><a href="{{ url('/') }}#partenaires">Nos partenaires</a></li>
                         {{-- <li><a href="{{ url('/') }}#recherche">Recherche &amp; innovation</a></li> --}}
-                        <li><a href="{{ url('/') }}#galerie">Galerie photos / vidéos</a></li>
+                        <li><a href="{{ route('galerie.index') }}#galerie">Galerie photos</a></li>
 
                     </ul>
                 </li>
