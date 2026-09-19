@@ -117,27 +117,54 @@ class PartenaireController extends Controller
             ->with('status_partenaire', 'Partenaire supprimé.');
     }
 
-    private function validatePartenaire(Request $request, ?int $ignoreId = null): array
-    {
-        $uniqueNom = 'unique:partenaires,nom';
-        if ($ignoreId !== null) {
-            $uniqueNom .= ',' . $ignoreId;
-        }
+    // private function validatePartenaire(Request $request, ?int $ignoreId = null): array
+    // {
+    //     $uniqueNom = 'unique:partenaires,nom';
+    //     if ($ignoreId !== null) {
+    //         $uniqueNom .= ',' . $ignoreId;
+    //     }
 
-        return $request->validate([
-            'nom'          => ['required', 'string', 'max:150', $uniqueNom],
-            'logo_url'     => ['nullable', 'image', 'mimes:jpeg,png,webp,gif', 'max:2048'],
-            'site_web'     => ['nullable', 'url', 'max:255'],
-            'type'         => ['required', 'string', 'in:institutionnel,financier,technique,academique,collectivite'],
-            'description'  => ['nullable', 'string', 'max:1000'],
-            'actif'        => ['sometimes', 'boolean'],
-        ], [
-            'nom.unique'      => 'Ce nom est déjà utilisé.',
-            'type.in'         => 'Le type sélectionné est invalide.',
-            'logo_url.image'  => 'Le fichier doit être une image.',
-            'logo_url.mimes'  => 'Formats autorisés : JPG, PNG, WEBP, GIF.',
-        ]);
+    //     return $request->validate([
+    //         'nom'          => ['required', 'string', 'max:150', $uniqueNom],
+    //         'logo_url'     => ['nullable', 'image', 'mimes:jpeg,png,webp,gif', 'max:2048'],
+    //         'site_web'     => ['nullable', 'url', 'max:255'],
+    //         'type'         => ['required', 'string', 'in:institutionnel,financier,technique,academique,collectivite'],
+    //         'description'  => ['nullable', 'string', 'max:1000'],
+    //         'actif'        => ['sometimes', 'boolean'],
+    //     ], [
+    //         'nom.unique'      => 'Ce nom est déjà utilisé.',
+    //         'type.in'         => 'Le type sélectionné est invalide.',
+    //         'logo_url.image'  => 'Le fichier doit être une image.',
+    //         'logo_url.mimes'  => 'Formats autorisés : JPG, PNG, WEBP, GIF.',
+    //     ]);
+    // }
+
+    private function validatePartenaire(Request $request, ?int $ignoreId = null): array
+{
+    $uniqueNom = 'unique:partenaires,nom';
+
+    if ($ignoreId !== null) {
+        $uniqueNom .= ',' . $ignoreId;
     }
+
+    $request->merge([
+        'actif' => $request->boolean('actif'),
+    ]);
+
+    return $request->validate([
+        'nom'         => ['required', 'string', 'max:150', $uniqueNom],
+        'logo_url'    => ['nullable', 'image', 'mimes:jpeg,png,webp,gif', 'max:2048'],
+        'site_web'    => ['nullable', 'url', 'max:255'],
+        'type'        => ['required', 'string', 'in:institutionnel,financier,technique,academique,collectivite'],
+        'description' => ['nullable', 'string', 'max:1000'],
+        'actif'       => ['required', 'boolean'],
+    ], [
+        'nom.unique'     => 'Ce nom est déjà utilisé.',
+        'type.in'        => 'Le type sélectionné est invalide.',
+        'logo_url.image' => 'Le fichier doit être une image.',
+        'logo_url.mimes' => 'Formats autorisés : JPG, PNG, WEBP, GIF.',
+    ]);
+}
 
     private function storeLogo(Request $request): string
     {

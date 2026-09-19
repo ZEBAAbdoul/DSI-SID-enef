@@ -111,20 +111,43 @@ class TypePieceController extends Controller
             ->with('status_type_piece', 'Type de pièce supprimé.');
     }
 
-    private function validateTypePiece(Request $request, ?int $ignoreId = null): array
-    {
-        $uniqueCode = 'unique:types_pieces,code';
-        if ($ignoreId !== null) {
-            $uniqueCode .= ',' . $ignoreId;
-        }
+    // private function validateTypePiece(Request $request, ?int $ignoreId = null): array
+    // {
+    //     $uniqueCode = 'unique:types_pieces,code';
+    //     if ($ignoreId !== null) {
+    //         $uniqueCode .= ',' . $ignoreId;
+    //     }
 
-        return $request->validate([
-            'code'        => ['required', 'string', 'max:40', $uniqueCode],
-            'libelle'     => ['required', 'string', 'max:100'],
-            'obligatoire' => ['sometimes', 'boolean'],
-            'actif'       => ['sometimes', 'boolean'],
-        ], [
-            'code.unique' => 'Ce code est déjà utilisé.',
-        ]);
+    //     return $request->validate([
+    //         'code'        => ['required', 'string', 'max:40', $uniqueCode],
+    //         'libelle'     => ['required', 'string', 'max:100'],
+    //         'obligatoire' => ['sometimes', 'boolean'],
+    //         'actif'       => ['sometimes', 'boolean'],
+    //     ], [
+    //         'code.unique' => 'Ce code est déjà utilisé.',
+    //     ]);
+    // }
+    private function validateTypePiece(Request $request, ?int $ignoreId = null): array
+{
+    $uniqueCode = 'unique:types_pieces,code';
+
+    if ($ignoreId !== null) {
+        $uniqueCode .= ',' . $ignoreId;
     }
+
+   
+    $request->merge([
+        'obligatoire' => $request->boolean('obligatoire'),
+        'actif'       => $request->boolean('actif'),
+    ]);
+
+    return $request->validate([
+        'code'        => ['required', 'string', 'max:40', $uniqueCode],
+        'libelle'     => ['required', 'string', 'max:100'],
+        'obligatoire' => ['required', 'boolean'],
+        'actif'       => ['required', 'boolean'],
+    ], [
+        'code.unique' => 'Ce code est déjà utilisé.',
+    ]);
+}
 }

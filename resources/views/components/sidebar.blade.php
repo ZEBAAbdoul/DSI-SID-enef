@@ -452,7 +452,7 @@
 
 
                     {{-- Catégories --}}
-                    <li class="nav-item">
+                    {{-- <li class="nav-item">
 
                         <a href="{{ route('admin.categories-documents.index') }}"
                             class="nav-link {{ Route::is('admin.categories-documents.*') ? 'active' : '' }}">
@@ -465,7 +465,7 @@
 
                         </a>
 
-                    </li>
+                    </li> --}}
 
                 </ul>
 
@@ -624,6 +624,24 @@
 
                             <p>
                                 Catégories de formation
+                            </p>
+
+                        </a>
+
+                    </li>
+
+
+
+                    {{-- Catégories documents --}}
+                    <li class="nav-item">
+
+                        <a href="{{ route('admin.categories-documents.index') }}"
+                            class="nav-link {{ Route::is('admin.categories-documents.*') ? 'active' : '' }}">
+
+                            <i class="fas fa-tags nav-icon"></i>
+
+                            <p>
+                                Catégories de documents
                             </p>
 
                         </a>

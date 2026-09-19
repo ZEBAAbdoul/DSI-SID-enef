@@ -3,55 +3,141 @@
 namespace App\Http\Controllers;
 
 use App\Models\CategorieDocument;
-use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class CategorieDocumentController extends Controller
 {
-    public function index(): JsonResponse
+    /**
+     * Liste des catégories
+     */
+    public function index(Request $request): View
     {
-        $categories = CategorieDocument::with('enfants')
-            ->whereNull('parent_id')
-            ->get();
+        $query = CategorieDocument::query();
 
-        return response()->json($categories);
-    }
+        // Recherche
+        if ($request->filled('recherche')) {
+            $query->where(
+                'nom',
+                'ilike',
+                '%' . $request->recherche . '%'
+            );
+        }
 
-    public function show(CategorieDocument $categorie): JsonResponse
-    {
-        return response()->json(
-            $categorie->load(['enfants', 'documents'])
+        $categories = $query
+            ->orderBy('nom')
+            ->paginate(10);
+
+        return view(
+            'admin.categories-documents.index',
+            compact('categories')
         );
     }
 
-    public function store(Request $request): JsonResponse
+    /**
+     * Formulaire de création
+     */
+    public function create(): View
     {
-        $validated = $request->validate([
-            'nom' => ['required', 'string', 'max:150'],
-            'parent_id' => ['nullable', 'exists:categories_documents,id'],
-        ]);
-
-        $categorie = CategorieDocument::create($validated);
-
-        return response()->json($categorie, 201);
+        return view(
+            'admin.categories-documents.create'
+        );
     }
 
-    public function update(Request $request, CategorieDocument $categorie): JsonResponse
+    /**
+     * Enregistrement
+     */
+    public function store(Request $request): RedirectResponse
     {
         $validated = $request->validate([
-            'nom' => ['required', 'string', 'max:150'],
-            'parent_id' => ['nullable', 'exists:categories_documents,id'],
+            'nom' => [
+                'required',
+                'string',
+                'max:150',
+            ],
+        ], [
+            'nom.required' => 'Le nom de la catégorie est obligatoire.',
+            'nom.string' => 'Le nom de la catégorie doit être une chaîne de caractères.',
+            'nom.max' => 'Le nom ne doit pas dépasser 150 caractères.',
+        ]);
+
+        CategorieDocument::create($validated);
+
+        return redirect()
+            ->route('admin.categories-documents.index')
+            ->with(
+                'success',
+                'Catégorie de document créée avec succès.'
+            );
+    }
+
+    /**
+     * Affichage d'une catégorie
+     */
+    public function show(CategorieDocument $categorie): View
+    {
+        return view(
+            'admin.categories-documents.show',
+            compact('categorie')
+        );
+    }
+
+    /**
+     * Formulaire de modification
+     */
+    public function edit(CategorieDocument $categorie): View
+    {
+        return view(
+            'admin.categories-documents.edit',
+            compact('categorie')
+        );
+    }
+
+    /**
+     * Mise à jour
+     */
+    public function update(
+        Request $request,
+        CategorieDocument $categorie
+    ): RedirectResponse {
+
+        $validated = $request->validate([
+            'nom' => [
+                'required',
+                'string',
+                'max:150',
+            ],
+        ], [
+            'nom.required' => 'Le nom de la catégorie est obligatoire.',
+            'nom.string' => 'Le nom de la catégorie doit être une chaîne de caractères.',
+            'nom.max' => 'Le nom ne doit pas dépasser 150 caractères.',
         ]);
 
         $categorie->update($validated);
 
-        return response()->json($categorie);
+        return redirect()
+            ->route('admin.categories-documents.index')
+            ->with(
+                'success',
+                'Catégorie de document modifiée avec succès.'
+            );
     }
 
-    public function destroy(CategorieDocument $categorie): JsonResponse
-    {
+    /**
+     * Suppression
+     */
+    public function destroy(
+        CategorieDocument $categorie
+    ): RedirectResponse {
+
         $categorie->delete();
 
-        return response()->json(null, 204);
+        return redirect()
+            ->route('admin.categories-documents.index')
+            ->with(
+                'success',
+                'Catégorie de document supprimée avec succès.'
+            );
     }
 }

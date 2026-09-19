@@ -134,23 +134,23 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(
 
     // ==================== CATÉGORIES DOCUMENTS ====================
 
-    Route::prefix('categories-documents')->name('categories-documents.')->group(function () {
+    // Route::prefix('categories-documents')->name('categories-documents.')->group(function () {
 
-        Route::get('/', [CategorieDocumentController::class, 'index'])
-            ->name('index');
+    //     Route::get('/', [CategorieDocumentController::class, 'index'])
+    //         ->name('index');
 
-        Route::post('/', [CategorieDocumentController::class, 'store'])
-            ->name('store');
+    //     Route::post('/', [CategorieDocumentController::class, 'store'])
+    //         ->name('store');
 
-        Route::get('/{categorie}', [CategorieDocumentController::class, 'show'])
-            ->name('show');
+    //     Route::get('/{categorie}', [CategorieDocumentController::class, 'show'])
+    //         ->name('show');
 
-        Route::put('/{categorie}', [CategorieDocumentController::class, 'update'])
-            ->name('update');
+    //     Route::put('/{categorie}', [CategorieDocumentController::class, 'update'])
+    //         ->name('update');
 
-        Route::delete('/{categorie}', [CategorieDocumentController::class, 'destroy'])
-            ->name('destroy');
-    });
+    //     Route::delete('/{categorie}', [CategorieDocumentController::class, 'destroy'])
+    //         ->name('destroy');
+    // });
 
 
     // ==================== PARAMÈTRES DU SITE ====================
@@ -352,4 +352,14 @@ Route::prefix('notes')->name('notes.')->group(function () {
             [InscriptionAdminController::class, 'verifierPiece']
         )->name('pieces.verifier');
     });
+
+    // ==================== CATEGORIES-DOCUMENTS ====================
+// Route::resource('categories-documents', CategorieDocumentController::class);
+Route::resource(
+    'categories-documents',
+    CategorieDocumentController::class
+)->parameters([
+    'categories-documents' => 'categorie',
+]);
+
 });
