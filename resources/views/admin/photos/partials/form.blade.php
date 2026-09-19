@@ -215,7 +215,7 @@
 {{-- IMAGE ACTUELLE                                            --}}
 {{-- ========================================================= --}}
 
-@if (isset($photo) && $photo->image_url)
+{{-- @if (isset($photo) && $photo->image_url)
 
     <div class="form-group">
 
@@ -236,6 +236,30 @@
                 "
             >
 
+        </div>
+
+    </div>
+
+@endif --}}
+@if (isset($photo) && $photo->image_url)
+
+    <div class="form-group">
+
+        <label>
+            Image actuelle
+        </label>
+
+        <div>
+            <img
+                src="{{ asset('photos/' . $photo->image_url) }}"
+                alt="{{ $photo->titre }}"
+                class="img-thumbnail"
+                style="
+                    max-width: 300px;
+                    max-height: 200px;
+                    object-fit: contain;
+                "
+            >
         </div>
 
     </div>
