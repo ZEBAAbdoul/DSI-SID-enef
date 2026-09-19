@@ -2,114 +2,166 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Controller;
+use App\Models\CategorieDocument;
 use App\Models\Document;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\View\View;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Str;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class DocumentController extends Controller
 {
-    /**
-     * Liste des documents, avec filtres optionnels (categorie_id, type, acces).
-     */
-    public function index(Request $request): JsonResponse
-    {
-        $query = Document::with(['categorie', 'publiePar']);
+    private array $typeOptions = [
+        'rapport' => 'Rapport',
+        'brochure' => 'Brochure',
+        'texte_reglementaire' => 'Texte réglementaire',
+        'support_pedagogique' => 'Support pédagogique',
+    ];
 
-        if ($request->filled('categorie_id')) {
-            $query->where('categorie_id', $request->categorie_id);
+    private array $accesOptions = [
+        'public' => 'Public',
+        'restreint' => 'Restreint',
+    ];
+
+    public function index(Request $request): View
+    {
+        $categories = CategorieDocument::orderBy('nom')->get();
+
+        $documents = Document::with(['categorie', 'publiePar'])
+            ->when($request->filled('categorie_id'), fn ($q) => $q->where('categorie_id', $request->categorie_id))
+            ->when($request->filled('type'), fn ($q) => $q->where('type', $request->type))
+            ->when($request->filled('acces'), fn ($q) => $q->where('acces', $request->acces))
+            ->orderByDesc('publie_le')
+            ->paginate(15)
+            ->withQueryString();
+
+        return view('admin.documents.index', [
+            'documents' => $documents,
+            'categories' => $categories,
+        ]);
+    }
+
+    public function create(): View
+    {
+        return view('admin.documents.create', [
+            'categories' => CategorieDocument::orderBy('nom')->get(),
+            'typeOptions' => $this->typeOptions,
+            'accesOptions' => $this->accesOptions,
+            'document' => new Document(),
+        ]);
+    }
+
+    public function store(Request $request): RedirectResponse
+    {
+        $validated = $this->validateRequest($request, fileRequired: true);
+
+        $fichier = $request->file('fichier');
+        $path = $fichier->store('documents', 'public');
+
+        Document::create([
+            ...$validated,
+            'fichier_url' => $path,
+            'format_fichier' => $fichier->getClientOriginalExtension(),
+            'taille_fichier_ko' => (int) round($fichier->getSize() / 1024),
+            'nombre_telechargements' => 0,
+            'publie_par' => auth()->id(),
+        ]);
+
+        return redirect()
+            ->route('admin.documents.index')
+            ->with('success', 'Document créé avec succès.');
+    }
+
+    public function show(Document $document): View
+    {
+        $document->load(['categorie', 'publiePar']);
+
+        return view('admin.documents.show', [
+            'document' => $document,
+            'typeOptions' => $this->typeOptions,
+        ]);
+    }
+
+    public function edit(Document $document): View
+    {
+        return view('admin.documents.edit', [
+            'document' => $document,
+            'categories' => CategorieDocument::orderBy('nom')->get(),
+            'typeOptions' => $this->typeOptions,
+            'accesOptions' => $this->accesOptions,
+        ]);
+    }
+
+    public function update(Request $request, Document $document): RedirectResponse
+    {
+        $validated = $this->validateRequest($request, fileRequired: false);
+
+        $data = $validated;
+
+        if ($request->hasFile('fichier')) {
+            // Remplace l'ancien fichier
+            if ($document->fichier_url) {
+                Storage::disk('public')->delete($document->fichier_url);
+            }
+
+            $fichier = $request->file('fichier');
+            $path = $fichier->store('documents', 'public');
+
+            $data['fichier_url'] = $path;
+            $data['format_fichier'] = $fichier->getClientOriginalExtension();
+            $data['taille_fichier_ko'] = (int) round($fichier->getSize() / 1024);
         }
 
-        if ($request->filled('type')) {
-            $query->where('type', $request->type);
+        $document->update($data);
+
+        return redirect()
+            ->route('admin.documents.index')
+            ->with('success', 'Document mis à jour avec succès.');
+    }
+
+    public function destroy(Document $document): RedirectResponse
+    {
+        if ($document->fichier_url) {
+            Storage::disk('public')->delete($document->fichier_url);
         }
 
-        if ($request->filled('acces')) {
-            $query->where('acces', $request->acces);
-        }
-
-        $documents = $query->orderByDesc('publie_le')->paginate(15);
-
-        return response()->json($documents);
-    }
-
-    /**
-     * Détail d'un document.
-     */
-    public function show(Document $document): JsonResponse
-    {
-        return response()->json(
-            $document->load(['categorie', 'publiePar'])
-        );
-    }
-
-    /**
-     * Création d'un document.
-     */
-    public function store(Request $request): JsonResponse
-    {
-        $validated = $this->validateDocument($request);
-
-        $validated['publie_par'] = $request->user()?->id;
-        $validated['publie_le'] = now();
-
-        $document = Document::create($validated);
-
-        return response()->json($document->load(['categorie', 'publiePar']), 201);
-    }
-
-    /**
-     * Mise à jour d'un document.
-     */
-    public function update(Request $request, Document $document): JsonResponse
-    {
-        $validated = $this->validateDocument($request, $document->id);
-
-        $document->update($validated);
-
-        return response()->json($document->load(['categorie', 'publiePar']));
-    }
-
-    /**
-     * Suppression d'un document.
-     */
-    public function destroy(Document $document): JsonResponse
-    {
         $document->delete();
 
-        return response()->json(null, 204);
+        return redirect()
+            ->route('admin.documents.index')
+            ->with('success', 'Document supprimé.');
     }
 
-    /**
-     * Incrémente le compteur de téléchargements et renvoie l'URL du fichier.
-     */
-    public function telecharger(Document $document): JsonResponse
+     public function telecharger(Document $document): StreamedResponse
     {
+        if (! $document->fichier_url || ! Storage::disk('public')->exists($document->fichier_url)) {
+            abort(404, 'Fichier introuvable.');
+        }
+ 
         $document->increment('nombre_telechargements');
-
-        return response()->json([
-            'fichier_url' => $document->fichier_url,
-            'nombre_telechargements' => $document->nombre_telechargements,
-        ]);
+ 
+        $nomTelecharge = Str::slug($document->titre)
+            . ($document->format_fichier ? '.' . $document->format_fichier : '');
+ 
+        return Storage::disk('public')->download($document->fichier_url, $nomTelecharge);
     }
 
-    private function validateDocument(Request $request, ?int $ignoreId = null): array
+    private function validateRequest(Request $request, bool $fileRequired): array
     {
         return $request->validate([
-            'categorie_id' => ['nullable', 'exists:categories_documents,id'],
+            'categorie_id' => ['required', 'exists:categories_documents,id'],
             'titre' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
-            'type' => ['required', Rule::in([
-                'rapport',
-                'brochure',
-                'texte_reglementaire',
-                'support_pedagogique',
-            ])],
-            'fichier_url' => ['required', 'string', 'max:255'],
-            'format_fichier' => ['nullable', 'string', 'max:10'],
-            'taille_fichier_ko' => ['nullable', 'integer', 'min:0'],
-            'acces' => ['required', Rule::in(['public', 'restreint'])],
+            'type' => ['required', 'in:' . implode(',', array_keys($this->typeOptions))],
+            'acces' => ['required', 'in:' . implode(',', array_keys($this->accesOptions))],
             'version' => ['nullable', 'string', 'max:20'],
+            'publie_le' => ['nullable', 'date'],
+            'fichier' => [$fileRequired ? 'required' : 'nullable', 'file', 'mimes:pdf,doc,docx,xls,xlsx,ppt,pptx', 'max:20480'],
         ]);
     }
+
+    
 }

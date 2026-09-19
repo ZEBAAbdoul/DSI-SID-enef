@@ -72,11 +72,6 @@
                                 <option value="{{ $categorie->id }}" @selected(request('categorie_id') == $categorie->id)>
                                     {{ $categorie->nom }}
                                 </option>
-                                @foreach ($categorie->enfants as $enfant)
-                                    <option value="{{ $enfant->id }}" @selected(request('categorie_id') == $enfant->id)>
-                                        &nbsp;&nbsp;— {{ $enfant->nom }}
-                                    </option>
-                                @endforeach
                             @endforeach
                         </select>
                     </div>
