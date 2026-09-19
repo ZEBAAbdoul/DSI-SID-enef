@@ -19,6 +19,8 @@ use App\Http\Controllers\NoteController;
 use App\Http\Controllers\SessionFormationController;
 use App\Http\Controllers\TypePieceController;
 use App\Http\Controllers\PartenaireController;
+use App\Http\Controllers\PhotoAdminController;
+use App\Http\Controllers\VideoAdminController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(function () {
@@ -108,8 +110,16 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(
         Route::get('/', [DocumentController::class, 'index'])
             ->name('index');
 
+        // ⚠️ Routes littérales AVANT la route dynamique /{document} :
+        // sinon "create" est capturé comme valeur de {document}.
+        Route::get('/create', [DocumentController::class, 'create'])
+            ->name('create');
+
         Route::post('/', [DocumentController::class, 'store'])
             ->name('store');
+
+        Route::get('/{document}/edit', [DocumentController::class, 'edit'])
+            ->name('edit');
 
         Route::get('/{document}', [DocumentController::class, 'show'])
             ->name('show');
@@ -119,6 +129,8 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(
 
         Route::delete('/{document}', [DocumentController::class, 'destroy'])
             ->name('destroy');
+
+        Route::get('/{document}/telecharger', [DocumentController::class, 'telecharger'])->name('telecharger');
     });
 
 
@@ -351,5 +363,13 @@ Route::resource(
 )->parameters([
     'categories-documents' => 'categorie',
 ]);
+
+
+    // ==================== PHOTOS ====================
+
+    Route::resource('photos', PhotoAdminController::class)
+        ->names('photos');
+
+    Route::resource('videos', VideoAdminController::class);
 
 });

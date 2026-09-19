@@ -493,35 +493,39 @@
 
                 <ul class="nav nav-treeview">
 
+<li class="nav-item">
 
-                    <li class="nav-item">
+    <a
+        href="{{ route('admin.photos.index') }}"
+        class="nav-link"
+    >
 
-                        <a href="" class="nav-link">
+        <i class="fas fa-camera nav-icon"></i>
 
-                            <i class="fas fa-camera nav-icon"></i>
+        <p>
+            Photos
+        </p>
 
-                            <p>
-                                Photos
-                            </p>
+    </a>
 
-                        </a>
+</li>
 
-                    </li>
+<li class="nav-item">
 
+    <a
+        href="{{ route('admin.videos.index') }}"
+        class="nav-link"
+    >
 
-                    <li class="nav-item">
+        <i class="fas fa-video nav-icon"></i>
 
-                        <a href="" class="nav-link">
+        <p>
+            Vidéos
+        </p>
 
-                            <i class="fas fa-video nav-icon"></i>
+    </a>
 
-                            <p>
-                                Vidéos
-                            </p>
-
-                        </a>
-
-                    </li>
+</li>
 
                 </ul>
 

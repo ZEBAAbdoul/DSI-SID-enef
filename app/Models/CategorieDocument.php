@@ -17,7 +17,6 @@ class CategorieDocument extends Model
 
     protected $fillable = [
         'nom',
-        'parent_id',
     ];
 
     public function parent(): BelongsTo

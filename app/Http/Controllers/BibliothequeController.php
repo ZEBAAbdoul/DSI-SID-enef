@@ -18,10 +18,7 @@ class BibliothequeController extends Controller
 
     public function index(Request $request): View
     {
-        $categories = CategorieDocument::whereNull('parent_id')
-            ->with('enfants')
-            ->orderBy('nom')
-            ->get();
+        $categories = CategorieDocument::all();
 
         $documents = Document::with('categorie')
             ->where('acces', 'public')
@@ -46,15 +43,15 @@ class BibliothequeController extends Controller
     }
 
     public function telecharger(Document $document)
-{
-    if ($document->acces !== 'public') {
-        return redirect()
-            ->route('bibliotheque.index')
-            ->with('info', 'Ce document n\'est pas téléchargeable en ligne. Rendez-vous à la bibliothèque de l\'ENEF (Bobo-Dioulasso) pour consulter sa version physique.');
+    {
+        if ($document->acces !== 'public') {
+            return redirect()
+                ->route('bibliotheque.index')
+                ->with('info', 'Ce document n\'est pas téléchargeable en ligne. Rendez-vous à la bibliothèque de l\'ENEF (Bobo-Dioulasso) pour consulter sa version physique.');
+        }
+
+        $document->increment('nombre_telechargements');
+
+        return redirect($document->fichier_url);
     }
-
-    $document->increment('nombre_telechargements');
-
-    return redirect($document->fichier_url);
-}
 }
