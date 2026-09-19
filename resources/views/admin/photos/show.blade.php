@@ -41,7 +41,8 @@
                             src="{{ asset('storage/' . $photo->image_url) }}"
                             alt="{{ $photo->titre }}"
                             class="img-fluid img-thumbnail"
-                            style="max-height:500px;"
+                            style="max-height:500px; cursor: pointer;"
+                            onclick="openLightbox()"
                         >
 
                     @else
@@ -191,4 +192,48 @@
     </div>
 
 </x-admin>
+
+<!-- Lightbox personnalisée -->
+<div id="lightbox" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.95); z-index: 9999; justify-content: center; align-items: center;">
+    <button onclick="closeLightbox()" style="position: absolute; top: 20px; right: 20px; background: white; border: none; border-radius: 50%; width: 40px; height: 40px; font-size: 24px; cursor: pointer; z-index: 10000;">&times;</button>
+    
+    <div style="text-align: center; max-width: 90%; max-height: 90%;">
+        <h3 id="lightboxTitle" style="color: white; margin-bottom: 10px;"></h3>
+        <img id="lightboxImage" src="" style="max-width: 100%; max-height: 80vh; object-fit: contain;">
+    </div>
+</div>
+
+<script>
+function openLightbox() {
+    const photoUrl = '{{ asset('storage/' . $photo->image_url) }}';
+    const photoTitle = '{{ $photo->titre }}';
+    
+    document.getElementById('lightboxTitle').textContent = photoTitle;
+    document.getElementById('lightboxImage').src = photoUrl;
+    
+    document.getElementById('lightbox').style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+}
+
+function closeLightbox() {
+    document.getElementById('lightbox').style.display = 'none';
+    document.body.style.overflow = 'auto';
+}
+
+// Fermer avec Escape
+document.addEventListener('keydown', function(e) {
+    if (document.getElementById('lightbox').style.display === 'flex') {
+        if (e.key === 'Escape') {
+            closeLightbox();
+        }
+    }
+});
+
+// Fermer en cliquant sur le fond
+document.getElementById('lightbox').addEventListener('click', function(e) {
+    if (e.target === this) {
+        closeLightbox();
+    }
+});
+</script>
 
