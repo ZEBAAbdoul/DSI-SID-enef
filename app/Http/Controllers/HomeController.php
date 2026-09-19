@@ -55,7 +55,7 @@ class HomeController extends Controller
             ->limit(6)
             ->get();
 
-        $categoriesDocuments = CategorieDocument::whereNull('parent_id')->get();
+        // $categoriesDocuments = CategorieDocument::whereNull('parent_id')->get();
 
         $documentsRecents = Document::with('categorie')
             ->orderByDesc('publie_le')
@@ -69,7 +69,7 @@ class HomeController extends Controller
                 ->distinct()
                 ->get()
                 ->count(),
-            'thematiques' => CategorieDocument::whereNull('parent_id')->count(),
+            // 'thematiques' => CategorieDocument::whereNull('parent_id')->count(),
         ];
 
         $typeLabels = [
@@ -99,14 +99,14 @@ class HomeController extends Controller
             'partenaires'         => $partenaires,
         ]);
 
-        
+
     }
 
     // Mot du Directeur
     public function motDuDirecteur()
     {
         $param_site = ParametresSite::first();
- 
+
         return view('mot_directeur.index', [
             'param_site' => $param_site,
         ]);
