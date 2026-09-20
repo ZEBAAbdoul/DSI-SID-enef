@@ -2,24 +2,28 @@
 
 use App\Http\Controllers\ActualiteController;
 use App\Http\Controllers\CategorieDocumentController;
+use App\Http\Controllers\CategorieFormationController;
 use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\EnseignantController;
 use App\Http\Controllers\FiliereController;
 use App\Http\Controllers\FormationController;
+use App\Http\Controllers\IdeeController;
+use App\Http\Controllers\IdeeDirectionController;
 use App\Http\Controllers\InscriptionAdminController;
 use App\Http\Controllers\InscriptionController;
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\RoleController;
-use App\Http\Controllers\UserController;
-use App\Http\Controllers\PermissionController;
-use App\Http\Controllers\ParametresSiteController;
-use App\Http\Controllers\CategorieFormationController;
+use App\Http\Controllers\MesTemoignagesController;
 use App\Http\Controllers\NoteAdminController;
 use App\Http\Controllers\NoteController;
-use App\Http\Controllers\SessionFormationController;
-use App\Http\Controllers\TypePieceController;
+use App\Http\Controllers\ParametresSiteController;
 use App\Http\Controllers\PartenaireController;
+use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\PhotoAdminController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\RoleController;
+use App\Http\Controllers\SessionFormationController;
+use App\Http\Controllers\TemoignageController;
+use App\Http\Controllers\TypePieceController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\VideoAdminController;
 use Illuminate\Support\Facades\Route;
 
@@ -259,43 +263,43 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(
 
 
 
-// ==================== NOTES (ENSEIGNANT) ====================
+    // ==================== NOTES (ENSEIGNANT) ====================
 
-Route::prefix('enseignant')
-    ->name('enseignant.')
-    ->middleware(['auth', 'verified', 'role:enseignant|super-admin|dg'])
-    ->group(function () {
+    Route::prefix('enseignant')
+        ->name('enseignant.')
+        ->middleware(['auth', 'verified', 'role:enseignant|super-admin|dg'])
+        ->group(function () {
 
-        Route::prefix('notes')->name('notes.')->group(function () {
+            Route::prefix('notes')->name('notes.')->group(function () {
 
-            Route::get('/', [NoteController::class, 'index'])
-                ->name('index');
+                Route::get('/', [NoteController::class, 'index'])
+                    ->name('index');
 
-            Route::get('/deposer', [NoteController::class, 'create'])
-                ->name('create');
+                Route::get('/deposer', [NoteController::class, 'create'])
+                    ->name('create');
 
-            Route::post('/deposer', [NoteController::class, 'store'])
-                ->name('store');
+                Route::post('/deposer', [NoteController::class, 'store'])
+                    ->name('store');
 
-            Route::get('/{note}/telecharger', [NoteController::class, 'telecharger'])
-                ->name('telecharger');
+                Route::get('/{note}/telecharger', [NoteController::class, 'telecharger'])
+                    ->name('telecharger');
 
-            Route::delete('/{note}', [NoteController::class, 'destroy'])
-                ->name('destroy');
+                Route::delete('/{note}', [NoteController::class, 'destroy'])
+                    ->name('destroy');
+            });
         });
+
+
+    // ==================== NOTES (ADMINISTRATION) ====================
+
+    Route::prefix('notes')->name('notes.')->group(function () {
+
+        Route::get('/', [NoteAdminController::class, 'index'])
+            ->name('index');
+
+        Route::get('/{note}/telecharger', [NoteAdminController::class, 'telecharger'])
+            ->name('telecharger');
     });
-
-
-// ==================== NOTES (ADMINISTRATION) ====================
-
-Route::prefix('notes')->name('notes.')->group(function () {
-
-    Route::get('/', [NoteAdminController::class, 'index'])
-        ->name('index');
-
-    Route::get('/{note}/telecharger', [NoteAdminController::class, 'telecharger'])
-        ->name('telecharger');
-});
 
     // ==================== SESSIONS DE FORMATION ====================
 
@@ -356,13 +360,41 @@ Route::prefix('notes')->name('notes.')->group(function () {
     });
 
     // ==================== CATEGORIES-DOCUMENTS ====================
-// Route::resource('categories-documents', CategorieDocumentController::class);
-Route::resource(
-    'categories-documents',
-    CategorieDocumentController::class
-)->parameters([
-    'categories-documents' => 'categorie',
-]);
+    // Route::resource('categories-documents', CategorieDocumentController::class);
+    Route::resource(
+        'categories-documents',
+        CategorieDocumentController::class
+    )->parameters([
+        'categories-documents' => 'categorie',
+    ]);
+
+    // Routes pour les témoignages
+    // Rôle USER : ses propres témoignages
+    Route::middleware('role:user')->group(function () {
+        Route::resource('mes-temoignages', MesTemoignagesController::class)
+            ->parameters(['mes-temoignages' => 'temoignage'])
+            ->except(['show']);
+    });
+
+    // Administration : modération (publier / dépublier / supprimer)
+    Route::middleware('backoffice')->group(function () {
+        Route::resource('temoignages', TemoignageController::class)->only(['index', 'destroy']);
+        Route::patch('temoignages/{temoignage}/toggle', [TemoignageController::class, 'toggle'])
+            ->name('temoignages.toggle');
+    });
+
+    
+// Personnel : ses propres idées (l'accès est contrôlé par IdeePolicy)
+Route::resource('mes-idees', IdeeController::class)
+    ->parameters(['mes-idees' => 'idee'])
+    ->names('idees')
+    ->except(['show']);
+
+// DG / SG : toutes les idées
+Route::resource('boite-a-idees', IdeeDirectionController::class)
+    ->parameters(['boite-a-idees' => 'idee'])
+    ->names('idees-direction')
+    ->only(['index', 'show', 'update']);
 
 
     // ==================== PHOTOS ====================
@@ -371,5 +403,4 @@ Route::resource(
         ->names('photos');
 
     Route::resource('videos', VideoAdminController::class);
-
 });
