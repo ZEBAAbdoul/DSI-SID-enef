@@ -1836,7 +1836,7 @@
                         <li><a href="{{ route('unites-pedagogiques') }}">Unités pédagogiques</a></li>
                         <li><a href="{{ url('/') }}#partenaires">Nos partenaires</a></li>
                         {{-- <li><a href="{{ url('/') }}#recherche">Recherche &amp; innovation</a></li> --}}
-                        <li><a href="{{ route('galerie.index') }}#galerie">Galerie photos</a></li>
+                        <li><a href="{{ route('galerie.index') }}">Galerie photo &amp; vidéo</a></li>
 
                     </ul>
                 </li>
@@ -1938,6 +1938,7 @@
                         <li><a href="{{ url('/') }}#dg">Mot du Directeur Général</a></li>
                         <li><a href="{{ url('/') }}#presentation">Présentation &amp; historique</a></li>
                         <li><a href="{{ url('/') }}#partenaires">Nos partenaires</a></li>
+                        <li><a href="{{ route('galerie.index') }}">Galerie photo &amp; vidéo</a></li>
                         <li><a href="{{ url('/') }}#actualites">Actualités</a></li>
                     </ul>
                 </div>

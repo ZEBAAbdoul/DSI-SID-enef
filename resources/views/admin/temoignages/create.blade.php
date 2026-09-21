@@ -1,4 +1,4 @@
-<x-admi>
+<x-admin>
     @section('title', 'Nouveau témoignage')
 
     @section('content')

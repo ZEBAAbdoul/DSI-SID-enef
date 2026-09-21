@@ -13,6 +13,7 @@ use App\Models\ParametresSite;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\InscriptionController;
 use App\Http\Controllers\PhotoPublicController;
+use App\Http\Controllers\VideoPublicController;
 
 /*
 |---------------------------------------------------------------------------
@@ -108,6 +109,9 @@ Route::get('/bibliotheque', [BibliothequeController::class, 'index'])->name('bib
 
 // À coller dans routes/web.php, en dehors du groupe admin
 Route::get('/galerie', [PhotoPublicController::class, 'index'])->name('galerie.index');
+
+// Galerie vidéo publique
+Route::get('/videos', [VideoPublicController::class, 'index'])->name('videos.index');
 
 // Auth routes
 require __DIR__ . '/auth.php';
