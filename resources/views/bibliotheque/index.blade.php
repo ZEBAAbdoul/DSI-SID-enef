@@ -2,6 +2,33 @@
 
 @section('title', 'ENEF — Bibliothèque documentaire')
 
+@php
+    // Icône + couleur d'accent par type de document — aucune image à uploader.
+    // Clés alignées sur BibliothequeController::$typeLabels.
+    $docTypeStyles = [
+        'rapport' => [
+            'color' => '#2f6b4f',
+            'icon'  => '<path d="M7 3h7l5 5v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/><path d="M14 3v5h5"/><path d="M9 13h6M9 16.5h6M9 9.5h3"/>',
+        ],
+        'brochure' => [
+            'color' => '#3a7ca5',
+            'icon'  => '<path d="M4 5.5C6 4.3 8.5 4 12 5v14c-3.5-1-6-.7-8 .5V5.5z"/><path d="M20 5.5C18 4.3 15.5 4 12 5v14c3.5-1 6-.7 8 .5V5.5z"/>',
+        ],
+        'texte_reglementaire' => [
+            'color' => '#8a5a2b',
+            'icon'  => '<circle cx="12" cy="8" r="5"/><path d="M9 12.5 6 21l6-3 6 3-3-8.5"/>',
+        ],
+        'support_pedagogique' => [
+            'color' => '#6b4fa0',
+            'icon'  => '<path d="M22 9 12 4 2 9l10 5 10-5z"/><path d="M6 11v5c0 1.5 2.7 3 6 3s6-1.5 6-3v-5"/>',
+        ],
+        'default' => [
+            'color' => '#5c6b5f',
+            'icon'  => '<path d="M7 3h7l5 5v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/><path d="M14 3v5h5"/>',
+        ],
+    ];
+@endphp
+
 @section('content')
 
     <!-- ===================== EN-TÊTE ===================== -->
@@ -19,7 +46,7 @@
 
             <!-- Colonne filtres -->
             <aside class="biblio-filters">
-                <form action="{{ route('bibliotheque.index') }}" method="GET">
+                <form action="{{ route('bibliotheque.index') }}" method="GET" id="biblio-filter-form">
                     <div class="filter-block">
                         <label for="q">Rechercher</label>
                         <input type="text" id="q" name="q" value="{{ request('q') }}"
@@ -45,11 +72,6 @@
                                 <option value="{{ $categorie->id }}" @selected(request('categorie_id') == $categorie->id)>
                                     {{ $categorie->nom }}
                                 </option>
-                                @foreach ($categorie->enfants as $enfant)
-                                    <option value="{{ $enfant->id }}" @selected(request('categorie_id') == $enfant->id)>
-                                        &nbsp;&nbsp;— {{ $enfant->nom }}
-                                    </option>
-                                @endforeach
                             @endforeach
                         </select>
                     </div>
@@ -83,9 +105,18 @@
 
                 <div class="documents-grid">
                     @forelse ($documents as $document)
+                        @php
+                            $docStyle = $docTypeStyles[$document->type] ?? $docTypeStyles['default'];
+                        @endphp
                         <div class="doc-card">
+                            <div class="doc-icon" style="--doc-color: {{ $docStyle['color'] }};">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                    {!! $docStyle['icon'] !!}
+                                </svg>
+                            </div>
+
                             <div class="doc-top">
-                                <span class="badge prog">{{ $typeLabels[$document->type] ?? $document->type }}</span>
+                                <span class="badge prog" style="--badge-color: {{ $docStyle['color'] }};">{{ $typeLabels[$document->type] ?? $document->type }}</span>
                                 @if ($document->format_fichier)
                                     <span class="doc-format">{{ strtoupper($document->format_fichier) }}</span>
                                 @endif
@@ -220,11 +251,39 @@
             }
 
             .doc-card {
+                position: relative;
                 background: var(--white);
                 border: 1px solid var(--line);
+                border-top: 3px solid var(--doc-color, var(--line));
                 padding: 20px;
+                padding-top: 56px;
                 display: flex;
                 flex-direction: column;
+                transition: border-color .2s ease, transform .2s ease, box-shadow .2s ease;
+            }
+
+            .doc-card:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 6px 16px rgba(0, 0, 0, .06);
+            }
+
+            .doc-icon {
+                position: absolute;
+                top: 16px;
+                left: 20px;
+                width: 34px;
+                height: 34px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border-radius: 50%;
+                background: color-mix(in srgb, var(--doc-color) 12%, white);
+                color: var(--doc-color);
+            }
+
+            .doc-icon svg {
+                width: 18px;
+                height: 18px;
             }
 
             .doc-top {
@@ -232,6 +291,12 @@
                 justify-content: space-between;
                 align-items: center;
                 margin-bottom: 10px;
+            }
+
+            .doc-top .badge {
+                background: color-mix(in srgb, var(--badge-color) 14%, white);
+                color: var(--badge-color);
+                border: none;
             }
 
             .doc-format {
@@ -354,6 +419,34 @@
                 }
             }
         </style>
+    @endpush
+
+    @push('scripts')
+        <script>
+            (function () {
+                var form = document.getElementById('biblio-filter-form');
+                var searchInput = document.getElementById('q');
+                if (!form || !searchInput) return;
+
+                var timer = null;
+
+                searchInput.addEventListener('input', function () {
+                    clearTimeout(timer);
+                    // Recherche automatique 500ms après la dernière frappe
+                    timer = setTimeout(function () {
+                        form.submit();
+                    }, 500);
+                });
+
+                // Empêche le rechargement immédiat si l'utilisateur presse Entrée
+                // pendant que le debounce est encore en attente (évite un double submit)
+                searchInput.addEventListener('keydown', function (e) {
+                    if (e.key === 'Enter') {
+                        clearTimeout(timer);
+                    }
+                });
+            })();
+        </script>
     @endpush
 
 @endsection

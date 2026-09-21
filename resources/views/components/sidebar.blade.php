@@ -2,6 +2,17 @@
     $isUser = auth()->check() && auth()->user()->hasRole('user');
     $isEnseignant = auth()->check() && auth()->user()->hasRole('enseignant');
 
+    $temoignagesActive = Route::is('admin.temoignages.*');
+    $mesTemoignagesActive = Route::is('admin.mes-temoignages.*');
+
+    $peutSoumettreIdee = auth()->check() && ! auth()->user()->hasRole('dg');
+    $peutVoirIdees =
+        auth()->check() &&
+        auth()
+            ->user()
+            ->hasAnyRole(['dg', 'sg', 'super-admin']);
+    $ideesActive = Route::is('admin.idees.*') || Route::is('admin.idees-direction.*');
+
     /*
     |--------------------------------------------------------------------------
     | Formations
@@ -156,6 +167,38 @@
             </li>
         @endif
 
+        {{-- ========================================================= --}}
+        {{-- MES TÉMOIGNAGES — visible uniquement pour le rôle USER    --}}
+        {{-- ========================================================= --}}
+        @if ($isUser)
+            <li class="nav-item {{ $mesTemoignagesActive ? 'menu-open' : '' }}">
+                <a href="#" class="nav-link {{ $mesTemoignagesActive ? 'active' : '' }}">
+                    <i class="nav-icon fas fa-comment-dots"></i>
+                    <p>
+                        Témoignages
+                        <i class="fas fa-angle-left right"></i>
+                    </p>
+                </a>
+
+                <ul class="nav nav-treeview">
+                    <li class="nav-item">
+                        {{-- <a href="{{ route('admin.mes-temoignages.create') }}"
+                    class="nav-link {{ Route::is('admin.mes-temoignages.create') ? 'active' : '' }}">
+                    <i class="fas fa-pen nav-icon"></i>
+                    <p>Écrire un témoignage</p>
+                </a> --}}
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ route('admin.mes-temoignages.index') }}"
+                            class="nav-link {{ Route::is('admin.mes-temoignages.index') || Route::is('admin.mes-temoignages.edit') ? 'active' : '' }}">
+                            <i class="fas fa-list nav-icon"></i>
+                            <p>Mes témoignages</p>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+        @endif
+
 
 
         {{-- ========================================================= --}}
@@ -234,6 +277,67 @@
             </li>
         @endif
 
+        {{-- ========================================================= --}}
+{{-- BOÎTE À IDÉES                                            --}}
+{{-- Personnel (sauf DG et élèves) : ses idées                --}}
+{{-- DG / SG : toutes les idées                               --}}
+{{-- ========================================================= --}}
+@if ($peutSoumettreIdee || $peutVoirIdees)
+    @php
+        $ideesEnAttente = $peutVoirIdees
+            ? \App\Models\Idee::where('statut', 'soumise')->count()
+            : 0;
+    @endphp
+
+    <li class="nav-item {{ $ideesActive ? 'menu-open' : '' }}">
+        <a href="#" class="nav-link {{ $ideesActive ? 'active' : '' }}">
+            <i class="nav-icon fas fa-lightbulb"></i>
+            <p>
+                Boîte à idées
+                @if ($ideesEnAttente > 0)
+                    <span class="badge badge-warning right">{{ $ideesEnAttente }}</span>
+                @else
+                    <i class="fas fa-angle-left right"></i>
+                @endif
+            </p>
+        </a>
+
+        <ul class="nav nav-treeview">
+            @if ($peutSoumettreIdee)
+                <li class="nav-item">
+                    <a href="{{ route('admin.idees.create') }}"
+                        class="nav-link {{ Route::is('admin.idees.create') ? 'active' : '' }}">
+                        <i class="fas fa-pen nav-icon"></i>
+                        <p>Proposer une idée</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('admin.idees.index') }}"
+                        class="nav-link {{ Route::is('admin.idees.index') || Route::is('admin.idees.edit') ? 'active' : '' }}">
+                        <i class="fas fa-list nav-icon"></i>
+                        <p>Mes idées</p>
+                    </a>
+                </li>
+            @endif
+
+            @if ($peutVoirIdees)
+                <li class="nav-item">
+                    <a href="{{ route('admin.idees-direction.index') }}"
+                        class="nav-link {{ Route::is('admin.idees-direction.*') ? 'active' : '' }}">
+                        <i class="fas fa-inbox nav-icon"></i>
+                        <p>
+                            Toutes les idées
+                            @if ($ideesEnAttente > 0)
+                                <span class="badge badge-warning right">{{ $ideesEnAttente }}</span>
+                            @endif
+                        </p>
+                    </a>
+                </li>
+            @endif
+        </ul>
+    </li>
+@endif
+
 
 
         {{-- ========================================================= --}}
@@ -278,20 +382,38 @@
 
                     {{-- Ajouter une actualité --}}
                     {{-- <li class="nav-item">
-            <a href="{{ route('admin.actualites.create') }}"
-               class="nav-link {{ request()->routeIs('admin.actualites.create') ? 'active' : '' }}">
+                    <a href="{{ route('admin.actualites.create') }}"
+                    class="nav-link {{ request()->routeIs('admin.actualites.create') ? 'active' : '' }}">
 
-                <i class="far fa-circle nav-icon"></i>
+                        <i class="far fa-circle nav-icon"></i>
 
-                <p>
-                    Ajouter une actualité
-                </p>
+                        <p>
+                            Ajouter une actualité
+                        </p>
 
-            </a>
-        </li> --}}
+                    </a>
+                </li> --}}
 
                 </ul>
 
+            </li>
+
+            {{-- ===================================================== --}}
+            {{-- TÉMOIGNAGES (modération)                              --}}
+            {{-- ===================================================== --}}
+            @php $temoignagesEnAttente = \App\Models\Temoignage::where('est_publie', false)->count(); @endphp
+
+            <li class="nav-item">
+                <a href="{{ route('admin.temoignages.index') }}"
+                    class="nav-link {{ $temoignagesActive ? 'active' : '' }}">
+                    <i class="nav-icon fas fa-comments"></i>
+                    <p>
+                        Témoignages
+                        @if ($temoignagesEnAttente > 0)
+                            <span class="badge badge-warning right">{{ $temoignagesEnAttente }}</span>
+                        @endif
+                    </p>
+                </a>
             </li>
 
 
@@ -319,7 +441,7 @@
                     <li class="nav-item">
 
                         <a href="{{ route('admin.filieres.create') }}"
-                           class="nav-link {{ Route::is('admin.filieres.create') ? 'active' : '' }}">
+                            class="nav-link {{ Route::is('admin.filieres.create') ? 'active' : '' }}">
 
                             <i class="fas fa-plus-circle nav-icon"></i>
 
@@ -335,7 +457,7 @@
                     <li class="nav-item">
 
                         <a href="{{ route('admin.filieres.index') }}"
-                           class="nav-link {{ Route::is('admin.filieres.index') || Route::is('admin.filieres.edit') ? 'active' : '' }}">
+                            class="nav-link {{ Route::is('admin.filieres.index') || Route::is('admin.filieres.edit') ? 'active' : '' }}">
 
                             <i class="fas fa-list nav-icon"></i>
 
@@ -452,7 +574,7 @@
 
 
                     {{-- Catégories --}}
-                    <li class="nav-item">
+                    {{-- <li class="nav-item">
 
                         <a href="{{ route('admin.categories-documents.index') }}"
                             class="nav-link {{ Route::is('admin.categories-documents.*') ? 'active' : '' }}">
@@ -465,7 +587,7 @@
 
                         </a>
 
-                    </li>
+                    </li> --}}
 
                 </ul>
 
@@ -493,10 +615,9 @@
 
                 <ul class="nav nav-treeview">
 
-
                     <li class="nav-item">
 
-                        <a href="" class="nav-link">
+                        <a href="{{ route('admin.photos.index') }}" class="nav-link">
 
                             <i class="fas fa-camera nav-icon"></i>
 
@@ -508,10 +629,9 @@
 
                     </li>
 
-
                     <li class="nav-item">
 
-                        <a href="" class="nav-link">
+                        <a href="{{ route('admin.videos.index') }}" class="nav-link">
 
                             <i class="fas fa-video nav-icon"></i>
 
@@ -624,6 +744,24 @@
 
                             <p>
                                 Catégories de formation
+                            </p>
+
+                        </a>
+
+                    </li>
+
+
+
+                    {{-- Catégories documents --}}
+                    <li class="nav-item">
+
+                        <a href="{{ route('admin.categories-documents.index') }}"
+                            class="nav-link {{ Route::is('admin.categories-documents.*') ? 'active' : '' }}">
+
+                            <i class="fas fa-tags nav-icon"></i>
+
+                            <p>
+                                Catégories de documents
                             </p>
 
                         </a>

@@ -31,7 +31,8 @@ class HomeController extends Controller
             return Filiere::active()->get();
         });
 
-        $temoignages = Temoignage::publies()->ordonnes()->get();
+        // $temoignages = Temoignage::publies()->ordonnes()->get();
+        $temoignages = Temoignage::publies()->orderBy('ordre')->get();
 
         $formations = Formation::ouvertes()
             ->with([
@@ -55,7 +56,7 @@ class HomeController extends Controller
             ->limit(6)
             ->get();
 
-        $categoriesDocuments = CategorieDocument::whereNull('parent_id')->get();
+        $categoriesDocuments = CategorieDocument::all();
 
         $documentsRecents = Document::with('categorie')
             ->orderByDesc('publie_le')
@@ -69,7 +70,7 @@ class HomeController extends Controller
                 ->distinct()
                 ->get()
                 ->count(),
-            'thematiques' => CategorieDocument::whereNull('parent_id')->count(),
+            'thematiques' => CategorieDocument::all()->count(),
         ];
 
         $typeLabels = [
@@ -98,5 +99,23 @@ class HomeController extends Controller
             'typeLabels'          => $typeLabels,
             'partenaires'         => $partenaires,
         ]);
+
+
+    }
+
+    // Mot du Directeur
+    public function motDuDirecteur()
+    {
+        $param_site = ParametresSite::first();
+
+        return view('mot_directeur.index', [
+            'param_site' => $param_site,
+        ]);
+    }
+
+    // Unites Pedagogiques
+    public function unitesPedagogiques()
+    {
+        return view('unites-pedagogiques.index');
     }
 }

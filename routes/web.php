@@ -12,7 +12,7 @@ use App\Models\Actualite;
 use App\Models\ParametresSite;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\InscriptionController;
-
+use App\Http\Controllers\PhotoPublicController;
 
 /*
 |---------------------------------------------------------------------------
@@ -78,6 +78,13 @@ Route::get('/actualites/{actualite:slug}', function (Actualite $actualite) {
 })->name('actualites.show');
 
 
+Route::get('/mot-du-directeur', [HomeController::class, 'motDuDirecteur']) ->name('mot-directeur');
+
+// Route for the pedagogical units
+Route::get('/unites-pedagogiques', [HomeController::class, 'unitesPedagogiques'])->name('unites-pedagogiques');
+
+
+
 
 // Routes d'inscription pour les candidats
 // Route::middleware(['auth'])->group(function () {
@@ -96,6 +103,11 @@ Route::post('inscription', [UserController::class, 'storeInscription'])->name('s
 
 // Route publique pour bibliothèque de documents
 Route::get('/bibliotheque', [BibliothequeController::class, 'index'])->name('bibliotheque.index');
+
+// Routes pour la galerie photos
+
+// À coller dans routes/web.php, en dehors du groupe admin
+Route::get('/galerie', [PhotoPublicController::class, 'index'])->name('galerie.index');
 
 // Auth routes
 require __DIR__ . '/auth.php';
