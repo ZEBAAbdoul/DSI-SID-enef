@@ -196,7 +196,7 @@ $filieresActive = Route::is('admin.filieres.*');
                     </a>
                 </li>
 
-                  <li class="nav-item {{ $filieresActive ? 'menu-open' : '' }}">
+                <li class="nav-item {{ $filieresActive ? 'menu-open' : '' }}">
 
                     <a href="#" class="nav-link {{ $filieresActive ? 'active' : '' }}">
 

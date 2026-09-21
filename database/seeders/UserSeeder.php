@@ -20,7 +20,7 @@ class UserSeeder extends Seeder
         $this->createUser(
             prenom: 'Abdoul-Abass',
             nom: 'ZEBA',
-            email: 'GIT',
+            email: 'zeba@gmail.com',
             pieceNumero: 'B00000001',
             role: 'super-admin',
         );
