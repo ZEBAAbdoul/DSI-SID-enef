@@ -31,7 +31,8 @@ class HomeController extends Controller
             return Filiere::active()->get();
         });
 
-        $temoignages = Temoignage::publies()->ordonnes()->get();
+        // $temoignages = Temoignage::publies()->ordonnes()->get();
+        $temoignages = Temoignage::publies()->orderBy('ordre')->get();
 
         $formations = Formation::ouvertes()
             ->with([

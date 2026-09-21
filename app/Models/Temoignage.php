@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Temoignage extends Model
 {
@@ -29,6 +30,7 @@ class Temoignage extends Model
      * Les attributs assignables en masse.
      */
     protected $fillable = [
+        'user_id',
         'contenu',
         'auteur',
         'fonction',
@@ -49,6 +51,14 @@ class Temoignage extends Model
             'est_publie' => 'boolean',
             'ordre' => 'integer',
         ];
+    }
+
+    /**
+     * Relation avec l'utilisateur ayant créé le témoignage.
+     */
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 
     /**
