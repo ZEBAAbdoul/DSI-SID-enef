@@ -1847,10 +1847,10 @@
                             <path d="M1 1l5 5 5-5" />
                         </svg></button>
                     <ul class="dropdown">
-                        <li><a href="{{ url('/') }}#catalogue">Formations programmées</a></li>
-                        <li><a href="{{ url('/') }}#catalogue">Formations à la carte</a></li>
-                        <li><a href="mailto:infos@enef.gov.bf?subject=Demande%20de%20formation%20%C3%A0%20la%20carte">Demande
-                                de formation à la carte</a></li> {{-- <li><a href="{{ url('/') }}#catalogue">Devis en ligne</a></li> --}}
+                        <li><a href="{{ url('/catalogue-formations-initiales') }}">Formations initiales</a></li>
+                        <li><a href="{{ url('/catalogue-formations-continues') }}">Formations continues</a></li>
+                        {{-- <li><a href="mailto:infos@enef.gov.bf?subject=Demande%20de%20formation%20%C3%A0%20la%20carte">Demande
+                                de formation à la carte</a></li>  --}}
                     </ul>
                 </li>
 

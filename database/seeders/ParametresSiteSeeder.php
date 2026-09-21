@@ -20,7 +20,7 @@ class ParametresSiteSeeder extends Seeder
         DB::table('parametres_site')->insert([
             'id' => (string) Str::uuid(),
             'nom_site' => 'ENEF - École Nationale des Eaux et Forêts',
-            'slogan' => 'Former les gardiens des eaux, des forêts et de l\'environnement',
+            'slogan' => 'Former pour protéger, agir pour préserver.',
             'logo_url' => '/storage/logos/enef-logo.jpg',
             'favicon_url' => '/storage/favicons/enef-favicon.ico',
             'mot_dg_titre' => 'Mot du Directeur Général',
