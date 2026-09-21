@@ -11,7 +11,12 @@ use App\Http\Controllers\IdeeController;
 use App\Http\Controllers\IdeeDirectionController;
 use App\Http\Controllers\InscriptionAdminController;
 use App\Http\Controllers\InscriptionController;
-use App\Http\Controllers\MesTemoignagesController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\RoleController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\PermissionController;
+use App\Http\Controllers\ParametresSiteController;
+use App\Http\Controllers\CategorieFormationController;
 use App\Http\Controllers\NoteAdminController;
 use App\Http\Controllers\NoteController;
 use App\Http\Controllers\ParametresSiteController;
@@ -23,8 +28,7 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SessionFormationController;
 use App\Http\Controllers\TemoignageController;
 use App\Http\Controllers\TypePieceController;
-use App\Http\Controllers\UserController;
-use App\Http\Controllers\VideoAdminController;
+use App\Http\Controllers\PartenaireController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(function () {
