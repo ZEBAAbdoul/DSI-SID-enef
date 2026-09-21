@@ -312,6 +312,12 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(
         ->names('matieres');
 
 
+    // ==================== PARTENAIRES ====================
+
+    Route::resource('partenaires', PartenaireController::class)
+        ->names('partenaires');
+
+
     // ==================== CANDIDATURES BACK-OFFICE ====================
 
     Route::prefix('inscriptions')->name('inscriptions.')->group(function () {
@@ -391,7 +397,10 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(
     Route::resource('photos', PhotoAdminController::class)
         ->names('photos');
 
+  Route::resource('partenaires', PartenaireController::class)
+        ->names('partenaires');
 
+        
     // ==================== VIDÉOS ====================
 
     Route::resource('videos', VideoAdminController::class);
