@@ -84,6 +84,11 @@ class HomeController extends Controller
             return Partenaire::actifs()->ordonnes()->get();
         });
 
+        $formationsInitiales = Formation::whereNotIn('type', ['continue_programmee', 'continue_a_la_carte'])
+    ->orderByRaw("CASE WHEN code_module LIKE 'FI-GRN%' THEN 0 ELSE 1 END")
+    ->orderBy('code_module')
+    ->get();
+
         return view('welcome', [
             'param_site'          => $paramSite,
             'temoignages'         => $temoignages,
@@ -98,6 +103,7 @@ class HomeController extends Controller
             'biblioStats'         => $biblioStats,
             'typeLabels'          => $typeLabels,
             'partenaires'         => $partenaires,
+            'formationsInitiales' =>$formationsInitiales,
         ]);
 
 

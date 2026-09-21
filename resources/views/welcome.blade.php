@@ -14,7 +14,7 @@
                 <p class="hero-lede">{{ $param_site->meta_description ?? '' }}</p>
                 <div class="hero-ctas">
                     <a href="#admissions" class="btn btn-primary">Candidater en ligne</a>
-                    <a href="{{ route('catalogue.formations') }}" class="btn btn-ghost-light">Découvrir le catalogue de
+                    <a href="{{ route('catalogue.formations.initiales') }}" class="btn btn-ghost-light">Découvrir le catalogue de
                         formations</a>
                 </div>
                 <div class="hero-stats">
@@ -149,7 +149,7 @@
                 <div class="step">
                     <div class="step-num">3</div>
                     <h4>Suivre l'instruction</h4>
-                    <p>Notification par e-mail et SMS à chaque étape : en cours, incomplet, validé.</p>
+                    <p>Notification par e-mail à chaque étape : en cours, incomplet, validé.</p>
                     <span class="status">Statut : en cours</span>
                 </div>
                 <div class="step">
@@ -165,48 +165,64 @@
                 </div>
                 <div style="display:flex;gap:12px;flex-wrap:wrap;">
                     <a href="{{ route('inscription') }}" class="btn btn-primary">Postuler maintenant</a>
-                    <a href="#suivi" class="btn btn-ghost-light">Suivre mon dossier</a>
+                    {{-- <a href="#suivi" class="btn btn-ghost-light">Suivre mon dossier</a> --}}
                 </div>
             </div>
         </div>
     </section>
 
     <!-- ===================== CATALOGUE FORMATIONS ===================== -->
-    <section id="catalogue" class="alt">
+    {{--
+    À COLLER dans resources/views/.../accueil.blade.php
+    en remplaçant TOUT le bloc <section id="catalogue" class="alt"> ... </section> existant.
+
+    Puis, dans le @push('scripts'), remplacer une seule ligne :
+        var activeGroup = 'programmee';
+    par :
+        var activeGroup = 'initiale';
+--}}
+
+    <!-- ===================== CATALOGUE FORMATIONS ===================== -->
+    {{-- <section id="catalogue" class="alt">
         <div class="container">
             <div class="section-head">
                 <div>
                     <span class="kicker">Formations</span>
-                    <h2>Catalogue de formations académiques et continues</h2>
-                    <p class="desc">Formations programmées à dates fixes ou modules à la carte, conçus pour les
-                        professionnels de l'environnement et des ressources naturelles.</p>
+                    <h2>Catalogue de formations initiales et continues</h2>
+                    <p class="desc">Cycles de formation initiale (Eaux et Forêts, Environnement), formations
+                        programmées à dates fixes ou modules à la carte, conçus pour les professionnels de
+                        l'environnement et des ressources naturelles.</p>
                 </div>
-                {{-- <a href="#catalogue" class="btn btn-outline btn-sm">Demander un devis</a> --}}
             </div>
 
             <div class="tabs" role="tablist">
-                <button class="tab-btn" role="tab" aria-selected="true" data-filter-group="programmee">Formations
+                <button class="tab-btn" role="tab" aria-selected="true" data-filter-group="initiale">Formations
+                    initiales</button>
+                <button class="tab-btn" role="tab" aria-selected="false" data-filter-group="programmee">Formations
                     programmées</button>
                 <button class="tab-btn" role="tab" aria-selected="false" data-filter-group="carte">Formations à la
                     carte</button>
             </div>
 
-            {{-- <div class="filter-chips">
-                @foreach ($categories as $categorie)
-                    <span class="chip" data-filter-cat="{{ $categorie->id }}">{{ $categorie->nom }}</span>
-                @endforeach
-            </div> --}}
+            
 
             <div class="courses-grid">
                 @forelse ($formation as $item)
                     @php
-                        $estALaCarte = $item->type === 'continue_a_la_carte';
-                        $groupe = $estALaCarte ? 'carte' : 'programmee';
+                        $groupe = match ($item->type) {
+                            'continue_a_la_carte' => 'carte',
+                            'continue_programmee' => 'programmee',
+                            default => 'initiale',
+                        };
+                        $estALaCarte = $groupe === 'carte';
+                        $estInitiale = $groupe === 'initiale';
                     @endphp
                     <div class="course-card" data-group="{{ $groupe }}" data-cat="{{ $item->categorie_id }}">
                         <div class="course-top">
                             @if ($estALaCarte)
                                 <span class="badge carte">À la carte</span>
+                            @elseif ($estInitiale)
+                                <span class="badge prog">Formation initiale</span>
                             @else
                                 <span class="badge prog">{{ $item->type_libelle }}</span>
                             @endif
@@ -221,17 +237,25 @@
                                 </svg>
                                 {{ $item->duree_formate }}
                             </span>
-                            <span>
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-                                    <circle cx="9" cy="7" r="4" />
-                                </svg>
-                                {{ $item->public_cible ?? 'Tous publics' }}
-                            </span>
+                            @if ($estInitiale)
+                                <span>
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+                                    </svg>
+                                    {{ $item->cout_indicatif ? number_format($item->cout_indicatif, 0, ',', ' ') . ' F CFA / an' : 'Frais : nous consulter' }}
+                                </span>
+                            @else
+                                <span>
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                                        <circle cx="9" cy="7" r="4" />
+                                    </svg>
+                                    {{ $item->public_cible ?? 'Tous publics' }}
+                                </span>
+                            @endif
                         </div>
 
-                        {{-- ✅ Sessions déjà eager loadées et triées dans le contrôleur --}}
-                        @if (!$estALaCarte && $item->sessions->isNotEmpty())
+                        @if (!$estALaCarte && !$estInitiale && $item->sessions->isNotEmpty())
                             <div class="sessions-block">
                                 <span class="sessions-title">Prochaines sessions</span>
                                 <ul class="sessions-list">
@@ -255,21 +279,19 @@
                         @endif
 
                         @if ($estALaCarte)
-                            {{-- <a href="#catalogue" class="btn btn-outline btn-sm">Demander ce module</a> --}}
                         @else
-                            <a href="{{ route('formations.show', $item->slug) }}" class="btn btn-outline btn-sm">Voir la
-                                fiche du module</a>
+                            <a href="{{ route('formations.show', $item->slug) }}" class="btn btn-outline btn-sm">
+                                {{ $estInitiale ? 'Voir la fiche du cycle' : 'Voir la fiche du module' }}
+                            </a>
                         @endif
                     </div>
                 @empty
                     <p style="color:var(--ink-soft);">Aucune formation disponible pour le moment.</p>
                 @endforelse
             </div>
-            {{-- <div class="catalog-more">
-                <a href="#catalogue" class="btn btn-outline">Voir tout le catalogue de formations</a>
-            </div> --}}
+            
         </div>
-    </section>
+    </section> --}}
 
     <!-- ===================== SESSIONS À VENIR ===================== -->
     @if ($sessions->isNotEmpty())
@@ -354,7 +376,8 @@
                     <h4>Appui-conseil &amp; accompagnement</h4>
                     <p>Planification environnementale, projets finance carbone, valorisation des savoirs locaux,
                         réhabilitation de sites miniers.</p>
-                    <a href="#prestations" class="btn btn-outline btn-sm">Découvrir nos missions</a>
+                    <a href="mailto:infos@enef.gov.bf?subject=Demande%20de%20formation%20%C3%A0%20la%20carte"
+                        class="btn btn-primary btn-sm">Découvrir nos missions</a>
                 </div>
                 <div class="presta-card">
                     <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2">
