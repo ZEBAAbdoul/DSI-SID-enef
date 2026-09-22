@@ -31,6 +31,7 @@ class FormationsSeeder extends Seeder
         $userId = DB::table('users')->value('id'); // null si aucun utilisateur en base
 
         $categorieProgrammeeId = DB::table('categories_formation')->where('nom', 'Formation programmée')->value('id');
+        $categorieProgrammeeinitialeId = DB::table('categories_formation')->where('nom', 'Formation initiale')->value('id');
 
         // Récupérer les IDs des filières avec leur code
         $filieres = DB::table('filieres')->pluck('id', 'code')->toArray();
@@ -76,6 +77,9 @@ class FormationsSeeder extends Seeder
                 'mots_cles' => 'ressources naturelles, écologie, gestion, développement durable',
                 'statut' => 'ouverte',
             ],
+
+            // FOrmation initiale
+            
         ];
 
         foreach ($formations as $data) {

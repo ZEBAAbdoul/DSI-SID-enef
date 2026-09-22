@@ -17,6 +17,15 @@ class ParametresSite extends Model
     protected $table = 'parametres_site';
 
     /**
+     * La clé primaire est un UUID (non auto-incrémentée).
+     *
+     * @var string
+     */
+    protected $keyType = 'string';
+
+    public $incrementing = false;
+
+    /**
      * The attributes that are mass assignable.
      *
      * @var array<int, string>
@@ -37,6 +46,7 @@ class ParametresSite extends Model
         'personne_forme',
         'facebook_url',
         'linkedin_url',
+        'liens_utiles',
         'meta_description',
         'updated_by',
     ];
@@ -49,6 +59,7 @@ class ParametresSite extends Model
     protected $casts = [
         'annee_creation' => 'integer',
         'personne_forme' => 'integer',
+        'liens_utiles' => 'array',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];

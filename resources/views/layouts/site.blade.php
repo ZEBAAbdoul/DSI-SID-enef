@@ -1847,10 +1847,10 @@
                             <path d="M1 1l5 5 5-5" />
                         </svg></button>
                     <ul class="dropdown">
-                        <li><a href="{{ url('/') }}#catalogue">Formations programmées</a></li>
-                        <li><a href="{{ url('/') }}#catalogue">Formations à la carte</a></li>
-                        <li><a href="mailto:infos@enef.gov.bf?subject=Demande%20de%20formation%20%C3%A0%20la%20carte">Demande
-                                de formation à la carte</a></li> {{-- <li><a href="{{ url('/') }}#catalogue">Devis en ligne</a></li> --}}
+                        <li><a href="{{ url('/catalogue-formations-initiales') }}">Formations initiales</a></li>
+                        <li><a href="{{ url('/catalogue-formations-continues') }}">Formations continues</a></li>
+                        {{-- <li><a href="mailto:infos@enef.gov.bf?subject=Demande%20de%20formation%20%C3%A0%20la%20carte">Demande
+                                de formation à la carte</a></li>  --}}
                     </ul>
                 </li>
 
@@ -1909,9 +1909,16 @@
     </main>
 
     <!-- ===================== FOOTER ===================== -->
+    @php
+        $liensUtilesFooter = \Illuminate\Support\Facades\Cache::remember(
+            'site.liens_utiles',
+            now()->addHours(1),
+            fn () => optional(\App\Models\ParametresSite::first())->liens_utiles ?? []
+        ) ?? [];
+    @endphp
     <footer id="contact">
         <div class="container">
-            <div class="footer-grid">
+            <div class="footer-grid" style="grid-template-columns:1.4fr repeat({{ !empty($liensUtilesFooter) ? 5 : 4 }}, 1fr);">
                 <div class="footer-brand">
                     <div class="brand" style="gap:10px;">
                         <span class="brand-mark" style="width:42px;height:42px;"><span
@@ -1970,6 +1977,20 @@
                         <li><a href="{{ url('/') }}#contact">Nous écrire</a></li>
                     </ul>
                 </div>
+                @if(!empty($liensUtilesFooter))
+                    <div class="footer-col">
+                        <h5>Liens utiles</h5>
+                        <ul>
+                            @foreach($liensUtilesFooter as $lien)
+                                @if(!empty($lien['titre']) && !empty($lien['url']))
+                                    <li>
+                                        <a href="{{ $lien['url'] }}" target="_blank" rel="noopener">{{ $lien['titre'] }}</a>
+                                    </li>
+                                @endif
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
             </div>
             <div class="footer-bottom">
                 <span>© 2026 École Nationale des Eaux et Forêts (ENEF) — Burkina Faso. Tous droits réservés.</span>

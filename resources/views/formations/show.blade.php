@@ -109,7 +109,7 @@
                 @else
                     <a href="{{ url('/') }}#admissions" class="btn btn-primary">Candidater à cette formation</a>
                 @endif
-                <a href="{{ route('catalogue.formations') }}" class="btn btn-outline">Retour au catalogue</a>
+                <a href="{{ route('catalogue.formations.initiales') }}" class="btn btn-outline">Retour au catalogue</a>
             </div>
 
         </div>

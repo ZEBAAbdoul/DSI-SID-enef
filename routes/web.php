@@ -71,10 +71,13 @@ Route::get('/formations/{formation:slug}', function (\App\Models\Formation $form
 
 
 
-Route::get('/catalogue-formations', [CatalogueController::class, 'index'])
-    ->name('catalogue.formations');
+Route::get('/catalogue-formations-initiales', [CatalogueController::class, 'index'])
+    ->name('catalogue.formations.initiales');
 
-    
+Route::get('/catalogue-formations-continues', [CatalogueController::class, 'formationContinue'])
+    ->name('catalogue.formations.continue');
+
+
 Route::get('/actualites/{actualite:slug}', function (Actualite $actualite) {
     return view('actualites.show', compact('actualite'));
 })->name('actualites.show');
