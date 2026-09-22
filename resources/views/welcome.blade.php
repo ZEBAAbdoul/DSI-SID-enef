@@ -14,15 +14,15 @@
                 <p class="hero-lede">{{ $param_site->meta_description ?? '' }}</p>
                 <div class="hero-ctas">
                     <a href="#admissions" class="btn btn-primary">Candidater en ligne</a>
-                    <a href="{{ route('catalogue.formations.initiales') }}" class="btn btn-ghost-light">Découvrir le catalogue de
-                        formations</a>
+                    {{-- <a href="{{ route('catalogue.formations.initiales') }}" class="btn btn-ghost-light">Découvrir le catalogue de
+                        formations</a> --}}
                 </div>
                 <div class="hero-stats">
                     <div><span class="num">{{ $param_site->annee_creation ?? '—' }}</span><span class="lbl">Année
                             de création de l'école</span>
                     </div>
-                    <div><span class="num">{{ $param_site->personne_forme ?? '—' }}</span><span class="lbl">Personnes
-                            formées en 2020</span>
+                    <div><span class="num">{{ $param_site->personne_forme ?? '—' }} <strong>+</strong> </span><span class="lbl">Personnes
+                            formées à nos jours</span>
                     </div>
                     <div><span class="num">{{ $fillieres->count() }}</span><span class="lbl">Filières de
                             spécialisation</span></div>
@@ -137,7 +137,7 @@
             <div class="steps">
                 <div class="step">
                     <div class="step-num">1</div>
-                    <h4>Créer un compte candidat</h4>
+                    <h4>Créer son compte candidat</h4>
                     <p>Inscrivez-vous en quelques minutes pour accéder à l'espace de candidature.</p>
                 </div>
                 <div class="step">
@@ -148,7 +148,7 @@
                 </div>
                 <div class="step">
                     <div class="step-num">3</div>
-                    <h4>Suivre l'instruction</h4>
+                    <h4>Suivre son dossier</h4>
                     <p>Notification par e-mail à chaque étape : en cours, incomplet, validé.</p>
                     <span class="status">Statut : en cours</span>
                 </div>
@@ -395,7 +395,6 @@
     </section>
 
     <!-- ===================== BIBLIOTHÈQUE ===================== -->
-    <!-- ===================== BIBLIOTHÈQUE ===================== -->
     <section id="bibliotheque" class="alt">
         <div class="container biblio">
             <div>
@@ -404,7 +403,7 @@
                 <p class="desc" style="margin-bottom:20px;">Parcourez le catalogue des ressources publiées par
                     l'ENEF : textes réglementaires, rapports, brochures et supports de formation, consultables à la
                     bibliothèque de l'école.</p>
-                <a href="{{ route('bibliotheque.index') }}" class="btn btn-outline">Accéder au catalogue en ligne</a>
+                <a href="{{ route('bibliotheque.index') }}" class="btn btn-outline">Accéder au documents</a>
 
                 @if ($documentsRecents->isNotEmpty())
                     <div class="biblio-recent">
@@ -456,7 +455,7 @@
     </section>
 
     <!-- ===================== ESPACES UTILISATEURS ===================== -->
-    <section id="recherche">
+    {{-- <section id="recherche">
         <div class="container">
             <div class="section-head">
                 <div>
@@ -509,7 +508,7 @@
                 </div>
             </div>
         </div>
-    </section>
+    </section> --}}
 
     <!-- ===================== PARTENAIRES ===================== -->
     <!-- ===================== PARTENAIRES ===================== -->

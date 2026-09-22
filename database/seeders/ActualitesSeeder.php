@@ -53,11 +53,11 @@ class ActualitesSeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
-                'titre' => 'Cérémonie de remise des diplômes promotion 2026',
+                'titre' => 'Cérémonie de port de galons promotion 2026',
                 'type' => 'evenement',
                 'chapo' => "La promotion 2026 de l'ENEF a reçu ses diplômes lors d'une cérémonie solennelle placée sous le thème de l'excellence.",
                 'contenu' => "La cérémonie de remise des diplômes de la promotion 2026 s'est déroulée le 15 septembre 2026 dans les locaux de l'ENEF. Cette cérémonie a été marquée par la présence des autorités administratives, des partenaires et des familles des diplômés.\n\nAu total, 156 étudiants ont reçu leur diplôme dans les différentes filières proposées par l'école, avec un taux de réussite exceptionnel de 92%.",
-                'image_couverture_url' => 'actualites/remise-diplomes.WEBP',
+                'image_couverture_url' => 'actualites/remise-diplomes.jpg',
                 'is_publiee' => true,
                 'ordre_menu' => 3,
                 'created_by' => $userId,
