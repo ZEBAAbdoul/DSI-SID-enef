@@ -122,12 +122,32 @@
                             <input type="hidden" name="honeypot_time" value="{{ time() }}">
                         </div>
 
-                        <button type="submit" class="btn btn-primary">Envoyer le message</button>
+                        <button type="submit" id="btn-envoyer" class="btn btn-primary" disabled>Envoyer le message</button>
+                        <small class="gating-hint">Résolvez le calcul pour activer l'envoi.</small>
                     </form>
                 </div>
             </div>
         </div>
     </section>
+
+    <script>
+        (function () {
+            var a = {{ $math['a'] }};
+            var b = {{ $math['b'] }};
+            var total = a + b;
+            var input = document.getElementById('math_answer');
+            var btn = document.getElementById('btn-envoyer');
+
+            function verifier() {
+                var val = input.value.replace(/\s+/g, '');
+                var ok = val !== '' && String(total) === val;
+                btn.disabled = !ok;
+            }
+
+            input.addEventListener('input', verifier);
+            verifier();
+        })();
+    </script>
 
     @push('styles')
         <style>
@@ -284,6 +304,19 @@
                 width: 1px !important;
                 height: 1px !important;
                 overflow: hidden !important;
+            }
+
+            #btn-envoyer:disabled,
+            #btn-envoyer[disabled] {
+                opacity: .5;
+                cursor: not-allowed;
+            }
+
+            .gating-hint {
+                display: block;
+                margin-top: 10px;
+                font-size: 12.5px;
+                color: var(--ink-soft);
             }
 
             .cflash {
