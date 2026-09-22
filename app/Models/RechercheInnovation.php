@@ -25,6 +25,7 @@ class RechercheInnovation extends Model
         'photo',
         'url_video',
         'document',
+        'document_nom',
         'type',
         'is_publiee',
         'created_by',
@@ -146,10 +147,18 @@ class RechercheInnovation extends Model
     }
 
     /**
-     * Nom affichable du document joint (sans le chemin)
+     * Nom affichable du document joint :
+     *  - le nom d'origine du fichier (tel qu'uploadé) s'il a été conservé,
+     *  - sinon le nom du fichier stocké (repli pour les anciens enregistrements).
      */
     public function getDocumentNomAttribute(): ?string
     {
+        $nomOrigine = $this->attributes['document_nom'] ?? null;
+
+        if (!empty($nomOrigine)) {
+            return $nomOrigine;
+        }
+
         if (!$this->document) {
             return null;
         }

@@ -30,10 +30,10 @@ class RecherchesInnovationsSeeder extends Seeder
                     'recherches_innovations/photos/XaGgcEoNwmlwcKVMa1gGDwXDmHOTcxqj3M38dvHU.webp',
                 ],
                 'url_video'  => 'https://www.facebook.com/reel/1032699442754352',
-                'document'   => 'recherches_innovations/documents/t5LzdYYilYmqYQsXgx7cjuivL2LhOx9Z9m1QOfZE.pdf',
+                'document'   => 'recherches_innovations/documents/memoire.pdf',
                 'is_publiee' => true,
                 'created_at' => '2026-09-22 09:26:59',
-                'updated_at' => '2026-09-22 09:26:59',
+                'updated_at' => '2026-09-22 09:38:00',
             ],
         ];
 

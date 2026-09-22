@@ -94,6 +94,7 @@ class RechercheInnovationController extends Controller
         if ($request->hasFile('document')) {
             $validated['document'] = $request->file('document')
                 ->store('recherches_innovations/documents', 'public');
+            $validated['document_nom'] = $request->file('document')->getClientOriginalName();
         }
 
         /*
@@ -237,6 +238,7 @@ class RechercheInnovationController extends Controller
 
             $validated['document'] = $request->file('document')
                 ->store('recherches_innovations/documents', 'public');
+            $validated['document_nom'] = $request->file('document')->getClientOriginalName();
         }
 
         /*
