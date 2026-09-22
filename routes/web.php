@@ -3,6 +3,7 @@
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\BibliothequeController;
 use App\Http\Controllers\CatalogueController;
+use App\Http\Controllers\ContactController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LoginWithOTPController;
 use App\Http\Controllers\ManualController;
@@ -82,6 +83,10 @@ Route::get('/actualites/{actualite:slug}', function (Actualite $actualite) {
 
 
 Route::get('/mot-du-directeur', [HomeController::class, 'motDuDirecteur'])->name('mot-directeur');
+
+// Page de contact publique (formulaire + hCaptcha)
+Route::get('/contact', [ContactController::class, 'index'])->name('contact.index');
+Route::post('/contact', [ContactController::class, 'send'])->name('contact.send');
 
 // Route for the pedagogical units
 Route::get('/unites-pedagogiques', [HomeController::class, 'unitesPedagogiques'])->name('unites-pedagogiques');
