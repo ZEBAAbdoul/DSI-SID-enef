@@ -311,6 +311,66 @@
                         @enderror
                     </div>
 
+                    {{-- ==================== SECTION LIENS UTILES ==================== --}}
+                    <div class="col-md-12 mt-4">
+                        <h5 class="fw-bold text-primary border-bottom pb-2 mb-3">
+                            <i class="fas fa-link"></i> Liens utiles
+                        </h5>
+                        <p class="text-muted mb-3">
+                            Liens affichés dans le pied de page du site (ministères, institutions, plateformes…).
+                            Laissez une ligne vide pour la supprimer.
+                        </p>
+                    </div>
+
+                    <div class="col-12 mb-3">
+                        @php
+                            $liensActuels = [];
+                            if (old('liens_utiles.titre') !== null) {
+                                $oldTitres = (array) old('liens_utiles.titre');
+                                $oldUrls = (array) (request()->old('liens_utiles.url') ?? []);
+                                foreach ($oldTitres as $i => $t) {
+                                    $liensActuels[] = ['titre' => $t, 'url' => $oldUrls[$i] ?? ''];
+                                }
+                            } else {
+                                $liensActuels = $parametres->liens_utiles ?? [];
+                            }
+                        @endphp
+
+                        <div id="liensUtilesList">
+                            @forelse($liensActuels as $lien)
+                                <div class="row g-2 lien-utile-row mb-2">
+                                    <div class="col-md-5">
+                                        <input type="text" name="liens_utiles[titre][]" class="form-control"
+                                               placeholder="Titre du lien (ex: Gouvernement du Faso)"
+                                               value="{{ $lien['titre'] ?? '' }}">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <input type="url" name="liens_utiles[url][]" class="form-control"
+                                               placeholder="https://www.exemple.bf"
+                                               value="{{ $lien['url'] ?? '' }}">
+                                    </div>
+                                    <div class="col-md-1 d-flex align-items-center">
+                                        <button type="button" class="btn btn-outline-danger btn-sm btn-remove-lien"
+                                                title="Supprimer ce lien">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            @empty
+                                <div class="text-muted small" id="aucunLienUtile">
+                                    Aucun lien configuré pour le moment.
+                                </div>
+                            @endforelse
+                        </div>
+
+                        <button type="button" id="btnAjouterLien" class="btn btn-outline-primary btn-sm mt-1">
+                            <i class="fas fa-plus"></i> Ajouter un lien
+                        </button>
+                        @error('liens_utiles.url.*')
+                            <div class="text-danger small mt-2">{{ $message }}</div>
+                        @enderror
+                    </div>
+
                     {{-- ==================== DERNIÈRE MODIFICATION ==================== --}}
                     @if($parametres && $parametres->updatedBy)
                         <div class="col-12 mt-3">
@@ -437,7 +497,10 @@
                 formData.append('_token', csrfToken);
                 
                 let url = $(this).attr('action');
-                let method = $('input[name="_method"]').val() || 'POST';
+                // Toujours en POST : la vraie méthode (PUT pour la modification) est transmise
+                // via le champ caché `_method` du formulaire. Un PUT ajax + FormData multiplart
+                // n'est pas parsé par PHP ($_POST vide) → ni CSRF ni validation ne passent.
+                let method = 'POST';
 
                 let submitBtn = $(this).find('button[type="submit"]');
                 submitBtn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> En cours...');
@@ -528,6 +591,40 @@
                     });
                 }, 5000);
             }
+
+            /* ===================== LIENS UTILES : AJOUT / RETRAIT ===================== */
+            function nouvelleLigneLien(titre = '', url = '') {
+                return $(`
+                    <div class="row g-2 lien-utile-row mb-2">
+                        <div class="col-md-5">
+                            <input type="text" name="liens_utiles[titre][]" class="form-control"
+                                   placeholder="Titre du lien (ex: Gouvernement du Faso)" value="${titre}">
+                        </div>
+                        <div class="col-md-6">
+                            <input type="url" name="liens_utiles[url][]" class="form-control"
+                                   placeholder="https://www.exemple.bf" value="${url}">
+                        </div>
+                        <div class="col-md-1 d-flex align-items-center">
+                            <button type="button" class="btn btn-outline-danger btn-sm btn-remove-lien"
+                                    title="Supprimer ce lien">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                `);
+            }
+
+            $('#btnAjouterLien').on('click', function() {
+                $('#aucunLienUtile').remove();
+                $('#liensUtilesList').append(nouvelleLigneLien());
+            });
+
+            $('#liensUtilesList').on('click', '.btn-remove-lien', function() {
+                $(this).closest('.lien-utile-row').remove();
+                if ($('.lien-utile-row').length === 0) {
+                    $('#liensUtilesList').append('<div class="text-muted small" id="aucunLienUtile">Aucun lien configuré pour le moment.</div>');
+                }
+            });
 
         });
     </script>

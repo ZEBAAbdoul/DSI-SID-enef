@@ -27,6 +27,7 @@ use App\Http\Controllers\TemoignageController;
 use App\Http\Controllers\TypePieceController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VideoAdminController;
+use App\Http\Controllers\RechercheInnovationController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(function () {
@@ -429,11 +430,11 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(
     });
 
 
-    // Personnel : ses propres idées (l'accès est contrôlé par IdeePolicy)
-    Route::resource('mes-idees', IdeeController::class)
-        ->parameters(['mes-idees' => 'idee'])
-        ->names('idees')
-        ->except(['show']);
+// Personnel : ses propres idées (l'accès est contrôlé par IdeePolicy)
+Route::resource('mes-idees', IdeeController::class)
+    ->parameters(['mes-idees' => 'idee'])
+    ->names('idees')
+    ->except(['show']);
 
     // DG / SG : toutes les idées
     Route::resource('boite-a-idees', IdeeDirectionController::class)
@@ -455,4 +456,15 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(
 
     Route::resource('videos', VideoAdminController::class);
 
+Route::resource(
+    'recherches-innovations',
+    RechercheInnovationController::class
+);
+
+// Publier / dépublier une recherche ou une innovation
+Route::patch('recherches-innovations/{recherches_innovation}/publier', [RechercheInnovationController::class, 'publier'])
+    ->name('recherches-innovations.publier');
+
+Route::patch('recherches-innovations/{recherches_innovation}/depublier', [RechercheInnovationController::class, 'depublier'])
+    ->name('recherches-innovations.depublier');
 });

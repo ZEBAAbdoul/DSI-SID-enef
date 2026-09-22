@@ -1836,8 +1836,8 @@
                         {{-- <li><a href="{{ url('/') }}#presentation">Présentation &amp; historique</a></li> --}}
                         <li><a href="{{ route('unites-pedagogiques') }}">Unités pédagogiques</a></li>
                         <li><a href="{{ url('/') }}#partenaires">Nos partenaires</a></li>
-                        {{-- <li><a href="{{ url('/') }}#recherche">Recherche &amp; innovation</a></li> --}}
-                        <li><a href="{{ route('galerie.index') }}#galerie">Galerie photos</a></li>
+                        <li><a href="{{ route('recherches-innovations.index') }}">Recherche &amp; innovation</a></li>
+                        <li><a href="{{ route('galerie.index') }}">Galerie photo &amp; vidéo</a></li>
 
                     </ul>
                 </li>
@@ -1856,13 +1856,13 @@
                 </li>
 
                 <li>
-                    <button class="toplink" aria-expanded="false">Services <svg class="chev" viewBox="0 0 12 8"
+                    <button class="toplink" aria-expanded="false">E-services <svg class="chev" viewBox="0 0 12 8"
                             fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M1 1l5 5 5-5" />
                         </svg></button>
                     <ul class="dropdown">
-                        <li><a href="{{ url('/') }}#prestations">Prestations &amp; appui-conseil</a></li>
-                        <li><a href="{{ url('/bibliotheque') }}#bibliotheque">Bibliothèque</a></li>
+                        <li><a href="{{ url('/') }}#prestations">Bibliothèque en ligne</a></li>
+                        <li><a href="{{ url('/bibliotheque') }}#bibliotheque">Centre de téléchargement</a></li>
 
                     </ul>
                 </li>
@@ -1910,9 +1910,16 @@
     </main>
 
     <!-- ===================== FOOTER ===================== -->
+    @php
+        $liensUtilesFooter = \Illuminate\Support\Facades\Cache::remember(
+            'site.liens_utiles',
+            now()->addHours(1),
+            fn () => optional(\App\Models\ParametresSite::first())->liens_utiles ?? []
+        ) ?? [];
+    @endphp
     <footer id="contact">
         <div class="container">
-            <div class="footer-grid">
+            <div class="footer-grid" style="grid-template-columns:1.4fr repeat({{ !empty($liensUtilesFooter) ? 5 : 4 }}, 1fr);">
                 <div class="footer-brand">
                     <div class="brand" style="gap:10px;">
                         <a href="{{ url('/') }}" class="brand"> <span class="brand-mark"> <img
@@ -1943,6 +1950,8 @@
                         <li><a href="{{ url('/') }}#dg">Mot du Directeur Général</a></li>
                         <li><a href="{{ url('/') }}#presentation">Présentation &amp; historique</a></li>
                         <li><a href="{{ url('/') }}#partenaires">Nos partenaires</a></li>
+                        <li><a href="{{ route('recherches-innovations.index') }}">Recherche &amp; innovation</a></li>
+                        <li><a href="{{ route('galerie.index') }}">Galerie photo &amp; vidéo</a></li>
                         <li><a href="{{ url('/') }}#actualites">Actualités</a></li>
                     </ul>
                 </div>
@@ -1973,6 +1982,20 @@
                         <li><a href="{{ route('contact.index') }}">Nous écrire</a></li>
                     </ul>
                 </div>
+                @if(!empty($liensUtilesFooter))
+                    <div class="footer-col">
+                        <h5>Liens utiles</h5>
+                        <ul>
+                            @foreach($liensUtilesFooter as $lien)
+                                @if(!empty($lien['titre']) && !empty($lien['url']))
+                                    <li>
+                                        <a href="{{ $lien['url'] }}" target="_blank" rel="noopener">{{ $lien['titre'] }}</a>
+                                    </li>
+                                @endif
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
             </div>
             <div class="footer-bottom">
                 <span>© 2026 École Nationale des Eaux et Forêts (ENEF) — Burkina Faso. Tous droits réservés.</span>

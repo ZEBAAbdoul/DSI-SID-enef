@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log; 
+use Illuminate\Support\Facades\Cache; 
 
 class ParametresSiteController extends Controller
 {
@@ -63,6 +64,10 @@ class ParametresSiteController extends Controller
                 'personne_forme' => 'nullable|integer|min:0',
                 'facebook_url' => 'nullable|string|max:255|url',
                 'linkedin_url' => 'nullable|string|max:255|url',
+                'liens_utiles.titre' => 'nullable|array',
+                'liens_utiles.titre.*' => 'nullable|string|max:150',
+                'liens_utiles.url' => 'nullable|array',
+                'liens_utiles.url.*' => 'nullable|string|max:255|url',
                 'meta_description' => 'nullable|string|max:255',
             ]);
 
@@ -92,7 +97,12 @@ class ParametresSiteController extends Controller
 
             $data['updated_by'] = Auth::id();
 
+            $data['liens_utiles'] = $this->normalizeLiensUtiles($request);
+
             ParametresSite::create($data);
+
+            Cache::forget('site.parametres');
+            Cache::forget('site.liens_utiles');
 
             return redirect()->route('admin.parametres.index')
                 ->with('success', 'Paramètres créés avec succès !');
@@ -109,7 +119,7 @@ class ParametresSiteController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, $parametre) // Notez le paramètre
+    public function update(Request $request, $parametre)
     {
         try {
             $parametres = ParametresSite::find($parametre);
@@ -119,18 +129,109 @@ class ParametresSiteController extends Controller
                     ->with('error', 'Paramètres non trouvés');
             }
 
-            // Validation et mise à jour
-            // ...
+            $validator = Validator::make($request->all(), [
+                'nom_site' => 'required|string|max:150',
+                'slogan' => 'nullable|string|max:255',
+                'logo_url' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+                'favicon_url' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,ico|max:1024',
+                'mot_dg_titre' => 'nullable|string|max:150',
+                'mot_dg_contenu' => 'nullable|string',
+                'mot_dg_photo_url' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+                'mot_dg_nom' => 'nullable|string|max:150',
+                'adresse' => 'nullable|string|max:255',
+                'telephone' => 'nullable|string|max:30',
+                'email_contact' => 'nullable|string|max:150|email',
+                'annee_creation' => 'nullable|integer|min:1900|max:' . date('Y'),
+                'personne_forme' => 'nullable|integer|min:0',
+                'facebook_url' => 'nullable|string|max:255|url',
+                'linkedin_url' => 'nullable|string|max:255|url',
+                'liens_utiles.titre' => 'nullable|array',
+                'liens_utiles.titre.*' => 'nullable|string|max:150',
+                'liens_utiles.url' => 'nullable|array',
+                'liens_utiles.url.*' => 'nullable|string|max:255|url',
+                'meta_description' => 'nullable|string|max:255',
+            ]);
+
+            if ($validator->fails()) {
+                return redirect()->route('admin.parametres.index')
+                    ->withErrors($validator)
+                    ->withInput();
+            }
+
+            $data = $request->except(['logo_url', 'favicon_url', 'mot_dg_photo_url', '_method', '_token']);
+
+            // Gestion des fichiers
+            if ($request->hasFile('logo_url')) {
+                $path = $request->file('logo_url')->store('parametres/logos', 'public');
+                $data['logo_url'] = '/storage/' . $path;
+            }
+
+            if ($request->hasFile('favicon_url')) {
+                $path = $request->file('favicon_url')->store('parametres/favicons', 'public');
+                $data['favicon_url'] = '/storage/' . $path;
+            }
+
+            if ($request->hasFile('mot_dg_photo_url')) {
+                $path = $request->file('mot_dg_photo_url')->store('parametres/dg', 'public');
+                $data['mot_dg_photo_url'] = '/storage/' . $path;
+            }
+
+            $data['updated_by'] = Auth::id();
+
+            $data['liens_utiles'] = $this->normalizeLiensUtiles($request);
+
+            $parametres->update($data);
+
+            Cache::forget('site.parametres');
+            Cache::forget('site.liens_utiles');
 
             return redirect()->route('admin.parametres.index')
                 ->with('success', 'Paramètres mis à jour avec succès !');
 
         } catch (\Exception $e) {
             Log::error('Erreur lors de la mise à jour des paramètres : ' . $e->getMessage());
-            
+
             return redirect()->route('admin.parametres.index')
-                ->with('error', 'Erreur lors de la mise à jour des paramètres');
+                ->with('error', 'Erreur lors de la mise à jour des paramètres : ' . $e->getMessage())
+                ->withInput();
         }
+    }
+
+    /**
+     * Normalise la liste des liens utiles envoyée par le formulaire
+     * (tableaux ´liens_utiles[titre][]´ et ´liens_utiles[url][]´).
+     *
+     * Ne conserve que les lignes non vides : [['titre' => ..., 'url' => ...], ...]
+     *
+     * @return array<int, array{titre: string, url: string}>
+     */
+    protected function normalizeLiensUtiles(Request $request): array
+    {
+        $liens = [];
+
+        $titres = (array) $request->input('liens_utiles.titre', []);
+        $urls = (array) $request->input('liens_utiles.url', []);
+
+        foreach ($titres as $i => $titre) {
+            $titre = trim((string) $titre);
+            $url = trim((string) ($urls[$i] ?? ''));
+
+            if ($titre === '' && $url === '') {
+                continue;
+            }
+
+            // Repli : si le titre est vide, on affiche l'URL telle quelle.
+            if ($titre === '') {
+                $titre = $url;
+            }
+
+            $liens[] = [
+                'titre' => $titre,
+                'url' => $url,
+            ];
+        }
+
+        return $liens;
     }
 
     /**
@@ -167,6 +268,9 @@ class ParametresSiteController extends Controller
             }
 
             $parametres->delete();
+
+            Cache::forget('site.parametres');
+            Cache::forget('site.liens_utiles');
 
             return redirect()->route('admin.parametres.index')
                 ->with('success', 'Paramètres supprimés avec succès !');
@@ -210,6 +314,7 @@ class ParametresSiteController extends Controller
                 'personne_forme',
                 'facebook_url',
                 'linkedin_url',
+                'liens_utiles',
                 'meta_description',
             ]);
 

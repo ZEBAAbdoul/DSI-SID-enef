@@ -8,7 +8,6 @@ class InformationsComplementairesController extends Controller
 {
     public function index()
     {;
-        $formationinformations = 
         $informations = FormationInformation::orderBy('ordre')->get()->groupBy('categorie');
 
         return view('formations.informations-complementaires', [

@@ -103,7 +103,7 @@
                                     @if ($photo->image_url)
 
                                         <img
-                                            src="{{ asset('storage/' . $photo->image_url) }}"
+                                            src="{{ asset($photo->image_url) }}"
                                             alt="{{ $photo->titre }}"
                                             class="img-thumbnail"
                                             style="

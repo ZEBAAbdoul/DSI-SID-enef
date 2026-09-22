@@ -13,7 +13,7 @@
             <form action="{{ route('admin.formation-informations.update', $information) }}" method="POST">
                 @csrf
                 @method('PUT')
-                {{-- @include('formation-informations._form') --}}
+                @include('admin.formation-informations._forme')
 
                 <button type="submit" class="btn btn-primary">Mettre à jour</button>
                 <a href="{{ route('admin.formation-informations.index') }}" class="btn btn-link">Annuler</a>

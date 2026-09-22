@@ -12,9 +12,11 @@ use App\Http\Controllers\SocialiteController;
 use App\Http\Controllers\UserController;
 use App\Models\Actualite;
 use App\Models\ParametresSite;
+use App\Models\RechercheInnovation;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\InscriptionController;
 use App\Http\Controllers\PhotoPublicController;
+use App\Http\Controllers\VideoPublicController;
 
 /*
 |---------------------------------------------------------------------------
@@ -87,7 +89,28 @@ Route::get('/actualites/{actualite:slug}', function (Actualite $actualite) {
 })->name('actualites.show');
 
 
-Route::get('/mot-du-directeur', [HomeController::class, 'motDuDirecteur'])->name('mot-directeur');
+Route::get('/recherches-innovations', function (\Illuminate\Http\Request $request) {
+    $recherchesInnovations = \App\Models\RechercheInnovation::publiees()
+        ->deType($request->query('type'))
+        ->latest()
+        ->paginate(9)
+        ->withQueryString();
+
+    $types = [
+        'recherche'  => 'Recherche',
+        'innovation' => 'Innovation',
+    ];
+
+    return view('recherches_innovations.index', compact('recherchesInnovations', 'types'));
+})->name('recherches-innovations.index');
+
+
+Route::get('/recherches-innovations/{recherches_innovation:slug}', function (RechercheInnovation $recherches_innovation) {
+    return view('recherches_innovations.show', ['rechercheInnovation' => $recherches_innovation]);
+})->name('recherches-innovations.show');
+
+
+Route::get('/mot-du-directeur', [HomeController::class, 'motDuDirecteur']) ->name('mot-directeur');
 
 // Page de contact publique (formulaire + hCaptcha)
 Route::get('/contact', [ContactController::class, 'index'])->name('contact.index');
@@ -121,6 +144,9 @@ Route::get('/bibliotheque', [BibliothequeController::class, 'index'])->name('bib
 
 // À coller dans routes/web.php, en dehors du groupe admin
 Route::get('/galerie', [PhotoPublicController::class, 'index'])->name('galerie.index');
+
+// Galerie vidéo publique
+Route::get('/videos', [VideoPublicController::class, 'index'])->name('videos.index');
 
 // Auth routes
 require __DIR__ . '/auth.php';

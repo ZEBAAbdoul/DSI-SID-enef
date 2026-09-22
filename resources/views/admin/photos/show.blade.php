@@ -38,7 +38,7 @@
                     @if ($photo->image_url)
 
                         <img
-                            src="{{ asset('storage/' . $photo->image_url) }}"
+                            src="{{ asset($photo->image_url) }}"
                             alt="{{ $photo->titre }}"
                             class="img-fluid img-thumbnail"
                             style="max-height:500px; cursor: pointer;"
@@ -205,7 +205,7 @@
 
 <script>
 function openLightbox() {
-    const photoUrl = '{{ asset('storage/' . $photo->image_url) }}';
+    const photoUrl = '{{ asset($photo->image_url) }}';
     const photoTitle = '{{ $photo->titre }}';
     
     document.getElementById('lightboxTitle').textContent = photoTitle;

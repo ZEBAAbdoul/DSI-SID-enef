@@ -104,6 +104,7 @@ class HomeController extends Controller
             'typeLabels'          => $typeLabels,
             'partenaires'         => $partenaires,
             'formationsInitiales' =>$formationsInitiales,
+            
         ]);
 
 

@@ -546,9 +546,9 @@
         <div class="container stats-grid">
             <div><span class="num">{{ $param_site->annee_creation ?? '—' }}</span><span class="lbl">Année de
                     création</span></div>
-            <div><span class="num">{{ $param_site->personne_forme ?? '—' }}</span><span class="lbl">Personnes
-                    formées en
-                    2020</span></div>
+            <div><span class="num">{{ $param_site->personne_forme ?? '—' }} <strong>+</strong> </span><span class="lbl">Personnes
+                    formées à nos jours
+                    </span></div>
             <div><span class="num">{{ $fillieres->count() }}</span><span class="lbl">Profils de filières</span>
             </div>
             <div><span class="num">15+</span><span class="lbl">Partenaires techniques et financiers</span>

@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Photo;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\File;
 use Illuminate\View\View;
 
 class PhotoAdminController extends Controller
@@ -42,8 +42,10 @@ class PhotoAdminController extends Controller
         // Prochain numéro d'ordre automatique
         $validated['ordre'] = (Photo::max('ordre') ?? 0) + 1;
 
-        // Upload de l'image
-        $imagePath = $request->file('image')->store('photos', 'public');
+        // Upload de l'image vers public/photos (servie via /photos/...)
+        $imagePath = $this->sauvegarderImagePublique(
+            $request->file('image')
+        );
 
         Photo::create([
             'titre' => $validated['titre'],
@@ -165,20 +167,11 @@ public function update(Request $request, Photo $photo): RedirectResponse
      */
     if ($request->hasFile('image')) {
 
-        if (
-            $photo->image_url &&
-            Storage::disk('public')->exists($photo->image_url)
-        ) {
-            Storage::disk('public')->delete(
-                $photo->image_url
-            );
-        }
+        $this->supprimerImagePublique($photo->image_url);
 
-        $validated['image_url'] =
-            $request->file('image')->store(
-                'photos',
-                'public'
-            );
+        $validated['image_url'] = $this->sauvegarderImagePublique(
+            $request->file('image')
+        );
     }
 
     /*
@@ -349,12 +342,7 @@ public function update(Request $request, Photo $photo): RedirectResponse
     public function destroy(Photo $photo): RedirectResponse
     {
         // Supprimer le fichier image
-        if (
-            $photo->image_url &&
-            Storage::disk('public')->exists($photo->image_url)
-        ) {
-            Storage::disk('public')->delete($photo->image_url);
-        }
+        $this->supprimerImagePublique($photo->image_url);
 
         $photo->delete();
 
@@ -411,6 +399,30 @@ public function update(Request $request, Photo $photo): RedirectResponse
             'ordre.min' => "L'ordre ne peut pas être négatif.",
             'ordre.max' => "L'ordre doit être inférieur ou égal à 32767.",
         ]);
+    }
+
+    /**
+     * Enregistre une image uploadée dans public/photos.
+     * Retourne le chemin relatif (ex. : photos/abcd….jpg).
+     */
+    private function sauvegarderImagePublique(
+        \Illuminate\Http\UploadedFile $fichier
+    ): string {
+        $chemin = $fichier->hashName('photos');
+
+        $fichier->move(public_path('photos'), basename($chemin));
+
+        return $chemin;
+    }
+
+    /**
+     * Supprime une image du dossier public/photos si elle existe.
+     */
+    private function supprimerImagePublique(?string $imageUrl): void
+    {
+        if ($imageUrl && is_file(public_path($imageUrl))) {
+            File::delete(public_path($imageUrl));
+        }
     }
 }
 
