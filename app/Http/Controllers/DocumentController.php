@@ -11,6 +11,7 @@ use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\StreamedResponse;
+use Illuminate\Validation\Rule;
 
 class DocumentController extends Controller
 {
@@ -27,22 +28,23 @@ class DocumentController extends Controller
     ];
 
     public function index(Request $request): View
-    {
-        $categories = CategorieDocument::orderBy('nom')->get();
+{
+    $categories = CategorieDocument::orderBy('nom')->get();
 
-        $documents = Document::with(['categorie', 'publiePar'])
-            ->when($request->filled('categorie_id'), fn ($q) => $q->where('categorie_id', $request->categorie_id))
-            ->when($request->filled('type'), fn ($q) => $q->where('type', $request->type))
-            ->when($request->filled('acces'), fn ($q) => $q->where('acces', $request->acces))
-            ->orderByDesc('publie_le')
-            ->paginate(15)
-            ->withQueryString();
+    $documents = Document::with(['categorie', 'publiePar'])
+        ->when($request->filled('categorie_id'), fn($q) => $q->where('categorie_id', $request->categorie_id))
+        ->when($request->filled('type'), fn($q) => $q->where('type', $request->type))
+        ->when($request->filled('acces'), fn($q) => $q->where('acces', $request->acces))
+        ->when($request->filled('telechargeable'), fn($q) => $q->where('telechargeable', $request->boolean('telechargeable')))
+        ->orderByDesc('publie_le')
+        ->paginate(15)
+        ->withQueryString();
 
-        return view('admin.documents.index', [
-            'documents' => $documents,
-            'categories' => $categories,
-        ]);
-    }
+    return view('admin.documents.index', [
+        'documents' => $documents,
+        'categories' => $categories,
+    ]);
+}
 
     public function create(): View
     {
@@ -56,16 +58,21 @@ class DocumentController extends Controller
 
     public function store(Request $request): RedirectResponse
     {
-        $validated = $this->validateRequest($request, fileRequired: true);
+        $validated = $this->validateRequest($request);
 
-        $fichier = $request->file('fichier');
-        $path = $fichier->store('documents', 'public');
+        $data = $validated;
+
+        if ($request->hasFile('fichier')) {
+            $fichier = $request->file('fichier');
+            $path = $fichier->store('documents', 'public');
+
+            $data['fichier_url'] = $path;
+            $data['format_fichier'] = $fichier->getClientOriginalExtension();
+            $data['taille_fichier_ko'] = (int) round($fichier->getSize() / 1024);
+        }
 
         Document::create([
-            ...$validated,
-            'fichier_url' => $path,
-            'format_fichier' => $fichier->getClientOriginalExtension(),
-            'taille_fichier_ko' => (int) round($fichier->getSize() / 1024),
+            ...$data,
             'nombre_telechargements' => 0,
             'publie_par' => auth()->id(),
         ]);
@@ -97,7 +104,7 @@ class DocumentController extends Controller
 
     public function update(Request $request, Document $document): RedirectResponse
     {
-        $validated = $this->validateRequest($request, fileRequired: false);
+        $validated = $this->validateRequest($request, document: $document);
 
         $data = $validated;
 
@@ -135,33 +142,50 @@ class DocumentController extends Controller
             ->with('success', 'Document supprimé.');
     }
 
-     public function telecharger(Document $document): StreamedResponse
+    public function telecharger(Document $document): StreamedResponse
     {
+        if (! $document->telechargeable) {
+            abort(403, 'Ce document n\'est pas téléchargeable. Veuillez consulter le code fourni pour une consultation sur place.');
+        }
+
         if (! $document->fichier_url || ! Storage::disk('public')->exists($document->fichier_url)) {
             abort(404, 'Fichier introuvable.');
         }
- 
+
         $document->increment('nombre_telechargements');
- 
+
         $nomTelecharge = Str::slug($document->titre)
             . ($document->format_fichier ? '.' . $document->format_fichier : '');
- 
+
         return Storage::disk('public')->download($document->fichier_url, $nomTelecharge);
     }
 
-    private function validateRequest(Request $request, bool $fileRequired): array
+    private function validateRequest(Request $request, ?Document $document = null): array
     {
-        return $request->validate([
+        $validated = $request->validate([
             'categorie_id' => ['required', 'exists:categories_documents,id'],
             'titre' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
             'type' => ['required', 'in:' . implode(',', array_keys($this->typeOptions))],
             'acces' => ['required', 'in:' . implode(',', array_keys($this->accesOptions))],
+            'telechargeable' => ['sometimes', 'boolean'],
+            'code_consultation' => ['nullable', 'string', 'max:30'],
             'version' => ['nullable', 'string', 'max:20'],
             'publie_le' => ['nullable', 'date'],
-            'fichier' => [$fileRequired ? 'required' : 'nullable', 'file', 'mimes:pdf,doc,docx,xls,xlsx,ppt,pptx', 'max:20480'],
+            'fichier' => [
+                Rule::requiredIf(function () use ($request, $document) {
+                    // Fichier obligatoire si le document doit être téléchargeable
+                    // et qu'aucun fichier n'existe déjà (cas de l'édition sans remplacement)
+                    return $request->boolean('telechargeable') && ! $document?->fichier_url;
+                }),
+                'file',
+                'mimes:pdf,doc,docx,xls,xlsx,ppt,pptx',
+                'max:20480',
+            ],
         ]);
-    }
 
-    
+        $validated['telechargeable'] = $request->boolean('telechargeable');
+
+        return $validated;
+    }
 }

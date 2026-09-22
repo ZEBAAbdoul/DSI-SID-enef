@@ -1856,16 +1856,15 @@
                 </li>
 
                 <li>
-                    <button class="toplink" aria-expanded="false">E-services <svg class="chev" viewBox="0 0 12 8"
-                            fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M1 1l5 5 5-5" />
-                        </svg></button>
-                    <ul class="dropdown">
-                        <li><a href="{{ url('/') }}#prestations">Bibliothèque en ligne</a></li>
-                        <li><a href="{{ url('/bibliotheque') }}#bibliotheque">Centre de téléchargement</a></li>
-
-                    </ul>
-                </li>
+    <button class="toplink" aria-expanded="false">E-services <svg class="chev" viewBox="0 0 12 8"
+            fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M1 1l5 5 5-5" />
+        </svg></button>
+    <ul class="dropdown">
+        <li><a href="{{ route('bibliotheque.consultation') }}">Bibliothèque en ligne</a></li>
+        <li><a href="{{ route('bibliotheque.index') }}">Centre de téléchargement</a></li>
+    </ul>
+</li>
 
                 <li><a href="{{ url('/') }}#actualites">Actualités</a></li>
                 <li><a href="{{ url('/') }}#contact">Contact</a></li>
