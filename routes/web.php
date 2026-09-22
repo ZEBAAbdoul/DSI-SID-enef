@@ -10,6 +10,7 @@ use App\Http\Controllers\SocialiteController;
 use App\Http\Controllers\UserController;
 use App\Models\Actualite;
 use App\Models\ParametresSite;
+use App\Models\RechercheInnovation;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\InscriptionController;
 use App\Http\Controllers\PhotoPublicController;
@@ -77,6 +78,27 @@ Route::get('/catalogue-formations', [CatalogueController::class, 'index'])
 Route::get('/actualites/{actualite:slug}', function (Actualite $actualite) {
     return view('actualites.show', compact('actualite'));
 })->name('actualites.show');
+
+
+Route::get('/recherches-innovations', function (\Illuminate\Http\Request $request) {
+    $recherchesInnovations = \App\Models\RechercheInnovation::publiees()
+        ->deType($request->query('type'))
+        ->latest()
+        ->paginate(9)
+        ->withQueryString();
+
+    $types = [
+        'recherche'  => 'Recherche',
+        'innovation' => 'Innovation',
+    ];
+
+    return view('recherches_innovations.index', compact('recherchesInnovations', 'types'));
+})->name('recherches-innovations.index');
+
+
+Route::get('/recherches-innovations/{recherches_innovation:slug}', function (RechercheInnovation $recherches_innovation) {
+    return view('recherches_innovations.show', ['rechercheInnovation' => $recherches_innovation]);
+})->name('recherches-innovations.show');
 
 
 Route::get('/mot-du-directeur', [HomeController::class, 'motDuDirecteur']) ->name('mot-directeur');

@@ -24,6 +24,7 @@ class DatabaseSeeder extends Seeder
         $this->call(SessionsFormationSeeder::class);
         $this->call(TemoignagesSeeder::class);
         $this->call(ActualitesSeeder::class);
+        $this->call(RecherchesInnovationsSeeder::class);
         $this->call(CategorieDocumentSeeder::class);
         $this->call(DocumentSeeder::class);
         $this->call(PartenaireSeeder::class);

@@ -399,6 +399,25 @@
             </li>
 
             {{-- ===================================================== --}}
+            {{-- RECHERCHE & INNOVATION                                 --}}
+            {{-- ===================================================== --}}
+
+            <li class="nav-item {{ request()->routeIs('admin.recherches-innovations.*') ? 'active' : '' }}">
+
+                <a href="{{ route('admin.recherches-innovations.index') }}"
+                    class="nav-link {{ request()->routeIs('admin.recherches-innovations.*') ? 'active' : '' }}">
+
+                    <i class="nav-icon fas fa-flask"></i>
+
+                    <p>
+                        Recherche & Innovation
+                    </p>
+
+                </a>
+
+            </li>
+
+            {{-- ===================================================== --}}
             {{-- TÉMOIGNAGES (modération)                              --}}
             {{-- ===================================================== --}}
             @php $temoignagesEnAttente = \App\Models\Temoignage::where('est_publie', false)->count(); @endphp
