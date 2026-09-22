@@ -729,6 +729,7 @@ $filieresActive = Route::is('admin.filieres.*');
 
 
 
+<<<<<<< HEAD
         {{-- ===================================================== --}}
         {{-- PARAMÈTRES --}}
         {{-- ===================================================== --}}
@@ -799,9 +800,84 @@ $filieresActive = Route::is('admin.filieres.*');
                     </a>
 
                 </li>
+=======
+            {{-- ===================================================== --}}
+{{-- PARAMÈTRES                                            --}}
+{{-- ===================================================== --}}
+
+<li class="nav-item {{ $parametresActive ? 'menu-open' : '' }}">
+
+    <a href="#" class="nav-link {{ $parametresActive ? 'active' : '' }}">
+
+        <i class="nav-icon fas fa-cogs"></i>
+
+        <p>
+            Paramètres
+            <i class="fas fa-angle-left right"></i>
+        </p>
+
+    </a>
 
 
+    <ul class="nav nav-treeview">
 
+
+        {{-- Utilisateurs --}}
+        <li class="nav-item">
+
+            <a href="{{ route('admin.user.index') }}"
+                class="nav-link {{ Route::is('admin.user.*') ? 'active' : '' }}">
+
+                <i class="fas fa-users nav-icon"></i>
+
+                <p>
+                    Utilisateurs
+                </p>
+
+            </a>
+
+        </li>
+
+
+        {{-- Paramètres du site --}}
+        <li class="nav-item">
+
+            <a href="{{ route('admin.parametres.index') }}"
+                class="nav-link {{ Route::is('admin.parametres.*') ? 'active' : '' }}">
+
+                <i class="fas fa-sliders-h nav-icon"></i>
+
+                <p>
+                    Paramètres du site
+                </p>
+
+            </a>
+
+        </li>
+
+
+        {{-- Catégories de formation --}}
+        <li class="nav-item">
+
+            <a href="{{ route('admin.categories-formation.index') }}"
+                class="nav-link {{ Route::is('admin.categories-formation.*') ? 'active' : '' }}">
+
+                <i class="fas fa-tags nav-icon"></i>
+
+                <p>
+                    Catégories de formation
+                </p>
+
+            </a>
+
+        </li>
+>>>>>>> 60b69b212815634bbe6be77dfd91d0cc363a4dda
+
+
+        {{-- Informations formations --}}
+        <li class="nav-item">
+
+<<<<<<< HEAD
                 {{-- Catégories documents --}}
                 <li class="nav-item">
 
@@ -857,6 +933,76 @@ $filieresActive = Route::is('admin.filieres.*');
                         class="nav-link {{ Route::is('admin.partenaires.*') ? 'active' : '' }}">
 
                         <i class="fas fa-handshake nav-icon"></i>
+=======
+            <a href="{{ route('admin.formation-informations.index') }}"
+                class="nav-link {{ Route::is('admin.formation-informations.*') ? 'active' : '' }}">
+
+                <i class="fas fa-info-circle nav-icon"></i>
+
+                <p>
+                    Informations formations
+                </p>
+
+            </a>
+
+        </li>
+
+
+        {{-- Catégories documents --}}
+        <li class="nav-item">
+
+            <a href="{{ route('admin.categories-documents.index') }}"
+                class="nav-link {{ Route::is('admin.categories-documents.*') ? 'active' : '' }}">
+
+                <i class="fas fa-tags nav-icon"></i>
+
+                <p>
+                    Catégories de documents
+                </p>
+
+            </a>
+
+        </li>
+
+
+        {{-- Types de pièces --}}
+        <li class="nav-item">
+
+            <a href="{{ route('admin.types-pieces.index') }}"
+                class="nav-link {{ Route::is('admin.types-pieces.*') ? 'active' : '' }}">
+
+                <i class="fas fa-id-card nav-icon"></i>
+
+                <p>
+                    Types de pièces
+                </p>
+
+            </a>
+
+        </li>
+
+
+        {{-- Partenaires --}}
+        <li class="nav-item">
+
+            <a href="{{ route('admin.partenaires.index') }}"
+                class="nav-link {{ Route::is('admin.partenaires.*') ? 'active' : '' }}">
+
+                <i class="fas fa-handshake nav-icon"></i>
+
+                <p>
+                    Partenaires
+                </p>
+
+            </a>
+
+        </li>
+
+
+    </ul>
+
+</li>
+>>>>>>> 60b69b212815634bbe6be77dfd91d0cc363a4dda
 
                         <p>
                             Partenaires

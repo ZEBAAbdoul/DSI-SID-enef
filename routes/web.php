@@ -5,6 +5,7 @@ use App\Http\Controllers\BibliothequeController;
 use App\Http\Controllers\CatalogueController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\InformationsComplementairesController;
 use App\Http\Controllers\LoginWithOTPController;
 use App\Http\Controllers\ManualController;
 use App\Http\Controllers\SocialiteController;
@@ -61,6 +62,10 @@ Route::prefix('oauth/')->group(function () {
 // Route pour la documentation
 Route::get('/manual', [ManualController::class, 'index'])->name('manual.index');
 
+
+Route::get('/formations/informations-complementaires', [InformationsComplementairesController::class, 'index'])
+    ->name('formations.informations');
+    
 Route::get('/formations/{formation:slug}', function (\App\Models\Formation $formation) {
     $formation->load(['filiere', 'categorie']);
     $param_site = ParametresSite::first();
