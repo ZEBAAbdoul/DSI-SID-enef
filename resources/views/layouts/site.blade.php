@@ -1856,13 +1856,13 @@
                 </li>
 
                 <li>
-                    <button class="toplink" aria-expanded="false">Services <svg class="chev" viewBox="0 0 12 8"
+                    <button class="toplink" aria-expanded="false">E-services <svg class="chev" viewBox="0 0 12 8"
                             fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M1 1l5 5 5-5" />
                         </svg></button>
                     <ul class="dropdown">
-                        <li><a href="{{ url('/') }}#prestations">Prestations &amp; appui-conseil</a></li>
-                        <li><a href="{{ url('/bibliotheque') }}#bibliotheque">Bibliothèque</a></li>
+                        <li><a href="{{ url('/') }}#prestations">Bibliothèque en ligne</a></li>
+                        <li><a href="{{ url('/bibliotheque') }}#bibliotheque">Centre de téléchargement</a></li>
 
                     </ul>
                 </li>

@@ -30,13 +30,13 @@ class ParametresSiteSeeder extends Seeder
             A travers ce site web, nous souhaitons renforcer notre proximité avec nos stagiaires, nos partenaires et l’ensemble de nos publics, tout en offrant une meilleure visibilité à nos formations, nos activités, nos réalisations et nos expertises.
             Ensemble, faisons de l’excellence, de l’innovation et de l’engagement les moteurs d’une gestion durable de notre environnement et de nos ressources naturelles.
             ',
-            'mot_dg_photo_url' => '/storage/dg/enef-dg.JPEG',
-            'mot_dg_nom' => 'Col. Fiédi HAKIEKOU',
+            'mot_dg_photo_url' => '/storage/dg/dg.jpeg',
+            'mot_dg_nom' => 'COL Fiédi HAKIEKOU',
             'adresse' => '01 BP 1105, Dindéresso — Bobo-Dioulasso, Burkina Faso',
             'telephone' => '(+226) 20 98 06 89',
             'email_contact' => 'infos@enef.gov.bf',
             'annee_creation' => 1953,
-            'personne_forme' => 1500,
+            'personne_forme' => 10000,
             'facebook_url' => 'https://web.facebook.com/enef2021',
             'linkedin_url' => 'https://linkedin.com/school/enef-sn',
             'meta_description' => 'Depuis 1953, l\'ENEF forme les cadres et techniciens qui protègent les ressources naturelles du Burkina Faso — formation initiale, formation continue et appui-conseil aux structures publiques et privées.',
