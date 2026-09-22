@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Formation;
+use App\Models\FormationInformation;
 
 class CatalogueController extends Controller
 {
@@ -53,10 +54,18 @@ class CatalogueController extends Controller
             ->orderBy('code_module')
             ->get();
 
+                    $informations = FormationInformation::orderBy('ordre')->get()->groupBy('categorie');
+
+
         return view('formations.Catalogue_formation_continue', [
             'formationsProgrammees' => $formationsProgrammees,
             'formationsALaCarte' => $formationsALaCarte,
             'formationsInitiales' => $formationsInitiales,
+
+            'frais' => $informations->get('frais', collect()),
+            'paiementIntermediaire' => $informations->get('paiement_intermediaire', collect()),
+            'paiementTerminale' => $informations->get('paiement_terminale', collect()),
+            'dossier' => $informations->get('dossier', collect()),
         ]);
     }
 }
