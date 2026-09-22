@@ -36,5 +36,6 @@ class DatabaseSeeder extends Seeder
         $this->call(PhotoSeeder::class);
         $this->call(VideosSeeder::class);
         $this->call(FormationsInitialesSeeder::class);
+        $this->call(FormationInformationsSeeder::class);
     }
 }

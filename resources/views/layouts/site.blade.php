@@ -1832,6 +1832,7 @@
                         </svg></button>
                     <ul class="dropdown">
                         <li><a href="{{ url('/') }}#dg">Mot du Directeur Général</a></li>
+                        {{-- <li><a href="{{ url('/formations/informations-complementaires') }}">Conditions d'entrée à l'ENEF</a></li> --}}
                         {{-- <li><a href="{{ url('/') }}#presentation">Présentation &amp; historique</a></li> --}}
                         <li><a href="{{ route('unites-pedagogiques') }}">Unités pédagogiques</a></li>
                         <li><a href="{{ url('/') }}#partenaires">Nos partenaires</a></li>
@@ -1921,10 +1922,14 @@
             <div class="footer-grid" style="grid-template-columns:1.4fr repeat({{ !empty($liensUtilesFooter) ? 5 : 4 }}, 1fr);">
                 <div class="footer-brand">
                     <div class="brand" style="gap:10px;">
-                        <span class="brand-mark" style="width:42px;height:42px;"><span
-                                style="font-size:15px;">EF</span></span>
-                        <span class="brand-text"><span class="full" style="color:#fff;">ENEF</span><span
-                                class="sub" style="color:#93a88e;">Eaux et Forêts</span></span>
+                        <a href="{{ url('/') }}" class="brand"> <span class="brand-mark"> <img
+                                    src="{{ asset('images/logo.jpg') }}" alt="Logo ENEF" class="logo-enef"> </span>
+                            <span class="brand-text"> <span class="full">ENEF</span> <span class="sub">École
+                                    Nationale des Eaux
+                                    et Forêts</span>
+                            </span> </a>
+                        {{-- <span class="brand-text"><span class="full" style="color:#fff;">ENEF</span><span
+                                class="sub" style="color:#93a88e;">Eaux et Forêts</span></span> --}}
                     </div>
                     <p>École publique de formation aux métiers des eaux, des forêts et de l'environnement, au service de
                         la Nation depuis 1953.</p>

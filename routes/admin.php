@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ActualiteController;
+use App\Http\Controllers\AdminFormationInformationController;
 use App\Http\Controllers\CategorieDocumentController;
 use App\Http\Controllers\CategorieFormationController;
 use App\Http\Controllers\DocumentController;
@@ -249,6 +250,57 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(
     )->name('formations.statut');
 
 
+    // ==================== INFORMATIONS FORMATIONS ====================
+
+    Route::prefix('formation-informations')
+        ->name('formation-informations.')
+        ->group(function () {
+
+            // Liste des informations
+            Route::get('/', [AdminFormationInformationController::class, 'index'])
+                ->name('index');
+
+            // Formulaire de création
+            Route::get('/create', [AdminFormationInformationController::class, 'create'])
+                ->name('create');
+
+            // Enregistrer une information
+            Route::post('/', [AdminFormationInformationController::class, 'store'])
+                ->name('store');
+
+            // Formulaire de modification
+            Route::get('/{formationInformation}/edit', [AdminFormationInformationController::class, 'edit'])
+                ->name('edit');
+
+            // Mettre à jour une information
+            Route::put('/{formationInformation}', [AdminFormationInformationController::class, 'update'])
+                ->name('update');
+
+            // Supprimer une information
+            Route::delete('/{formationInformation}', [AdminFormationInformationController::class, 'destroy'])
+                ->name('destroy');
+        });
+
+    /*
+|--------------------------------------------------------------------------
+| Si tu n'as pas encore de groupe admin, voici la version autonome :
+|--------------------------------------------------------------------------
+|
+| Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () {
+|     Route::resource('formation-informations', FormationInformationController::class)
+|         ->except(['show']);
+| });
+|
+| Cela génère automatiquement les routes suivantes :
+|   GET    /admin/formation-informations              admin.formation-informations.index
+|   GET    /admin/formation-informations/create        admin.formation-informations.create
+|   POST   /admin/formation-informations               admin.formation-informations.store
+|   GET    /admin/formation-informations/{id}/edit      admin.formation-informations.edit
+|   PUT    /admin/formation-informations/{id}           admin.formation-informations.update
+|   DELETE /admin/formation-informations/{id}           admin.formation-informations.destroy
+*/
+
+
     // ==================== ENSEIGNANTS ====================
 
     Route::resource('enseignants', EnseignantController::class)
@@ -391,11 +443,11 @@ Route::resource('mes-idees', IdeeController::class)
     ->names('idees')
     ->except(['show']);
 
-// DG / SG : toutes les idées
-Route::resource('boite-a-idees', IdeeDirectionController::class)
-    ->parameters(['boite-a-idees' => 'idee'])
-    ->names('idees-direction')
-    ->only(['index', 'show', 'update']);
+    // DG / SG : toutes les idées
+    Route::resource('boite-a-idees', IdeeDirectionController::class)
+        ->parameters(['boite-a-idees' => 'idee'])
+        ->names('idees-direction')
+        ->only(['index', 'show', 'update']);
 
 
     // ==================== PHOTOS ====================

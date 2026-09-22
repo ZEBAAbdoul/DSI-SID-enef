@@ -699,131 +699,148 @@
 
 
             {{-- ===================================================== --}}
-            {{-- PARAMÈTRES                                            --}}
-            {{-- ===================================================== --}}
+{{-- PARAMÈTRES                                            --}}
+{{-- ===================================================== --}}
 
-            <li class="nav-item {{ $parametresActive ? 'menu-open' : '' }}">
+<li class="nav-item {{ $parametresActive ? 'menu-open' : '' }}">
 
-                <a href="#" class="nav-link {{ $parametresActive ? 'active' : '' }}">
+    <a href="#" class="nav-link {{ $parametresActive ? 'active' : '' }}">
 
-                    <i class="nav-icon fas fa-cogs"></i>
+        <i class="nav-icon fas fa-cogs"></i>
 
-                    <p>
-                        Paramètres
-                        <i class="fas fa-angle-left right"></i>
-                    </p>
+        <p>
+            Paramètres
+            <i class="fas fa-angle-left right"></i>
+        </p>
 
-                </a>
-
-
-                <ul class="nav nav-treeview">
+    </a>
 
 
-                    {{-- Utilisateurs --}}
-                    <li class="nav-item">
-
-                        <a href="{{ route('admin.user.index') }}"
-                            class="nav-link {{ Route::is('admin.user.*') ? 'active' : '' }}">
-
-                            <i class="fas fa-users nav-icon"></i>
-
-                            <p>
-                                Utilisateurs
-                            </p>
-
-                        </a>
-
-                    </li>
+    <ul class="nav nav-treeview">
 
 
-                    {{-- Paramètres du site --}}
-                    <li class="nav-item">
+        {{-- Utilisateurs --}}
+        <li class="nav-item">
 
-                        <a href="{{ route('admin.parametres.index') }}"
-                            class="nav-link {{ Route::is('admin.parametres.*') ? 'active' : '' }}">
+            <a href="{{ route('admin.user.index') }}"
+                class="nav-link {{ Route::is('admin.user.*') ? 'active' : '' }}">
 
-                            <i class="fas fa-sliders-h nav-icon"></i>
+                <i class="fas fa-users nav-icon"></i>
 
-                            <p>
-                                Paramètres du site
-                            </p>
+                <p>
+                    Utilisateurs
+                </p>
 
-                        </a>
+            </a>
 
-                    </li>
-
-
-                    {{-- Catégories de formation --}}
-                    <li class="nav-item">
-
-                        <a href="{{ route('admin.categories-formation.index') }}"
-                            class="nav-link {{ Route::is('admin.categories-formation.*') ? 'active' : '' }}">
-
-                            <i class="fas fa-tags nav-icon"></i>
-
-                            <p>
-                                Catégories de formation
-                            </p>
-
-                        </a>
-
-                    </li>
+        </li>
 
 
+        {{-- Paramètres du site --}}
+        <li class="nav-item">
 
-                    {{-- Catégories documents --}}
-                    <li class="nav-item">
+            <a href="{{ route('admin.parametres.index') }}"
+                class="nav-link {{ Route::is('admin.parametres.*') ? 'active' : '' }}">
 
-                        <a href="{{ route('admin.categories-documents.index') }}"
-                            class="nav-link {{ Route::is('admin.categories-documents.*') ? 'active' : '' }}">
+                <i class="fas fa-sliders-h nav-icon"></i>
 
-                            <i class="fas fa-tags nav-icon"></i>
+                <p>
+                    Paramètres du site
+                </p>
 
-                            <p>
-                                Catégories de documents
-                            </p>
+            </a>
 
-                        </a>
-
-                    </li>
-
-
-                    {{-- Types de pièces --}}
-                    <li class="nav-item">
-
-                        <a href="{{ route('admin.types-pieces.index') }}"
-                            class="nav-link {{ Route::is('admin.types-pieces.*') ? 'active' : '' }}">
-
-                            <i class="fas fa-id-card nav-icon"></i>
-
-                            <p>
-                                Types de pièces
-                            </p>
-
-                        </a>
-
-                    </li>
+        </li>
 
 
-                    {{-- Partenaires --}}
-                    <li class="nav-item">
+        {{-- Catégories de formation --}}
+        <li class="nav-item">
 
-                        <a href="{{ route('admin.partenaires.index') }}"
-                            class="nav-link {{ Route::is('admin.partenaires.*') ? 'active' : '' }}">
+            <a href="{{ route('admin.categories-formation.index') }}"
+                class="nav-link {{ Route::is('admin.categories-formation.*') ? 'active' : '' }}">
 
-                            <i class="fas fa-handshake nav-icon"></i>
+                <i class="fas fa-tags nav-icon"></i>
 
-                            <p>
-                                Partenaires
-                            </p>
+                <p>
+                    Catégories de formation
+                </p>
 
-                        </a>
+            </a>
 
-                    </li>
+        </li>
 
-                </ul>
 
-            </li>
+        {{-- Informations formations --}}
+        <li class="nav-item">
+
+            <a href="{{ route('admin.formation-informations.index') }}"
+                class="nav-link {{ Route::is('admin.formation-informations.*') ? 'active' : '' }}">
+
+                <i class="fas fa-info-circle nav-icon"></i>
+
+                <p>
+                    Informations formations
+                </p>
+
+            </a>
+
+        </li>
+
+
+        {{-- Catégories documents --}}
+        <li class="nav-item">
+
+            <a href="{{ route('admin.categories-documents.index') }}"
+                class="nav-link {{ Route::is('admin.categories-documents.*') ? 'active' : '' }}">
+
+                <i class="fas fa-tags nav-icon"></i>
+
+                <p>
+                    Catégories de documents
+                </p>
+
+            </a>
+
+        </li>
+
+
+        {{-- Types de pièces --}}
+        <li class="nav-item">
+
+            <a href="{{ route('admin.types-pieces.index') }}"
+                class="nav-link {{ Route::is('admin.types-pieces.*') ? 'active' : '' }}">
+
+                <i class="fas fa-id-card nav-icon"></i>
+
+                <p>
+                    Types de pièces
+                </p>
+
+            </a>
+
+        </li>
+
+
+        {{-- Partenaires --}}
+        <li class="nav-item">
+
+            <a href="{{ route('admin.partenaires.index') }}"
+                class="nav-link {{ Route::is('admin.partenaires.*') ? 'active' : '' }}">
+
+                <i class="fas fa-handshake nav-icon"></i>
+
+                <p>
+                    Partenaires
+                </p>
+
+            </a>
+
+        </li>
+
+
+    </ul>
+
+</li>
 
 
 

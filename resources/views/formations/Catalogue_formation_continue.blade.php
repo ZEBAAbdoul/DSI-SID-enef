@@ -13,7 +13,7 @@
                 2025-2026 — formations programmées à dates fixes et modules à la carte, conçus pour les
                 professionnels de l'environnement et des ressources naturelles.</p>
             <div class="hero-ctas">
-                <a href="{{ url('/') }}#admissions" class="btn btn-ghost-light">&larr; Retour à l'accueil</a>
+                {{-- <a href="{{ url('/') }}#admissions" class="btn btn-ghost-light">&larr; Retour à l'accueil</a> --}}
             </div>
         </div>
     </section>
@@ -157,9 +157,13 @@
                                         </div>
                                     </div>
 
-                                    <div class="module-action flex-shrink-0">
-                                        <a class="btn btn-primary text-nowrap">
+                                    <div class="module-action">
+                                        <a class="btn btn-primary"
+                                            href="mailto:infos@enef.gov.bf?subject={{ rawurlencode('Demande de formation : ' . $item->titre) }}">
                                             Demander cette formation
+                                        </a>
+                                        <a class="btn btn-outline" href="{{ route('formations.informations') }}">
+                                            Voir les conditions
                                         </a>
                                     </div>
                                 </div>
@@ -354,32 +358,32 @@
                 font-size: 13.5px;
             }
 
-             /* style du buton a droite  */
-             .module-layout {
-    display: flex;
-    align-items: flex-start;
-    gap: 24px;
-}
+            /* style du buton a droite  */
+            .module-layout {
+                display: flex;
+                align-items: flex-start;
+                gap: 24px;
+            }
 
-.module-content {
-    flex: 1;
-    min-width: 0;
-}
+            .module-content {
+                flex: 1;
+                min-width: 0;
+            }
 
-.module-action {
-    flex-shrink: 0;
-}
+            .module-action {
+                flex-shrink: 0;
+            }
 
-@media (max-width: 640px) {
-    .module-layout {
-        flex-direction: column;
-    }
+            @media (max-width: 640px) {
+                .module-layout {
+                    flex-direction: column;
+                }
 
-    .module-action,
-    .module-action .btn {
-        width: 100%;
-    }
-}
+                .module-action,
+                .module-action .btn {
+                    width: 100%;
+                }
+            }
         </style>
     @endpush
 

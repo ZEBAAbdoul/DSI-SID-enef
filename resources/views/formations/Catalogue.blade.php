@@ -86,6 +86,7 @@
                                 </div>
 
                                 <a href="{{ route('formations.show', $item->slug) }}" class="btn btn-outline btn-sm">Voir la fiche du cycle</a>
+                                <a href="{{ route('formations.informations', $item->slug) }}" class="btn btn-outline btn-sm">Voir les informations complementaires</a>
                             </div>
                         </details>
                     @empty

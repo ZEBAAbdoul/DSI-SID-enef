@@ -30,7 +30,7 @@ class ParametresSiteSeeder extends Seeder
             A travers ce site web, nous souhaitons renforcer notre proximité avec nos stagiaires, nos partenaires et l’ensemble de nos publics, tout en offrant une meilleure visibilité à nos formations, nos activités, nos réalisations et nos expertises.
             Ensemble, faisons de l’excellence, de l’innovation et de l’engagement les moteurs d’une gestion durable de notre environnement et de nos ressources naturelles.
             ',
-            'mot_dg_photo_url' => '/storage/dg/enef-dg.jpg',
+            'mot_dg_photo_url' => '/storage/dg/enef-dg.JPEG',
             'mot_dg_nom' => 'Col. Fiédi HAKIEKOU',
             'adresse' => '01 BP 1105, Dindéresso — Bobo-Dioulasso, Burkina Faso',
             'telephone' => '(+226) 20 98 06 89',
