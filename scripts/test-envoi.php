@@ -1,14 +1,14 @@
 <?php
 
 /*
- * Test d'envoi direct du formulaire de contact vers infos@enef.gov.bf.
+ * Test d'envoi du formulaire de contact vers infos@enef.gov.bf.
  *
  * À exécuter depuis le serveur de production :
  *     php scripts/test-envoi.php
  *
- * Il faut que le .env soit configuré en SMTP direct (MAIL_HOST=mg01.gov.bf).
+ * Il faut que le .env soit configuré (relais SMTP, ex. Gmail) dans MAIL_HOST.
  * Affiche aussi si l'IP publique locale est sur la liste noire Barracuda
- * (b.barracudacentral.org), cause fréquente du refus "550 client blocked".
+ * (b.barracudacentral.org) — utile si le serveur gov.bf refuse une IP.
  */
 
 error_reporting(E_ALL);
