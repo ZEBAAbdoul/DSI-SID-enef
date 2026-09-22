@@ -30,10 +30,11 @@ class RecherchesInnovationsSeeder extends Seeder
                     'recherches_innovations/photos/XaGgcEoNwmlwcKVMa1gGDwXDmHOTcxqj3M38dvHU.webp',
                 ],
                 'url_video'  => 'https://www.facebook.com/reel/1032699442754352',
-                'document'   => 'recherches_innovations/documents/memoire.pdf',
+                'document'   => 'recherches_innovations/documents/JNgpGnyVsPmv6D85SecNxHgcH3tddK0eaELHmfTR.pdf',
+                'document_nom' => 'memoire.pdf',
                 'is_publiee' => true,
                 'created_at' => '2026-09-22 09:26:59',
-                'updated_at' => '2026-09-22 09:38:00',
+                'updated_at' => '2026-09-22 12:37:00',
             ],
         ];
 
@@ -48,6 +49,7 @@ class RecherchesInnovationsSeeder extends Seeder
                     'photo'      => $item['photo'],
                     'url_video'  => $item['url_video'],
                     'document'   => $item['document'],
+                    'document_nom' => $item['document_nom'],
                     'is_publiee' => $item['is_publiee'],
                     'created_by' => $userId,
                     'created_at' => $item['created_at'],
