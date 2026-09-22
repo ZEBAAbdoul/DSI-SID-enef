@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\RechercheInnovation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 
 class RechercheInnovationController extends Controller
@@ -81,7 +81,7 @@ class RechercheInnovationController extends Controller
          */
         $photos = [];
         foreach ($request->file('photo', []) as $fichier) {
-            $photos[] = $fichier->store('recherches_innovations/photos', 'public');
+            $photos[] = $this->sauvegarderPhotoPublique($fichier);
         }
 
         if ($photos) {
@@ -92,8 +92,9 @@ class RechercheInnovationController extends Controller
          * Upload du document
          */
         if ($request->hasFile('document')) {
-            $validated['document'] = $request->file('document')
-                ->store('recherches_innovations/documents', 'public');
+            $validated['document'] = $this->sauvegarderDocumentPublique(
+                $request->file('document')
+            );
             $validated['document_nom'] = $request->file('document')->getClientOriginalName();
         }
 
@@ -205,14 +206,12 @@ class RechercheInnovationController extends Controller
 
         // Suppression sur disque des photos retirées
         foreach (array_diff($actuelles, $gardees) as $supprimee) {
-            if (Storage::disk('public')->exists($supprimee)) {
-                Storage::disk('public')->delete($supprimee);
-            }
+            $this->supprimerFichierPublique($supprimee);
         }
 
         $nouvelles = [];
         foreach ($request->file('photo', []) as $fichier) {
-            $nouvelles[] = $fichier->store('recherches_innovations/photos', 'public');
+            $nouvelles[] = $this->sauvegarderPhotoPublique($fichier);
         }
 
         $photos = array_merge($gardees, $nouvelles);
@@ -229,15 +228,11 @@ class RechercheInnovationController extends Controller
          */
         if ($request->hasFile('document')) {
 
-            if (
-                $rechercheInnovation->document &&
-                Storage::disk('public')->exists($rechercheInnovation->document)
-            ) {
-                Storage::disk('public')->delete($rechercheInnovation->document);
-            }
+            $this->supprimerFichierPublique($rechercheInnovation->document);
 
-            $validated['document'] = $request->file('document')
-                ->store('recherches_innovations/documents', 'public');
+            $validated['document'] = $this->sauvegarderDocumentPublique(
+                $request->file('document')
+            );
             $validated['document_nom'] = $request->file('document')->getClientOriginalName();
         }
 
@@ -271,20 +266,13 @@ class RechercheInnovationController extends Controller
          * Supprimer les photos
          */
         foreach ($rechercheInnovation->photo_list as $photo) {
-            if (Storage::disk('public')->exists($photo)) {
-                Storage::disk('public')->delete($photo);
-            }
+            $this->supprimerFichierPublique($photo);
         }
 
         /*
          * Supprimer le document
          */
-        if (
-            $rechercheInnovation->document &&
-            Storage::disk('public')->exists($rechercheInnovation->document)
-        ) {
-            Storage::disk('public')->delete($rechercheInnovation->document);
-        }
+        $this->supprimerFichierPublique($rechercheInnovation->document);
 
         $rechercheInnovation->delete();
 
@@ -331,5 +319,49 @@ class RechercheInnovationController extends Controller
         return redirect()
             ->back()
             ->with('success', 'La recherche/innovation a été dépubliée avec succès.');
+    }
+
+    /**
+     * Enregistre une photo uploadée dans public/recherches_innovations/photos.
+     * Retourne le chemin relatif (ex. : recherches_innovations/photos/abcd….jpg).
+     */
+    private function sauvegarderPhotoPublique(
+        \Illuminate\Http\UploadedFile $fichier
+    ): string {
+        $chemin = $fichier->hashName('recherches_innovations/photos');
+
+        $fichier->move(
+            public_path('recherches_innovations/photos'),
+            basename($chemin)
+        );
+
+        return $chemin;
+    }
+
+    /**
+     * Enregistre un document uploadé dans public/recherches_innovations/documents.
+     * Retourne le chemin relatif (ex. : recherches_innovations/documents/abcd….pdf).
+     */
+    private function sauvegarderDocumentPublique(
+        \Illuminate\Http\UploadedFile $fichier
+    ): string {
+        $chemin = $fichier->hashName('recherches_innovations/documents');
+
+        $fichier->move(
+            public_path('recherches_innovations/documents'),
+            basename($chemin)
+        );
+
+        return $chemin;
+    }
+
+    /**
+     * Supprime un fichier (photo ou document) de public/ si présent.
+     */
+    private function supprimerFichierPublique(?string $chemin): void
+    {
+        if ($chemin && is_file(public_path($chemin))) {
+            File::delete(public_path($chemin));
+        }
     }
 }

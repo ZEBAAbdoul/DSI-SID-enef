@@ -341,7 +341,7 @@
             @if ($rechercheInnovation->document)
                 <div style="margin-top:32px; padding:18px 20px; background:var(--paper-alt); border:1px solid var(--line);">
                     <div style="font-size:13px; color:var(--ink-soft); margin-bottom:6px;">Document joint</div>
-                    <a href="{{ asset('storage/' . $rechercheInnovation->document) }}" target="_blank" rel="noopener noreferrer"
+                    <a href="{{ asset($rechercheInnovation->document) }}" target="_blank" rel="noopener noreferrer"
                        style="font-weight:700; color:var(--forest-mid);">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                              style="display:inline-block; margin-right:6px; vertical-align:-2px;">

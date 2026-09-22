@@ -226,7 +226,7 @@
         <div>
 
             <img
-                src="{{ asset('storage/' . $photo->image_url) }}"
+                src="{{ asset($photo->image_url) }}"
                 alt="{{ $photo->titre }}"
                 class="img-thumbnail"
                 style="
@@ -251,7 +251,7 @@
 
         <div>
             <img
-                src="{{ asset('photos/' . $photo->image_url) }}"
+                src="{{ asset($photo->image_url) }}"
                 alt="{{ $photo->titre }}"
                 class="img-thumbnail"
                 style="

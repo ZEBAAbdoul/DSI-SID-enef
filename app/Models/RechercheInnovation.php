@@ -117,7 +117,7 @@ class RechercheInnovation extends Model
     public function getPhotosAttribute(): array
     {
         return array_map(
-            fn (string $chemin) => asset('storage/' . $chemin),
+            fn (string $chemin) => asset($chemin),
             $this->photo_list
         );
     }

@@ -11,6 +11,8 @@ class RecherchesInnovationsSeeder extends Seeder
     /**
      * Reproduit le contenu actuel de la rubrique « Recherche & Innovation ».
      * Rejouable : la clé est le slug (met à jour au lieu de dupliquer).
+     * Les fichiers (photos + document) sont servis depuis public/recherches_innovations
+     * (URL : /recherches_innovations/…), versionnés dans git.
      */
     public function run(): void
     {

@@ -10,6 +10,8 @@ class PhotoSeeder extends Seeder
     /**
      * Reproduit la galerie photo actuelle.
      * Rejouable : la clé est image_url (met à jour au lieu de dupliquer).
+     * Les fichiers images sont servis depuis public/photos (URL : /photos/…),
+     * versionnés dans git — aucune manipulation manuelle après db:seed.
      */
     public function run(): void
     {

@@ -523,7 +523,7 @@
                                          onclick="ouvrirGalerie({{ $loop->parent->index * 4 + $loop->index }})"
                                          onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();ouvrirGalerie({{ $loop->parent->index * 4 + $loop->index }});}">
                                         <div class="gal-thumb">
-                                            <img src="{{ asset('storage/' . $photo->image_url) }}" alt="{{ $photo->titre }}" loading="lazy">
+                                            <img src="{{ asset($photo->image_url) }}" alt="{{ $photo->titre }}" loading="lazy">
                                         </div>
                                         <div class="gal-body">
                                             <h3>{{ $photo->titre }}</h3>
@@ -639,7 +639,7 @@
     @if ($photos->isNotEmpty())
         @php
             $galeriePhotos = $photos->map(fn ($p) => [
-                'image' => asset('storage/' . $p->image_url),
+                'image' => asset($p->image_url),
                 'titre' => $p->titre,
                 'description' => $p->description,
             ])->values();

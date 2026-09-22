@@ -199,7 +199,7 @@
 
     @if ($ri?->document)
         <a
-            href="{{ asset('storage/' . $ri->document) }}"
+            href="{{ asset($ri->document) }}"
             target="_blank"
             rel="noopener"
             class="d-block mb-2 text-truncate"
