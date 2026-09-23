@@ -1038,7 +1038,7 @@
                 });
             });
 
-            applyFilters();
+            applyFilters(); // état initial : onglet "Programmées"
         })();
     </script>
 <?php $__env->stopPush(); ?>
