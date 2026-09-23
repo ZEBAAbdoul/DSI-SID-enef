@@ -14,6 +14,11 @@
                 @else
                     <span class="badge bg-warning text-dark">Restreint</span>
                 @endif
+                @if ($document->telechargeable)
+                    <span class="badge bg-info text-dark"><i class="fas fa-download me-1"></i> Téléchargeable</span>
+                @else
+                    <span class="badge bg-light text-dark border"><i class="fas fa-eye me-1"></i> Consultation sur place</span>
+                @endif
             </div>
 
             <div class="d-flex gap-2">
@@ -57,6 +62,18 @@
                             <dt class="col-sm-3">Version</dt>
                             <dd class="col-sm-9">{{ $document->version ?: '—' }}</dd>
 
+                            <dt class="col-sm-3">Téléchargeable</dt>
+                            <dd class="col-sm-9">
+                                @if ($document->telechargeable)
+                                    <span class="text-success"><i class="fas fa-check-circle me-1"></i> Oui</span>
+                                @else
+                                    <span class="text-muted"><i class="fas fa-times-circle me-1"></i> Non — consultation sur place uniquement</span>
+                                @endif
+                            </dd>
+
+                            <dt class="col-sm-3">Code de consultation</dt>
+                            <dd class="col-sm-9">{{ $document->code_consultation ?: '—' }}</dd>
+
                             <dt class="col-sm-3">Fichier</dt>
                             <dd class="col-sm-9">
                                 @if ($document->fichier_url)
@@ -86,7 +103,7 @@
                 </div>
             </div>
 
-            <div class="col-lg-4">
+            {{-- <div class="col-lg-4">
                 <div class="card shadow-sm border-0">
                     <div class="card-body text-center">
                         <i class="fas fa-download fa-lg text-muted mb-2 d-block"></i>
@@ -94,7 +111,7 @@
                         <div class="text-muted">téléchargement(s)</div>
                     </div>
                 </div>
-            </div>
+            </div> --}}
         </div>
 
     </div>

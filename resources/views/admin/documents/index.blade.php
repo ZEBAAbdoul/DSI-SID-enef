@@ -49,7 +49,7 @@
                 <form method="GET" action="{{ route('admin.documents.index') }}">
                     <div class="row g-3 align-items-end">
 
-                        <div class="col-lg-4 col-md-6">
+                        <div class="col-lg-3 col-md-6">
                             <label for="categorie_id" class="form-label small text-muted mb-1">
                                 Catégorie
                             </label>
@@ -77,7 +77,7 @@
                             </select>
                         </div>
 
-                        <div class="col-lg-3 col-md-6">
+                        <div class="col-lg-2 col-md-6">
                             <label for="acces" class="form-label small text-muted mb-1">
                                 Accès
                             </label>
@@ -88,13 +88,24 @@
                             </select>
                         </div>
 
+                        <div class="col-lg-2 col-md-6">
+                            <label for="telechargeable" class="form-label small text-muted mb-1">
+                                Téléchargeable
+                            </label>
+                            <select id="telechargeable" name="telechargeable" class="form-select">
+                                <option value="">Indifférent</option>
+                                <option value="1" @selected(request('telechargeable') === '1')>Oui</option>
+                                <option value="0" @selected(request('telechargeable') === '0')>Non</option>
+                            </select>
+                        </div>
+
                         <div class="col-lg-2 col-md-6 d-flex gap-2">
                             <button type="submit" class="btn btn-success flex-grow-1">
                                 <i class="fas fa-filter me-1"></i>
                                 Filtrer
                             </button>
 
-                            @if(request()->hasAny(['categorie_id', 'type', 'acces']))
+                            @if(request()->hasAny(['categorie_id', 'type', 'acces', 'telechargeable']))
                                 <a href="{{ route('admin.documents.index') }}"
                                    class="btn btn-outline-secondary"
                                    title="Réinitialiser les filtres">
@@ -124,6 +135,7 @@
                                 <th style="width:150px;">Catégorie</th>
                                 <th style="width:150px;">Type</th>
                                 <th style="width:110px;">Accès</th>
+                                <th style="width:130px;">Téléchargement</th>
                                 <th style="width:90px;">Version</th>
                                 <th style="width:100px;">Taille</th>
                                 <th style="width:80px;" class="text-center">Téléch.</th>
@@ -140,11 +152,11 @@
                                     <div class="fw-semibold">
                                         {{ Str::limit($document->titre, 60) }}
                                     </div>
-                                    @if($document->description)
+                                    {{-- @if($document->description)
                                         <small class="text-muted">
                                             {{ Str::limit($document->description, 70) }}
                                         </small>
-                                    @endif
+                                    @endif --}}
                                 </td>
 
                                 <td>{{ $document->categorie?->nom ?? '—' }}</td>
@@ -160,6 +172,21 @@
                                         <span class="badge bg-success">Public</span>
                                     @else
                                         <span class="badge bg-warning text-dark">Restreint</span>
+                                    @endif
+                                </td>
+
+                                <td>
+                                    @if($document->telechargeable)
+                                        <span class="badge bg-info text-dark">
+                                            <i class="fas fa-download me-1"></i> Oui
+                                        </span>
+                                    @else
+                                        <span class="badge bg-light text-dark border">
+                                            <i class="fas fa-eye me-1"></i> Sur place
+                                        </span>
+                                        @if($document->code_consultation)
+                                            <div class="small text-muted mt-1">{{ $document->code_consultation }}</div>
+                                        @endif
                                     @endif
                                 </td>
 
@@ -220,10 +247,10 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="10" class="text-center py-5">
+                                <td colspan="11" class="text-center py-5">
                                     <i class="fas fa-file-lines fa-2x text-muted mb-3 d-block"></i>
 
-                                    @if(request()->hasAny(['categorie_id', 'type', 'acces']))
+                                    @if(request()->hasAny(['categorie_id', 'type', 'acces', 'telechargeable']))
                                         <p class="text-muted mb-3">
                                             Aucun document ne correspond à ces critères.
                                         </p>

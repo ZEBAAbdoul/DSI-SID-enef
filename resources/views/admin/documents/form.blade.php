@@ -78,14 +78,47 @@
     </div>
 
     <div class="col-md-6">
+        <label for="code_consultation" class="form-label">Code de consultation</label>
+        <input type="text" name="code_consultation" id="code_consultation"
+            class="form-control @error('code_consultation') is-invalid @enderror"
+            value="{{ old('code_consultation', $document->code_consultation) }}"
+            placeholder="ex. DOC-RA-001" maxlength="30">
+        @error('code_consultation')
+            <div class="invalid-feedback">{{ $message }}</div>
+        @enderror
+        <div class="form-text">
+            Visible par tous les visiteurs. Permet à ceux qui ne peuvent pas télécharger ce document de le
+            référencer pour une consultation sur place.
+        </div>
+    </div>
+
+    <div class="col-12">
+        <div class="form-check form-switch">
+            <input type="hidden" name="telechargeable" value="0">
+            <input type="checkbox" name="telechargeable" id="telechargeable" value="1"
+                class="form-check-input @error('telechargeable') is-invalid @enderror"
+                {{ old('telechargeable', $document->exists ? $document->telechargeable : true) ? 'checked' : '' }}>
+            <label for="telechargeable" class="form-check-label">
+                Téléchargeable par les visiteurs
+            </label>
+            @error('telechargeable')
+                <div class="invalid-feedback">{{ $message }}</div>
+            @enderror
+        </div>
+        <div class="form-text">
+            Si désactivé, le document sera proposé en consultation sur place uniquement (le code ci-dessus sera
+            affiché à la place du bouton de téléchargement).
+        </div>
+    </div>
+
+    <div class="col-md-6">
         <label for="fichier" class="form-label">
             Fichier
-            @unless($document->exists)
-                <span class="text-danger">*</span>
-            @endunless
+            <span class="text-muted small">(optionnel — requis uniquement si « téléchargeable » est activé et
+                qu'aucun fichier n'est déjà associé)</span>
         </label>
         <input type="file" name="fichier" id="fichier" class="form-control @error('fichier') is-invalid @enderror"
-            accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx" {{ $document->exists ? '' : 'required' }}>
+            accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx">
         @error('fichier')
             <div class="invalid-feedback">{{ $message }}</div>
         @enderror

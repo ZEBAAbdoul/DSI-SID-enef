@@ -3,7 +3,11 @@
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\BibliothequeController;
 use App\Http\Controllers\CatalogueController;
+<<<<<<< HEAD
 use App\Http\Controllers\ContactController;
+=======
+use App\Http\Controllers\DocumentController;
+>>>>>>> 4293f371683a47d5c93ec9250a2d4e01ebb2af9e
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\InformationsComplementairesController;
 use App\Http\Controllers\LoginWithOTPController;
@@ -138,7 +142,16 @@ Route::get('/inscription', [UserController::class, 'inscription'])->name('inscri
 Route::post('inscription', [UserController::class, 'storeInscription'])->name('storeInscription');
 
 // Route publique pour bibliothèque de documents
-Route::get('/bibliotheque', [BibliothequeController::class, 'index'])->name('bibliotheque.index');
+Route::get('/bibliotheque', [BibliothequeController::class, 'telechargeables'])->name('bibliotheque.index');
+
+// Bibliothèque publique — documents en consultation sur place
+Route::get('/bibliotheque/consultation', [BibliothequeController::class, 'consultation'])
+    ->name('bibliotheque.consultation');
+
+// Téléchargement public d'un document (vérifie en interne qu'il est bien "telechargeable")
+Route::get('/bibliotheque/{document}/telecharger', [DocumentController::class, 'telecharger'])
+    ->name('documents.telecharger');
+
 
 // Routes pour la galerie photos
 

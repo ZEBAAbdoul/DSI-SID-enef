@@ -26,6 +26,9 @@ return new class extends Migration
             $table->string('statut_verification', 20)->default('en_attente');
             $table->text('commentaire')->nullable();
             $table->timestamps();
+
+            $table->boolean('resoumis')->default(false)->after('statut_verification');
+            $table->timestamp('verifie_le')->nullable()->after('resoumis');
         });
 
         DB::statement("ALTER TABLE pieces_inscription ADD CONSTRAINT pieces_statut_verif_check 
