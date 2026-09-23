@@ -27,7 +27,7 @@
             </div>
 
             <div style="margin-top:36px;">
-                <a href="<?php echo e(url('/')); ?>#actualites" class="btn btn-outline">Retour aux actualités</a>
+                <a href="<?php echo e(route('actualites.index')); ?>" class="btn btn-outline">Retour aux actualités</a>
             </div>
 
         </div>

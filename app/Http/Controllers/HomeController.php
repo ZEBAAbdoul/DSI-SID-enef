@@ -45,7 +45,7 @@ class HomeController extends Controller
             ])
             ->get();
 
-        $actualites = Actualite::publiees()->ordonnees()->get();
+        $actualites = Actualite::publiees()->latest()->limit(10)->get();
         $derniereActualite = $actualites->first();
 
         $sessions = SessionFormation::with('formation')

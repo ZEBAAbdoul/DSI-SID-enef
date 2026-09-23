@@ -27,7 +27,7 @@
             </div>
 
             <div style="margin-top:36px;">
-                <a href="{{ url('/') }}#actualites" class="btn btn-outline">Retour aux actualités</a>
+                <a href="{{ route('actualites.index') }}" class="btn btn-outline">Retour aux actualités</a>
             </div>
 
         </div>
