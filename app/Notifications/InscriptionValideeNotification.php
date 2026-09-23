@@ -12,9 +12,7 @@ class InscriptionValideeNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 
-    public function __construct(public Inscription $inscription)
-    {
-    }
+    public function __construct(public Inscription $inscription) {}
 
     public function via($notifiable): array
     {
@@ -25,10 +23,16 @@ class InscriptionValideeNotification extends Notification implements ShouldQueue
     {
         return (new MailMessage)
             ->subject('Dossier validé — ' . $this->inscription->numero_dossier)
-            ->greeting('Félicitations ' . ($notifiable->name ?? ''))
-            ->line("Votre dossier de candidature n° {$this->inscription->numero_dossier} a été validé.")
-            ->line('Vous pouvez maintenant procéder au paiement des frais de scolarité.')
-            ->action('Voir mon dossier', route('admin.inscription.show', $this->inscription->id))
-            ->line('Bienvenue à l\'ENEF !');
+            ->view('emails.notification', [
+                'greeting' => 'Félicitations ' . ($notifiable->name ?? ''),
+                'lines' => [
+                    "Votre dossier de candidature n° {$this->inscription->numero_dossier} a été validé.",
+                    'Vous pouvez maintenant procéder au paiement des frais de scolarité.',
+                    "Bienvenue à l'ENEF !",
+                ],
+                'actionText' => 'Voir mon dossier',
+                'actionUrl' => url('/enef'),
+                'salutation' => "Cordialement, l'équipe ENEF",
+            ]);
     }
 }
