@@ -210,7 +210,7 @@
                     carte</button>
             </div>
 
-            
+
 
             <div class="courses-grid">
                 @forelse ($formation as $item)
@@ -295,7 +295,7 @@
                     <p style="color:var(--ink-soft);">Aucune formation disponible pour le moment.</p>
                 @endforelse
             </div>
-            
+
         </div>
     </section> --}}
 
@@ -1203,6 +1203,7 @@
             updateButtons();
         })();
     </script>
+    <script>
         // Catalogue tabs (visuel)
         document.querySelectorAll('.tab-btn').forEach(function(tab) {
             tab.addEventListener('click', function() {

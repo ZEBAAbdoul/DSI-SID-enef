@@ -42,6 +42,7 @@ class ParametresSite extends Model
         'adresse',
         'telephone',
         'email_contact',
+        'contact_rh',
         'annee_creation',
         'personne_forme',
         'facebook_url',
