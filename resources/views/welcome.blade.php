@@ -116,6 +116,7 @@
                     </div>
                 </div>
 
+<<<<<<< HEAD
                 <button type="button" id="news-next" class="news-nav-btn news-arrow news-arrow--right"
                     aria-label="Actualité suivante" title="Actualité suivante">&rarr;</button>
             </div>
@@ -140,6 +141,19 @@
                 </div>
             @empty
             @endforelse
+=======
+                    {{-- Duplication du flux pour l'effet de défilement continu (CSS) --}}
+                    @if ($actualites->count() > 2)
+                        @foreach ($actualites as $actualite)
+                            @include('partials.news-card', ['actualite' => $actualite, 'hidden' => true])
+                        @endforeach
+                    @endif
+                </div>
+            </div>
+
+            <button type="button" id="news-next" class="news-nav-btn news-arrow news-arrow--right"
+                aria-label="Actualité suivante" title="Actualité suivante">&rarr;</button>
+>>>>>>> a1beef04706e3f564f5709831d8642041e26273a
         </div>
     </section>
 
@@ -559,86 +573,16 @@
             pos = Math.round(Math.max(maxPos(), Math.min(0, pos - direction * stepSize())));
             track.style.transform = 'translateX(' + pos + 'px)';
             updateButtons();
-        }
-
-        prevBtn.addEventListener('click', function () { go(-1); });
-        nextBtn.addEventListener('click', function () { go(1); });
-        updateButtons();
-    })();
-
-    // "Voir plus" : affiche progressivement les batchs cachés
-    (function () {
-        var track = document.getElementById('news-track');
-        var bouton = document.getElementById('news-more');
-        var retour = document.getElementById('news-retour');
-        var batches = Array.prototype.slice.call(document.querySelectorAll('#news-batches .news-batch'));
-        var affichees = 1;
-
-        if (retour) {
-            retour.addEventListener('click', function () {
-                if (window.history.length > 1) {
-                    window.history.back();
-                } else {
-                    window.location.assign('{{ url('/') }}');
-                }
-            });
-        }
-
-        function batir() {
-            if (!track) return;
-            var cartes = [];
-            for (var i = 0; i < affichees && i < batches.length; i++) {
-                var cds = batches[i].querySelectorAll('.news-card');
-                for (var j = 0; j < cds.length; j++) {
-                    cartes.push(cds[j]);
-                }
-            }
-            track.innerHTML = '';
-            cartes.forEach(function (c) { track.appendChild(c.cloneNode(true)); });
-            cartes.forEach(function (c) {
-                var clone = c.cloneNode(true);
-                clone.setAttribute('aria-hidden', 'true');
-                track.appendChild(clone);
-            });
-        }
-
-        if (bouton) {
-            bouton.addEventListener('click', function () {
-                if (affichees >= batches.length) return;
-                affichees++;
-                batir();
-                if (affichees >= batches.length) bouton.remove();
-            });
-        }
-    })();
-
-    // Catalogue tabs (visuel) — si le bloc catalogue est réactivé
-    document.querySelectorAll('.tab-btn').forEach(function (tab) {
-        tab.addEventListener('click', function () {
-            document.querySelectorAll('.tab-btn').forEach(function (t) {
-                t.setAttribute('aria-selected', 'false');
-            });
-            tab.setAttribute('aria-selected', 'true');
-        });
-    });
-
-    // Catalogue tabs + chips : filtrage réel des formations affichées
-    (function () {
-        var activeGroup = 'programmee';
-        var activeCat = null;
-
-        function applyFilters() {
-            document.querySelectorAll('.course-card').forEach(function (card) {
-                var matchesGroup = card.dataset.group === activeGroup;
-                var matchesCat = !activeCat || card.dataset.cat === activeCat;
-                card.style.display = (matchesGroup && matchesCat) ? '' : 'none';
-            });
-        }
-
-        document.querySelectorAll('.tab-btn[data-filter-group]').forEach(function (tab) {
-            tab.addEventListener('click', function () {
-                activeGroup = tab.dataset.filterGroup;
-                applyFilters();
+        })();
+    </script>
+    <script>
+        // Catalogue tabs (visuel)
+        document.querySelectorAll('.tab-btn').forEach(function(tab) {
+            tab.addEventListener('click', function() {
+                document.querySelectorAll('.tab-btn').forEach(function(t) {
+                    t.setAttribute('aria-selected', 'false');
+                });
+                tab.setAttribute('aria-selected', 'true');
             });
         });
 
@@ -654,7 +598,19 @@
             });
         });
 
-        applyFilters();
-    })();
-</script>
+            document.querySelectorAll('.chip[data-filter-cat]').forEach(function(chip) {
+                chip.addEventListener('click', function() {
+                    var wasActive = chip.classList.contains('chip-active');
+                    document.querySelectorAll('.chip[data-filter-cat]').forEach(function(c) {
+                        c.classList.remove('chip-active');
+                    });
+                    activeCat = wasActive ? null : chip.dataset.filterCat;
+                    if (!wasActive) chip.classList.add('chip-active');
+                    applyFilters();
+                });
+            });
+
+            applyFilters(); // état initial : onglet "Programmées"
+        })();
+    </script>
 @endpush
