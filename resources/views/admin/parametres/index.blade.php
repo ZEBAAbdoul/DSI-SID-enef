@@ -254,7 +254,7 @@
                         <input type="text" class="form-control @error('contact_rh') is-invalid @enderror"
                                id="contact_rh" name="contact_rh"
                                value="{{ old('contact_rh', $parametres->contact_rh ?? '') }}"
-                               placeholder="Ex: (00226) 20 98 06 89">
+                               placeholder="Exemple: 70000000">
                         @error('contact_rh')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror

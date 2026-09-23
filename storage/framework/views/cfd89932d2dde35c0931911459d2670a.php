@@ -442,7 +442,7 @@ endif;
 unset($__errorArgs, $__bag); ?>"
                                id="contact_rh" name="contact_rh"
                                value="<?php echo e(old('contact_rh', $parametres->contact_rh ?? '')); ?>"
-                               placeholder="Ex: (00226) 20 98 06 89">
+                               placeholder="Exemple: 70000000">
                         <?php $__errorArgs = ['contact_rh'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
 if ($__bag->has($__errorArgs[0])) :
