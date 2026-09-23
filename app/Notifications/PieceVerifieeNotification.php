@@ -48,8 +48,7 @@ class PieceVerifieeNotification extends Notification implements ShouldQueue
                 'greeting' => 'Bonjour ' . ($notifiable->name ?? ''),
                 'lines' => $lines,
                 'actionText' => 'Voir mon dossier',
-                'actionUrl' => url('/enef'),
-                
-            ]);
-    }
+                'actionUrl' => url('/enef'),                
+                            ]);
+                    }
 }
