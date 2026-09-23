@@ -24,8 +24,8 @@
                     <div><span class="num">{{ $param_site->personne_forme ?? '—' }} <strong>+</strong> </span><span class="lbl">Personnes
                             formées à nos jours</span>
                     </div>
-                    <div><span class="num">{{ $fillieres->count() }}</span><span class="lbl">Filières de
-                            spécialisation</span></div>
+                    {{-- <div><span class="num">{{ $fillieres->count() }}</span><span class="lbl">Filières de
+                            spécialisation</span></div> --}}
                 </div>
             </div>
             <div class="hero-side">
@@ -50,7 +50,6 @@
         </div>
     </section>
 
-    <!-- ===================== MARQUEE ===================== -->
     <!-- ===================== TÉMOIGNAGES (BANDE COMPACTE) ===================== -->
     @if ($temoignages->isNotEmpty())
         <div class="testi-marquee testi-marquee--compact" aria-label="Témoignages des élèves de l'ENEF">
