@@ -26,26 +26,29 @@ class PieceVerifieeNotification extends Notification implements ShouldQueue
         $inscription = $this->piece->inscription;
         $conforme = $this->piece->statut_verification === 'conforme';
 
-        $mail = (new MailMessage)
+        $lines = [];
+
+        if ($conforme) {
+            $lines[] = "La pièce « {$this->piece->type_piece_libelle} » de votre dossier n° {$inscription->numero_dossier} a été validée.";
+        } else {
+            $lines[] = "La pièce « {$this->piece->type_piece_libelle} » de votre dossier n° {$inscription->numero_dossier} n'a pas été acceptée.";
+            if ($this->piece->commentaire) {
+                $lines[] = 'Motif : ' . $this->piece->commentaire;
+            }
+            $lines[] = 'Merci de déposer un nouveau fichier dès que possible.';
+        }
+
+        return (new MailMessage)
             ->subject(
                 $conforme
                     ? 'Pièce validée — Dossier ' . $inscription->numero_dossier
                     : 'Pièce à corriger — Dossier ' . $inscription->numero_dossier
             )
-            ->greeting('Bonjour ' . ($notifiable->name ?? ''));
-
-        if ($conforme) {
-            $mail->line("La pièce « {$this->piece->type_piece_libelle} » de votre dossier n° {$inscription->numero_dossier} a été validée.");
-        } else {
-            $mail->line("La pièce « {$this->piece->type_piece_libelle} » de votre dossier n° {$inscription->numero_dossier} n'a pas été acceptée.");
-            if ($this->piece->commentaire) {
-                $mail->line('Motif : ' . $this->piece->commentaire);
-            }
-            $mail->line('Merci de déposer un nouveau fichier dès que possible.');
-        }
-
-        return $mail
-            ->action('Voir mon dossier', route('admin.inscription.show', $inscription->id))
-            ->line('Merci de votre attention.');
-    }
+            ->view('emails.notification', [
+                'greeting' => 'Bonjour ' . ($notifiable->name ?? ''),
+                'lines' => $lines,
+                'actionText' => 'Voir mon dossier',
+                'actionUrl' => url('/enef'),                
+                            ]);
+                    }
 }

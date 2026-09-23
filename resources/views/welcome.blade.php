@@ -101,8 +101,19 @@
                     <span class="kicker">Actualités</span>
                     <h2>La vie de l'école, au fil des promotions</h2>
                 </div>
-                <a href="#actualites" class="btn btn-outline btn-sm">Toutes les actualités</a>
+                <a href="{{ route('actualites.index') }}" class="btn btn-outline btn-sm">Toutes les actualités</a>
             </div>
+            <div class="news-slider">
+                <button type="button" id="news-prev" class="news-nav-btn news-arrow news-arrow--left"
+                    aria-label="Actualité précédente" title="Actualité précédente">&larr;</button>
+
+                <div class="news-marquee" id="news-marquee" aria-label="Dernières actualités de l'ENEF">
+                <div class="news-track">
+                    @forelse ($actualites as $actualite)
+                        @include('partials.news-card', ['actualite' => $actualite])
+                    @empty
+                        <p style="color:var(--ink-soft);">Aucune actualité publiée pour le moment.</p>
+                    @endforelse
 
             @forelse ($actualites->chunk(10) as $index => $batch)
                 <div class="news-batch" data-news-batch="{{ $index }}">
@@ -124,7 +135,10 @@
                         <button type="button" id="news-more" class="btn btn-outline">Voir plus</button>
                     @endif
                 </div>
-            @endif
+            </div>
+
+            <button type="button" id="news-next" class="news-nav-btn news-arrow news-arrow--right"
+                aria-label="Actualité suivante" title="Actualité suivante">&rarr;</button>
         </div>
     </section>
 
@@ -271,7 +285,7 @@
                     carte</button>
             </div>
 
-            
+
 
             <div class="courses-grid">
                 @forelse ($formation as $item)
@@ -356,7 +370,7 @@
                     <p style="color:var(--ink-soft);">Aucune formation disponible pour le moment.</p>
                 @endforelse
             </div>
-            
+
         </div>
     </section> --}}
 
@@ -1150,6 +1164,66 @@
                 width: 260px;
             }
         }
+    /* ---------- Navigation du défilement des actualités ---------- */
+        .news-slider {
+            position: relative;
+            margin: 0 -28px; /* le bandeau déborde du conteneur comme avant */
+        }
+
+        .news-slider .news-marquee {
+            margin-left: 0;
+            margin-right: 0;
+        }
+
+        .news-nav-btn {
+            width: 38px;
+            height: 38px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--line);
+            border-radius: 50%;
+            background: var(--white);
+            color: var(--ink);
+            font-size: 19px;
+            line-height: 1;
+            cursor: pointer;
+            transition: border-color .15s ease, color .15s ease, background .15s ease;
+        }
+
+        .news-nav-btn:hover:not(:disabled) {
+            border-color: var(--water);
+            color: var(--water);
+            background: rgba(20, 108, 104, .06);
+        }
+
+        .news-nav-btn:disabled {
+            opacity: .45;
+            cursor: default;
+        }
+
+        .news-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 3;
+        }
+
+        .news-arrow--left {
+            left: 0;
+        }
+
+        .news-arrow--right {
+            right: 0;
+        }
+
+        @media (max-width: 640px) {
+            .news-arrow {
+                width: 32px;
+                height: 32px;
+                font-size: 16px;
+            }
+        }
     </style>
 @endpush
 
@@ -1157,6 +1231,53 @@
 
 @push('scripts')
     <script>
+        // Navigation précédent / suivant du défilement des actualités
+        (function() {
+            var marquee = document.getElementById('news-marquee');
+            if (!marquee) return;
+            var track = marquee.querySelector('.news-track');
+            var prevBtn = document.getElementById('news-prev');
+            var nextBtn = document.getElementById('news-next');
+            if (!track || !prevBtn || !nextBtn) return;
+
+            var gap = 26;
+            var pos = 0;
+
+            function stepSize() {
+                var card = track.querySelector('.news-card');
+                if (!card) return 320 + gap;
+                return card.getBoundingClientRect().width + gap;
+            }
+
+            // Le flux est dupliqué pour le défilement continu : le contenu "unique"
+            // correspond à la moitié du track.
+            function maxPos() {
+                var uniqueWidth = (track.scrollWidth - gap) / 2;
+                return -(uniqueWidth - marquee.clientWidth);
+            }
+
+            function updateButtons() {
+                prevBtn.disabled = pos >= -1;
+                nextBtn.disabled = pos <= maxPos() + 1;
+            }
+
+            function pause() {
+                track.style.animation = 'none';
+                track.style.transform = 'translateX(' + pos + 'px)';
+            }
+
+            function go(direction) {
+                pause();
+                pos = Math.round(Math.max(maxPos(), Math.min(0, pos - direction * stepSize())));
+                track.style.transform = 'translateX(' + pos + 'px)';
+                updateButtons();
+            }
+
+            prevBtn.addEventListener('click', function() { go(-1); });
+            nextBtn.addEventListener('click', function() { go(1); });
+            updateButtons();
+        })();
+    </script>
         // Catalogue tabs (visuel)
         document.querySelectorAll('.tab-btn').forEach(function(tab) {
             tab.addEventListener('click', function() {

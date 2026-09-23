@@ -83,7 +83,7 @@ $filieresActive = Route::is('admin.filieres.*');
                 <i class="nav-icon fas fa-tachometer-alt"></i>
 
                 <p>
-                    Dashboard
+                    Tableau de bord
                 </p>
 
             </a>

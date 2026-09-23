@@ -26,9 +26,8 @@
                 {{ $actualite->contenu }}
             </div>
 
-            <div style="margin-top:36px; display:flex; gap:12px; flex-wrap:wrap;">
-                <a href="#" id="btn-retour" class="btn btn-primary">Retour à la page précédente</a>
-                <a href="{{ url('/') }}#actualites" class="btn btn-outline">Toutes les actualités</a>
+            <div style="margin-top:36px;">
+                <a href="{{ route('actualites.index') }}" class="btn btn-outline">Retour aux actualités</a>
             </div>
 
         </div>

@@ -85,6 +85,16 @@ Route::get('/catalogue-formations-continues', [CatalogueController::class, 'form
     ->name('catalogue.formations.continue');
 
 
+Route::get('/toutes-les-actualites', function (\Illuminate\Http\Request $request) {
+    $actualites = \App\Models\Actualite::publiees()
+        ->latest()
+        ->paginate(10)
+        ->withQueryString();
+
+    return view('actualites.index', compact('actualites'));
+})->name('actualites.index');
+
+
 Route::get('/actualites/{actualite:slug}', function (Actualite $actualite) {
     return view('actualites.show', compact('actualite'));
 })->name('actualites.show');

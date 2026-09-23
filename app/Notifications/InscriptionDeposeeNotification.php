@@ -12,9 +12,7 @@ class InscriptionDeposeeNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 
-    public function __construct(public Inscription $inscription)
-    {
-    }
+    public function __construct(public Inscription $inscription) {}
 
     public function via($notifiable): array
     {
@@ -25,11 +23,17 @@ class InscriptionDeposeeNotification extends Notification implements ShouldQueue
     {
         return (new MailMessage)
             ->subject('Votre candidature a bien été enregistrée — ' . $this->inscription->numero_dossier)
-            ->greeting('Bonjour ' . ($notifiable->name ?? ''))
-            ->line("Votre dossier de candidature n° {$this->inscription->numero_dossier} a bien été enregistré.")
-            ->line("Formation : {$this->inscription->formation?->titre}")
-            ->line('Notre équipe va procéder à la vérification de vos pièces justificatives. Vous serez notifié à chaque étape.')
-            ->action('Suivre mon dossier', route('admin.inscription.show', $this->inscription->id))
-            ->line('Merci de votre confiance.');
+            ->view('emails.notification', [
+                'greeting' => 'Bonjour ' . ($notifiable->name ?? ''),
+                'lines' => [
+                    "Votre dossier de candidature n° {$this->inscription->numero_dossier} a bien été enregistré.",
+                    "Formation : {$this->inscription->formation?->titre}",
+                    'Notre équipe va procéder à la vérification de vos pièces justificatives. Vous serez notifié à chaque étape.',
+                    'Merci de votre confiance.',
+                ],
+                'actionText' => 'Suivre mon dossier',
+                'actionUrl' => url('/enef'),
+                'salutation' => "Cordialement, l'équipe ENEF",
+            ]);
     }
 }
