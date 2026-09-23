@@ -12,9 +12,7 @@ class InscriptionRejeteeNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 
-    public function __construct(public Inscription $inscription)
-    {
-    }
+    public function __construct(public Inscription $inscription) {}
 
     public function via($notifiable): array
     {
@@ -23,11 +21,22 @@ class InscriptionRejeteeNotification extends Notification implements ShouldQueue
 
     public function toMail($notifiable): MailMessage
     {
+        $lines = [
+            "Nous vous informons que votre dossier de candidature n° {$this->inscription->numero_dossier} n'a pas été retenu.",
+        ];
+
+        if ($this->inscription->motif_rejet) {
+            $lines[] = 'Motif : ' . $this->inscription->motif_rejet;
+        }
+
+        $lines[] = "Nous vous remercions de l'intérêt porté à l'ENEF.";
+
         return (new MailMessage)
             ->subject('Dossier non retenu — ' . $this->inscription->numero_dossier)
-            ->greeting('Bonjour ' . ($notifiable->name ?? ''))
-            ->line("Nous vous informons que votre dossier de candidature n° {$this->inscription->numero_dossier} n'a pas été retenu.")
-            ->when($this->inscription->motif_rejet, fn ($mail) => $mail->line('Motif : ' . $this->inscription->motif_rejet))
-            ->line('Nous vous remercions de l\'intérêt porté à l\'ENEF.');
+            ->view('emails.notification', [
+                'greeting' => 'Bonjour ' . ($notifiable->name ?? ''),
+                'lines' => $lines,
+                'salutation' => "Cordialement, l'équipe ENEF",
+            ]);
     }
 }

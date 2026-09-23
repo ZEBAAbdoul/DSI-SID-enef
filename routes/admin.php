@@ -12,6 +12,7 @@ use App\Http\Controllers\IdeeController;
 use App\Http\Controllers\IdeeDirectionController;
 use App\Http\Controllers\InscriptionAdminController;
 use App\Http\Controllers\InscriptionController;
+use App\Http\Controllers\MatiereController;
 use App\Http\Controllers\MesTemoignagesController;
 use App\Http\Controllers\NoteAdminController;
 use App\Http\Controllers\NoteController;
@@ -75,35 +76,27 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(
 
     Route::prefix('actualites')->name('actualites.')->group(function () {
 
-        // Liste des actualités
         Route::get('/', [ActualiteController::class, 'adminIndex'])
             ->name('index');
 
-        // Formulaire de création
         Route::get('/create', [ActualiteController::class, 'create'])
             ->name('create');
 
-        // Enregistrer une actualité
         Route::post('/', [ActualiteController::class, 'store'])
             ->name('store');
 
-        // Formulaire de modification
         Route::get('/{actualite}/edit', [ActualiteController::class, 'edit'])
             ->name('edit');
 
-        // Modifier une actualité
         Route::put('/{actualite}', [ActualiteController::class, 'update'])
             ->name('update');
 
-        // Supprimer une actualité
         Route::delete('/{actualite}', [ActualiteController::class, 'destroy'])
             ->name('destroy');
 
-        // Publier une actualité
         Route::patch('/{actualite}/publier', [ActualiteController::class, 'publier'])
             ->name('publier');
 
-        // Dépublier une actualité
         Route::patch('/{actualite}/depublier', [ActualiteController::class, 'depublier'])
             ->name('depublier');
     });
@@ -116,8 +109,6 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(
         Route::get('/', [DocumentController::class, 'index'])
             ->name('index');
 
-        // ⚠️ Routes littérales AVANT la route dynamique /{document} :
-        // sinon "create" est capturé comme valeur de {document}.
         Route::get('/create', [DocumentController::class, 'create'])
             ->name('create');
 
@@ -189,49 +180,41 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(
 
     Route::name('inscription.')->group(function () {
 
-        // Choisir une session de formation
         Route::get(
             'inscription/choisir',
             [InscriptionController::class, 'create']
         )->name('create');
 
-        // Formulaire d'inscription à une session
         Route::get(
             'inscription/session/{session}',
             [InscriptionController::class, 'createforme']
         )->name('inscriptionforme');
 
-        // Détails d'une candidature
         Route::get(
             'inscription/{inscription}',
             [InscriptionController::class, 'show']
         )->name('show');
 
-        // Enregistrer une candidature
         Route::post(
             'inscription',
             [InscriptionController::class, 'store']
         )->name('store');
 
-        // Ajouter une pièce à une candidature
         Route::post(
             'inscription/{inscription}/pieces',
             [InscriptionController::class, 'storePiece']
         )->name('piece.store');
 
-        // Télécharger une pièce
         Route::get(
             'pieces/{piece}/telecharger',
             [InscriptionController::class, 'telechargerPiece']
         )->name('piece.telecharger');
 
-        // Modifier une pièce
         Route::put(
             '/inscription/piece/{piece}',
             [InscriptionController::class, 'updatePiece']
         )->name('piece.update');
 
-        // Supprimer une pièce
         Route::delete(
             'pieces/{piece}',
             [InscriptionController::class, 'destroyPiece']
@@ -315,7 +298,6 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(
         ->names('filieres');
 
 
-
     // ==================== NOTES (ENSEIGNANT) ====================
 
     Route::prefix('enseignant')
@@ -354,6 +336,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(
             ->name('telecharger');
     });
 
+
     // ==================== SESSIONS DE FORMATION ====================
 
     Route::resource('sessions-formation', SessionFormationController::class)
@@ -373,6 +356,13 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(
     Route::resource('types-pieces', TypePieceController::class)
         ->except(['show'])
         ->names('types-pieces');
+
+
+    // ==================== MATIÈRES ====================
+
+    Route::resource('matieres', MatiereController::class)
+        ->except(['show'])
+        ->names('matieres');
 
 
     // ==================== PARTENAIRES ====================
@@ -412,8 +402,9 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(
         )->name('pieces.verifier');
     });
 
+
     // ==================== CATEGORIES-DOCUMENTS ====================
-    // Route::resource('categories-documents', CategorieDocumentController::class);
+
     Route::resource(
         'categories-documents',
         CategorieDocumentController::class
@@ -421,7 +412,9 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(
         'categories-documents' => 'categorie',
     ]);
 
-    // Routes pour les témoignages
+
+    // ==================== TÉMOIGNAGES ====================
+
     // Rôle USER : ses propres témoignages
     Route::middleware('role:user')->group(function () {
         Route::resource('mes-temoignages', MesTemoignagesController::class)
@@ -455,9 +448,13 @@ Route::resource('mes-idees', IdeeController::class)
     Route::resource('photos', PhotoAdminController::class)
         ->names('photos');
 
+  Route::resource('partenaires', PartenaireController::class)
+        ->names('partenaires');
+
+
+    // ==================== VIDÉOS ====================
+
     Route::resource('videos', VideoAdminController::class);
-
-
 
 Route::resource(
     'recherches-innovations',

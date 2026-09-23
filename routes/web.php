@@ -3,6 +3,7 @@
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\BibliothequeController;
 use App\Http\Controllers\CatalogueController;
+use App\Http\Controllers\ContactController;
 use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\InformationsComplementairesController;
@@ -67,7 +68,7 @@ Route::get('/manual', [ManualController::class, 'index'])->name('manual.index');
 
 Route::get('/formations/informations-complementaires', [InformationsComplementairesController::class, 'index'])
     ->name('formations.informations');
-    
+
 Route::get('/formations/{formation:slug}', function (\App\Models\Formation $formation) {
     $formation->load(['filiere', 'categorie']);
     $param_site = ParametresSite::first();
@@ -121,6 +122,10 @@ Route::get('/recherches-innovations/{recherches_innovation:slug}', function (Rec
 
 
 Route::get('/mot-du-directeur', [HomeController::class, 'motDuDirecteur']) ->name('mot-directeur');
+
+// Page de contact publique (formulaire + hCaptcha)
+Route::get('/contact', [ContactController::class, 'index'])->name('contact.index');
+Route::post('/contact', [ContactController::class, 'send'])->name('contact.send');
 
 // Route for the pedagogical units
 Route::get('/unites-pedagogiques', [HomeController::class, 'unitesPedagogiques'])->name('unites-pedagogiques');
