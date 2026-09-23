@@ -35,6 +35,7 @@ class ParametresSiteSeeder extends Seeder
             'adresse' => '01 BP 1105, Dindéresso — Bobo-Dioulasso, Burkina Faso',
             'telephone' => '(+226) 20 98 06 89',
             'email_contact' => 'infos@enef.gov.bf',
+            'contact_rh' => '(+226) 75 45 98 53',
             'annee_creation' => 1953,
             'personne_forme' => 10000,
             'facebook_url' => 'https://web.facebook.com/enef2021',
