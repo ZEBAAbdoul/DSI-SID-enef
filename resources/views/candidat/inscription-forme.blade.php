@@ -330,173 +330,173 @@
 
     @push('scripts')
         <script>
-    document.addEventListener('DOMContentLoaded', function () {
+            document.addEventListener('DOMContentLoaded', function() {
 
-        // ----------------------------------------------------
-        // Compteur de caractères pour le commentaire
-        // ----------------------------------------------------
-        const commentaire = document.getElementById('commentaire');
-        const compteur = document.getElementById('commentaire-count');
+                // ----------------------------------------------------
+                // Compteur de caractères pour le commentaire
+                // ----------------------------------------------------
+                const commentaire = document.getElementById('commentaire');
+                const compteur = document.getElementById('commentaire-count');
 
-        const majCompteur = () => {
-            if (commentaire && compteur) {
-                compteur.textContent = commentaire.value.length;
-            }
-        };
+                const majCompteur = () => {
+                    if (commentaire && compteur) {
+                        compteur.textContent = commentaire.value.length;
+                    }
+                };
 
-        if (commentaire) {
-            majCompteur();
-            commentaire.addEventListener('input', majCompteur);
-        }
-
-        // ----------------------------------------------------
-        // Formatage taille de fichier lisible
-        // ----------------------------------------------------
-        const formatTaille = (octets) => {
-            if (octets < 1024) return octets + ' o';
-            if (octets < 1024 * 1024) return (octets / 1024).toFixed(0) + ' Ko';
-            return (octets / (1024 * 1024)).toFixed(1) + ' Mo';
-        };
-
-        // ----------------------------------------------------
-        // Champs de fichiers : nom affiché + validation taille
-        // ----------------------------------------------------
-        document.querySelectorAll('.custom-file-input').forEach(function (input) {
-
-            const wrapper = input.closest('.piece-upload');
-            const label = wrapper ? wrapper.querySelector('.custom-file-label') : null;
-            const infoBox = wrapper ? wrapper.querySelector('.piece-selected-info') : null;
-            const infoName = infoBox ? infoBox.querySelector('.font-weight-bold') : null;
-            const infoSize = infoBox ? infoBox.querySelector('.piece-size-info') : null;
-            const maxSize = parseInt(input.dataset.maxSize || '5242880', 10);
-            const labelDefault = 'Choisir un fichier…';
-
-            const resetChamp = () => {
-                if (label) label.textContent = labelDefault;
-                if (infoBox) infoBox.style.display = 'none';
-                if (wrapper) wrapper.classList.remove('piece-upload-ok');
-            };
-
-            input.addEventListener('change', function () {
-
-                const file = this.files[0];
-
-                if (!file) {
-                    resetChamp();
-                    return;
+                if (commentaire) {
+                    majCompteur();
+                    commentaire.addEventListener('input', majCompteur);
                 }
 
-                if (file.size > maxSize) {
-                    alert(
-                        'Le fichier « ' + file.name + ' » dépasse la taille ' +
-                        'maximale autorisée (5 Mo). Veuillez sélectionner un autre fichier.'
-                    );
-                    this.value = '';
-                    resetChamp();
-                    this.classList.add('is-invalid');
-                    return;
+                // ----------------------------------------------------
+                // Formatage taille de fichier lisible
+                // ----------------------------------------------------
+                const formatTaille = (octets) => {
+                    if (octets < 1024) return octets + ' o';
+                    if (octets < 1024 * 1024) return (octets / 1024).toFixed(0) + ' Ko';
+                    return (octets / (1024 * 1024)).toFixed(1) + ' Mo';
+                };
+
+                // ----------------------------------------------------
+                // Champs de fichiers : nom affiché + validation taille
+                // ----------------------------------------------------
+                document.querySelectorAll('.custom-file-input').forEach(function(input) {
+
+                    const wrapper = input.closest('.piece-upload');
+                    const label = wrapper ? wrapper.querySelector('.custom-file-label') : null;
+                    const infoBox = wrapper ? wrapper.querySelector('.piece-selected-info') : null;
+                    const infoName = infoBox ? infoBox.querySelector('.font-weight-bold') : null;
+                    const infoSize = infoBox ? infoBox.querySelector('.piece-size-info') : null;
+                    const maxSize = parseInt(input.dataset.maxSize || '5242880', 10);
+                    const labelDefault = 'Choisir un fichier…';
+
+                    const resetChamp = () => {
+                        if (label) label.textContent = labelDefault;
+                        if (infoBox) infoBox.style.display = 'none';
+                        if (wrapper) wrapper.classList.remove('piece-upload-ok');
+                    };
+
+                    input.addEventListener('change', function() {
+
+                        const file = this.files[0];
+
+                        if (!file) {
+                            resetChamp();
+                            return;
+                        }
+
+                        if (file.size > maxSize) {
+                            alert(
+                                'Le fichier « ' + file.name + ' » dépasse la taille ' +
+                                'maximale autorisée (5 Mo). Veuillez sélectionner un autre fichier.'
+                            );
+                            this.value = '';
+                            resetChamp();
+                            this.classList.add('is-invalid');
+                            return;
+                        }
+
+                        this.classList.remove('is-invalid');
+
+                        if (label) label.textContent = file.name;
+
+                        if (infoBox && infoName && infoSize) {
+                            infoName.textContent = file.name;
+                            infoSize.textContent = ' (' + formatTaille(file.size) + ')';
+                            infoBox.style.display = 'block';
+                        }
+
+                        if (wrapper) wrapper.classList.add('piece-upload-ok');
+                    });
+                });
+
+                // ----------------------------------------------------
+                // Activer le bouton uniquement si la case est cochée
+                // ----------------------------------------------------
+                const confirmation = document.getElementById('confirmation');
+                const btnSubmit = document.getElementById('btn-submit');
+
+                const majBoutonSubmit = () => {
+                    if (confirmation && btnSubmit) {
+                        btnSubmit.disabled = !confirmation.checked;
+                    }
+                };
+
+                if (confirmation) {
+                    majBoutonSubmit();
+                    confirmation.addEventListener('change', majBoutonSubmit);
                 }
 
-                this.classList.remove('is-invalid');
+                // ----------------------------------------------------
+                // Empêcher un double envoi du formulaire
+                // ----------------------------------------------------
+                const form = document.getElementById('form-inscription');
+                const btnLabel = document.getElementById('btn-submit-label');
 
-                if (label) label.textContent = file.name;
+                if (form && btnSubmit) {
+                    form.addEventListener('submit', function(event) {
 
-                if (infoBox && infoName && infoSize) {
-                    infoName.textContent = file.name;
-                    infoSize.textContent = ' (' + formatTaille(file.size) + ')';
-                    infoBox.style.display = 'block';
+                        if (!form.checkValidity()) {
+                            event.preventDefault();
+                            event.stopPropagation();
+                            form.classList.add('was-validated');
+                            return;
+                        }
+
+                        btnSubmit.disabled = true;
+                        if (btnLabel) btnLabel.textContent = 'Envoi en cours…';
+                        btnSubmit.insertAdjacentHTML(
+                            'afterbegin',
+                            '<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>'
+                        );
+                    });
                 }
-
-                if (wrapper) wrapper.classList.add('piece-upload-ok');
             });
-        });
+        </script>
 
-        // ----------------------------------------------------
-        // Activer le bouton uniquement si la case est cochée
-        // ----------------------------------------------------
-        const confirmation = document.getElementById('confirmation');
-        const btnSubmit = document.getElementById('btn-submit');
-
-        const majBoutonSubmit = () => {
-            if (confirmation && btnSubmit) {
-                btnSubmit.disabled = !confirmation.checked;
+        <style>
+            .piece-upload {
+                padding: 15px;
+                border: 1px solid #e9ecef;
+                border-radius: 8px;
+                background: #fafafa;
+                transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out;
             }
-        };
 
-        if (confirmation) {
-            majBoutonSubmit();
-            confirmation.addEventListener('change', majBoutonSubmit);
-        }
+            .piece-upload:hover {
+                background: #f5f5f5;
+            }
 
-        // ----------------------------------------------------
-        // Empêcher un double envoi du formulaire
-        // ----------------------------------------------------
-        const form = document.getElementById('form-inscription');
-        const btnLabel = document.getElementById('btn-submit-label');
+            .piece-upload-ok {
+                border-color: #28a745;
+                background: #f4fbf6;
+            }
 
-        if (form && btnSubmit) {
-            form.addEventListener('submit', function (event) {
+            .piece-selected-info {
+                font-size: 0.875rem;
+            }
 
-                if (!form.checkValidity()) {
-                    event.preventDefault();
-                    event.stopPropagation();
-                    form.classList.add('was-validated');
-                    return;
+            .custom-file-label {
+                overflow: hidden;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+            }
+
+            .sticky-top {
+                z-index: 10;
+            }
+
+            #btn-submit:disabled {
+                cursor: not-allowed;
+                opacity: 0.65;
+            }
+
+            @media (max-width: 991px) {
+                .sticky-top {
+                    position: static !important;
+                    margin-top: 20px;
                 }
-
-                btnSubmit.disabled = true;
-                if (btnLabel) btnLabel.textContent = 'Envoi en cours…';
-                btnSubmit.insertAdjacentHTML(
-                    'afterbegin',
-                    '<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>'
-                );
-            });
-        }
-    });
-</script>
-
-<style>
-    .piece-upload {
-        padding: 15px;
-        border: 1px solid #e9ecef;
-        border-radius: 8px;
-        background: #fafafa;
-        transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out;
-    }
-
-    .piece-upload:hover {
-        background: #f5f5f5;
-    }
-
-    .piece-upload-ok {
-        border-color: #28a745;
-        background: #f4fbf6;
-    }
-
-    .piece-selected-info {
-        font-size: 0.875rem;
-    }
-
-    .custom-file-label {
-        overflow: hidden;
-        white-space: nowrap;
-        text-overflow: ellipsis;
-    }
-
-    .sticky-top {
-        z-index: 10;
-    }
-
-    #btn-submit:disabled {
-        cursor: not-allowed;
-        opacity: 0.65;
-    }
-
-    @media (max-width: 991px) {
-        .sticky-top {
-            position: static !important;
-            margin-top: 20px;
-        }
-    }
-</style>
-</x-admin>
+            }
+        </style>
+    </x-admin>
