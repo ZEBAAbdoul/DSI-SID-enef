@@ -1867,7 +1867,7 @@
 </li>
 
                 <li><a href="{{ url('/') }}#actualites">Actualités</a></li>
-                <li><a href="{{ url('/') }}#contact">Contact</a></li>
+                <li><a href="{{ route('contact.index') }}">Contact</a></li>
 
             </ul>
 
@@ -1978,7 +1978,7 @@
                         <li><a href="#login">Espace personnel</a></li>
                         <li><a href="#register">Créer un compte</a></li>
                         <li><a href="{{ url('/') }}#bibliotheque">Bibliothèque en ligne</a></li>
-                        <li><a href="{{ url('/') }}#contact">Nous écrire</a></li>
+                        <li><a href="{{ route('contact.index') }}">Nous écrire</a></li>
                     </ul>
                 </div>
                 @if(!empty($liensUtilesFooter))

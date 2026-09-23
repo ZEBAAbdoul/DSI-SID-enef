@@ -1,66 +1,66 @@
 @php
-    $isUser = auth()->check() && auth()->user()->hasRole('user');
-    $isEnseignant = auth()->check() && auth()->user()->hasRole('enseignant');
+$isUser = auth()->check() && auth()->user()->hasRole('user');
+$isEnseignant = auth()->check() && auth()->user()->hasRole('enseignant');
 
-    $temoignagesActive = Route::is('admin.temoignages.*');
-    $mesTemoignagesActive = Route::is('admin.mes-temoignages.*');
+$temoignagesActive = Route::is('admin.temoignages.*');
+$mesTemoignagesActive = Route::is('admin.mes-temoignages.*');
 
-    $peutSoumettreIdee = auth()->check() && !auth()->user()->hasRole('dg');
-    $peutVoirIdees =
-        auth()->check() &&
-        auth()
-            ->user()
-            ->hasAnyRole(['dg', 'sg', 'super-admin']);
-    $ideesActive = Route::is('admin.idees.*') || Route::is('admin.idees-direction.*');
+$peutSoumettreIdee = auth()->check() && ! auth()->user()->hasRole('dg');
+$peutVoirIdees =
+auth()->check() &&
+auth()
+->user()
+->hasAnyRole(['dg', 'sg', 'super-admin']);
+$ideesActive = Route::is('admin.idees.*') || Route::is('admin.idees-direction.*');
 
-    /*
-    |--------------------------------------------------------------------------
-    | Formations
-    |--------------------------------------------------------------------------
-    */
-    $formationsActive =
-        Route::is('admin.formations.*') || Route::is('admin.sessions-formation.*') || Route::is('admin.inscription.*');
+/*
+|--------------------------------------------------------------------------
+| Formations
+|--------------------------------------------------------------------------
+*/
+$formationsActive =
+Route::is('admin.formations.*') || Route::is('admin.sessions-formation.*') || Route::is('admin.inscription.*');
 
-    /*
-    |--------------------------------------------------------------------------
-    | Candidatures
-    |--------------------------------------------------------------------------
-    */
-    $candidaturesActive = Route::is('admin.inscriptions.*');
+/*
+|--------------------------------------------------------------------------
+| Candidatures
+|--------------------------------------------------------------------------
+*/
+$candidaturesActive = Route::is('admin.inscriptions.*');
 
-    /*
-    |--------------------------------------------------------------------------
-    | Bibliothèque
-    |--------------------------------------------------------------------------
-    */
-    $bibliothequeActive = Route::is('admin.documents.*') || Route::is('admin.categories-documents.*');
+/*
+|--------------------------------------------------------------------------
+| Bibliothèque
+|--------------------------------------------------------------------------
+*/
+$bibliothequeActive = Route::is('admin.documents.*') || Route::is('admin.categories-documents.*');
 
-    /*
-    |--------------------------------------------------------------------------
-    | Galeries
-    |--------------------------------------------------------------------------
-    */
-    $galerieActive =
-        Route::is('admin.photos.*') || Route::is('admin.videos.*');
+/*
+|--------------------------------------------------------------------------
+| Galeries
+|--------------------------------------------------------------------------
+*/
+$galerieActive =
+    Route::is('admin.photos.*') || Route::is('admin.videos.*');
 
-    /*
-    |--------------------------------------------------------------------------
-    | Paramètres
-    |--------------------------------------------------------------------------
-    */
-    $parametresActive =
-        Route::is('admin.user.*') ||
-        Route::is('admin.parametres.*') ||
-        Route::is('admin.categories-formation.*') ||
-        Route::is('admin.types-pieces.*') ||
-        Route::is('admin.partenaires.*');
+/*
+|--------------------------------------------------------------------------
+| Paramètres
+|--------------------------------------------------------------------------
+*/
+$parametresActive =
+Route::is('admin.user.*') ||
+Route::is('admin.parametres.*') ||
+Route::is('admin.categories-formation.*') ||
+Route::is('admin.types-pieces.*') ||
+Route::is('admin.partenaires.*');
 
-    /*
-    |--------------------------------------------------------------------------
-    | Filières
-    |--------------------------------------------------------------------------
-    */
-    $filieresActive = Route::is('admin.filieres.*');
+/*
+|--------------------------------------------------------------------------
+| Filières
+|--------------------------------------------------------------------------
+*/
+$filieresActive = Route::is('admin.filieres.*');
 @endphp
 
 
@@ -70,812 +70,835 @@
 
 
         {{-- ========================================================= --}}
-        {{-- ACCUEIL                                                  --}}
-        {{-- INVISIBLE POUR LES RÔLES USER ET ENSEIGNANT              --}}
+        {{-- ACCUEIL --}}
+        {{-- INVISIBLE POUR LES RÔLES USER ET ENSEIGNANT --}}
         {{-- ========================================================= --}}
 
         @if (!$isUser && !$isEnseignant)
-            <li class="nav-item">
+        <li class="nav-item">
 
-                <a href="{{ route('admin.dashboard') }}"
-                    class="nav-link {{ Route::is('admin.dashboard') ? 'active' : '' }}">
+            <a href="{{ route('admin.dashboard') }}"
+                class="nav-link {{ Route::is('admin.dashboard') ? 'active' : '' }}">
 
-                    <i class="nav-icon fas fa-tachometer-alt"></i>
+                <i class="nav-icon fas fa-tachometer-alt"></i>
 
-                    <p>
-                        Dashboard
-                    </p>
+                <p>
+                    Dashboard
+                </p>
 
-                </a>
+            </a>
 
-            </li>
+        </li>
         @endif
 
 
 
         {{-- ========================================================= --}}
-        {{-- FORMATIONS                                               --}}
-        {{-- Accessible également au rôle USER                        --}}
-        {{-- INVISIBLE POUR LE RÔLE ENSEIGNANT                        --}}
+        {{-- FORMATIONS --}}
+        {{-- Accessible également au rôle USER --}}
+        {{-- INVISIBLE POUR LE RÔLE ENSEIGNANT --}}
         {{-- ========================================================= --}}
 
         @if (!$isEnseignant)
-            <li class="nav-item {{ $formationsActive ? 'menu-open' : '' }}">
+        <li class="nav-item {{ $formationsActive ? 'menu-open' : '' }}">
 
-                <a href="#" class="nav-link {{ $formationsActive ? 'active' : '' }}">
+            <a href="#" class="nav-link {{ $formationsActive ? 'active' : '' }}">
 
-                    <i class="nav-icon fas fa-book-open"></i>
+                <i class="nav-icon fas fa-book-open"></i>
 
-                    <p>
-                        Formations
-                        <i class="fas fa-angle-left right"></i>
-                    </p>
+                <p>
+                    Formations
+                    <i class="fas fa-angle-left right"></i>
+                </p>
 
-                </a>
-
-
-                <ul class="nav nav-treeview">
+            </a>
 
 
-                    {{-- Sessions --}}
-                    <li class="nav-item">
-
-                        <a href="{{ route('admin.sessions-formation.index') }}"
-                            class="nav-link {{ Route::is('admin.sessions-formation.*') ? 'active' : '' }}">
-
-                            <i class="fas fa-calendar-alt nav-icon"></i>
-
-                            <p>
-                                Sessions de formation
-                            </p>
-
-                        </a>
-
-                    </li>
+            <ul class="nav nav-treeview">
 
 
-                    {{-- Liste des formations --}}
-                    <li class="nav-item">
+                {{-- Sessions --}}
+                <li class="nav-item">
 
-                        <a href="{{ route('admin.formations.index') }}"
-                            class="nav-link {{ Route::is('admin.formations.*') ? 'active' : '' }}">
+                    <a href="{{ route('admin.sessions-formation.index') }}"
+                        class="nav-link {{ Route::is('admin.sessions-formation.*') ? 'active' : '' }}">
 
-                            <i class="fas fa-list nav-icon"></i>
+                        <i class="fas fa-calendar-alt nav-icon"></i>
 
-                            <p>
-                                Liste des formations
-                            </p>
+                        <p>
+                            Sessions de formation
+                        </p>
 
-                        </a>
+                    </a>
 
-                    </li>
+                </li>
 
 
-                    {{-- Inscriptions --}}
-                    {{-- Visible uniquement pour le rôle USER --}}
-                    @if ($isUser)
+                {{-- Liste des formations --}}
+                <li class="nav-item">
+
+                    <a href="{{ route('admin.formations.index') }}"
+                        class="nav-link {{ Route::is('admin.formations.*') ? 'active' : '' }}">
+
+                        <i class="fas fa-list nav-icon"></i>
+
+                        <p>
+                            Liste des formations
+                        </p>
+
+                    </a>
+
+                </li>
+
+
+                {{-- Inscriptions --}}
+                {{-- Visible uniquement pour le rôle USER --}}
+                @if ($isUser)
+                <li class="nav-item">
+
+                    <a href="{{ route('admin.inscription.create') }}"
+                        class="nav-link {{ Route::is('admin.inscription.*') ? 'active' : '' }}">
+
+                        <i class="fas fa-user-plus nav-icon"></i>
+
+                        <p>
+                            Inscriptions
+                        </p>
+
+                    </a>
+
+                </li>
+                @endif
+
+            </ul>
+
+        </li>
+        @endif
+
+        {{-- ========================================================= --}}
+        {{-- MES TÉMOIGNAGES — visible uniquement pour le rôle USER --}}
+        {{-- ========================================================= --}}
+        @if ($isUser)
+        <li class="nav-item {{ $mesTemoignagesActive ? 'menu-open' : '' }}">
+            <a href="#" class="nav-link {{ $mesTemoignagesActive ? 'active' : '' }}">
+                <i class="nav-icon fas fa-comment-dots"></i>
+                <p>
+                    Témoignages
+                    <i class="fas fa-angle-left right"></i>
+                </p>
+            </a>
+
+            <ul class="nav nav-treeview">
+                <li class="nav-item">
+                    <a href="{{ route('admin.mes-temoignages.index') }}"
+                        class="nav-link {{ Route::is('admin.mes-temoignages.index') || Route::is('admin.mes-temoignages.edit') ? 'active' : '' }}">
+                        <i class="fas fa-list nav-icon"></i>
+                        <p>Mes témoignages</p>
+                    </a>
+                </li>
+
+                <li class="nav-item {{ $filieresActive ? 'menu-open' : '' }}">
+
+                    <a href="#" class="nav-link {{ $filieresActive ? 'active' : '' }}">
+
+                        <i class="nav-icon fas fa-sitemap"></i>
+
+                        <p>
+                            Filières
+                            <i class="fas fa-angle-left right"></i>
+                        </p>
+
+                    </a>
+
+
+                    <ul class="nav nav-treeview">
+
                         <li class="nav-item">
 
-                            <a href="{{ route('admin.inscription.create') }}"
-                                class="nav-link {{ Route::is('admin.inscription.*') ? 'active' : '' }}">
+                            <a href="{{ route('admin.filieres.create') }}"
+                                class="nav-link {{ Route::is('admin.filieres.create') ? 'active' : '' }}">
 
-                                <i class="fas fa-user-plus nav-icon"></i>
+                                <i class="fas fa-plus-circle nav-icon"></i>
 
                                 <p>
-                                    Inscriptions
+                                    Nouvelle filière
                                 </p>
 
                             </a>
 
                         </li>
-                    @endif
 
-                </ul>
 
-            </li>
-        @endif
+                        <li class="nav-item">
 
-        {{-- ========================================================= --}}
-        {{-- MES TÉMOIGNAGES — visible uniquement pour le rôle USER    --}}
-        {{-- ========================================================= --}}
-        @if ($isUser)
-            <li class="nav-item {{ $mesTemoignagesActive ? 'menu-open' : '' }}">
-                <a href="#" class="nav-link {{ $mesTemoignagesActive ? 'active' : '' }}">
-                    <i class="nav-icon fas fa-comment-dots"></i>
-                    <p>
-                        Témoignages
-                        <i class="fas fa-angle-left right"></i>
-                    </p>
-                </a>
+                            <a href="{{ route('admin.filieres.index') }}"
+                                class="nav-link {{ Route::is('admin.filieres.index') || Route::is('admin.filieres.edit') ? 'active' : '' }}">
 
-                <ul class="nav nav-treeview">
-                    <li class="nav-item">
-                        {{-- <a href="{{ route('admin.mes-temoignages.create') }}"
-                    class="nav-link {{ Route::is('admin.mes-temoignages.create') ? 'active' : '' }}">
-                    <i class="fas fa-pen nav-icon"></i>
-                    <p>Écrire un témoignage</p>
-                </a> --}}
-                    </li>
-                    <li class="nav-item">
-                        <a href="{{ route('admin.mes-temoignages.index') }}"
-                            class="nav-link {{ Route::is('admin.mes-temoignages.index') || Route::is('admin.mes-temoignages.edit') ? 'active' : '' }}">
-                            <i class="fas fa-list nav-icon"></i>
-                            <p>Mes témoignages</p>
-                        </a>
-                    </li>
-                </ul>
-            </li>
+                                <i class="fas fa-list nav-icon"></i>
+
+                                <p>
+                                    Liste des filières
+                                </p>
+
+                            </a>
+
+                        </li>
+
+                    </ul>
+
+                </li>
+            </ul>
+        </li>
         @endif
 
 
 
         {{-- ========================================================= --}}
-        {{-- ENSEIGNANTS & NOTES                                      --}}
-        {{-- Visible pour l'enseignant (lui seul voit ce bloc) et     --}}
-        {{-- pour l'admin/gérant. Invisible pour le rôle USER.        --}}
+        {{-- ENSEIGNANTS & NOTES --}}
+        {{-- Visible pour l'enseignant (lui seul voit ce bloc) et --}}
+        {{-- pour l'admin/gérant. Invisible pour le rôle USER. --}}
         {{-- ========================================================= --}}
 
         @if (!$isUser)
-            @php
-                $enseignantsActive =
-                    request()->routeIs('admin.enseignants.*') ||
-                    request()->routeIs('admin.notes.*') ||
-                    request()->routeIs('admin.enseignant.notes.*');
-            @endphp
+        @php
+        $enseignantsActive =
+        request()->routeIs('admin.enseignants.*') ||
+        request()->routeIs('admin.notes.*') ||
+        request()->routeIs('admin.enseignant.notes.*');
+        @endphp
 
-            <li class="nav-item {{ $enseignantsActive ? 'menu-open' : '' }}">
+        <li class="nav-item {{ $enseignantsActive ? 'menu-open' : '' }}">
 
-                <a href="#" class="nav-link {{ $enseignantsActive ? 'active' : '' }}">
+            <a href="#" class="nav-link {{ $enseignantsActive ? 'active' : '' }}">
 
-                    <i class="nav-icon fas fa-chalkboard-teacher"></i>
+                <i class="nav-icon fas fa-chalkboard-teacher"></i>
 
-                    <p>
-                        Enseignants
-                        <i class="fas fa-angle-left right"></i>
-                    </p>
+                <p>
+                    Enseignants
+                    <i class="fas fa-angle-left right"></i>
+                </p>
 
-                </a>
+            </a>
 
 
-                <ul class="nav nav-treeview">
+            <ul class="nav nav-treeview">
 
-                    {{-- Visible pour l'admin/gérant uniquement --}}
-                    @if (!$isEnseignant)
-                        <li class="nav-item">
-                            <a href="{{ route('admin.enseignants.index') }}"
-                                class="nav-link {{ request()->routeIs('admin.enseignants.index') ? 'active' : '' }}">
-                                <i class="fas fa-list nav-icon"></i>
-                                <p>Liste des enseignants</p>
-                            </a>
-                        </li>
-                    @endif
+                {{-- Visible pour l'admin/gérant uniquement --}}
+                @if (!$isEnseignant)
+                <li class="nav-item">
+                    <a href="{{ route('admin.enseignants.index') }}"
+                        class="nav-link {{ request()->routeIs('admin.enseignants.index') ? 'active' : '' }}">
+                        <i class="fas fa-list nav-icon"></i>
+                        <p>Liste des enseignants</p>
+                    </a>
+                </li>
+                @endif
 
-                    {{-- Visible pour l'enseignant : dépôt de ses fichiers --}}
-                    @if ($isEnseignant)
-                        <li class="nav-item">
-                            <a href="{{ route('admin.enseignant.notes.index') }}"
-                                class="nav-link {{ request()->routeIs('admin.enseignant.notes.index') ? 'active' : '' }}">
-                                <i class="fas fa-folder-open nav-icon"></i>
-                                <p>Mes notes</p>
-                            </a>
-                        </li>
+                {{-- Visible pour l'enseignant : dépôt de ses fichiers --}}
+                @if ($isEnseignant)
+                <li class="nav-item">
+                    <a href="{{ route('admin.enseignant.notes.index') }}"
+                        class="nav-link {{ request()->routeIs('admin.enseignant.notes.index') ? 'active' : '' }}">
+                        <i class="fas fa-folder-open nav-icon"></i>
+                        <p>Mes notes</p>
+                    </a>
+                </li>
 
-                        <li class="nav-item">
-                            <a href="{{ route('admin.enseignant.notes.create') }}"
-                                class="nav-link {{ request()->routeIs('admin.enseignant.notes.create') ? 'active' : '' }}">
-                                <i class="fas fa-upload nav-icon"></i>
-                                <p>Déposer un fichier</p>
-                            </a>
-                        </li>
-                    @endif
+                <li class="nav-item">
+                    <a href="{{ route('admin.enseignant.notes.create') }}"
+                        class="nav-link {{ request()->routeIs('admin.enseignant.notes.create') ? 'active' : '' }}">
+                        <i class="fas fa-upload nav-icon"></i>
+                        <p>Déposer un fichier</p>
+                    </a>
+                </li>
+                @endif
 
-                    {{-- Visible pour l'admin/gérant : consultation --}}
-                    @if (!$isEnseignant)
-                        <li class="nav-item">
-                            <a href="{{ route('admin.notes.index') }}"
-                                class="nav-link {{ request()->routeIs('admin.notes.index') ? 'active' : '' }}">
-                                <i class="fas fa-file-download nav-icon"></i>
-                                <p>Consultation des notes</p>
-                            </a>
-                        </li>
-                    @endif
+                {{-- Visible pour l'admin/gérant : consultation --}}
+                @if (!$isEnseignant)
+                <li class="nav-item">
+                    <a href="{{ route('admin.notes.index') }}"
+                        class="nav-link {{ request()->routeIs('admin.notes.index') ? 'active' : '' }}">
+                        <i class="fas fa-file-download nav-icon"></i>
+                        <p>Consultation des notes</p>
+                    </a>
+                </li>
+                @endif
 
-                </ul>
+            </ul>
 
-            </li>
+        </li>
         @endif
 
         {{-- ========================================================= --}}
-        {{-- BOÎTE À IDÉES                                            --}}
-        {{-- Personnel (sauf DG et élèves) : ses idées                --}}
-        {{-- DG / SG : toutes les idées                               --}}
+        {{-- BOÎTE À IDÉES --}}
+        {{-- Personnel (sauf DG et élèves) : ses idées --}}
+        {{-- DG / SG : toutes les idées --}}
         {{-- ========================================================= --}}
         @if ($peutSoumettreIdee || $peutVoirIdees)
-            @php
-                $ideesEnAttente = $peutVoirIdees ? \App\Models\Idee::where('statut', 'soumise')->count() : 0;
-            @endphp
+        @php
+        $ideesEnAttente = $peutVoirIdees
+        ? \App\Models\Idee::where('statut', 'soumise')->count()
+        : 0;
+        @endphp
 
-            <li class="nav-item {{ $ideesActive ? 'menu-open' : '' }}">
-                <a href="#" class="nav-link {{ $ideesActive ? 'active' : '' }}">
-                    <i class="nav-icon fas fa-lightbulb"></i>
-                    <p>
-                        Boîte à idées
-                        @if ($ideesEnAttente > 0)
+        <li class="nav-item {{ $ideesActive ? 'menu-open' : '' }}">
+            <a href="#" class="nav-link {{ $ideesActive ? 'active' : '' }}">
+                <i class="nav-icon fas fa-lightbulb"></i>
+                <p>
+                    Boîte à idées
+                    @if ($ideesEnAttente > 0)
+                    <span class="badge badge-warning right">{{ $ideesEnAttente }}</span>
+                    @else
+                    <i class="fas fa-angle-left right"></i>
+                    @endif
+                </p>
+            </a>
+
+            <ul class="nav nav-treeview">
+                @if ($peutSoumettreIdee)
+                <li class="nav-item">
+                    <a href="{{ route('admin.idees.create') }}"
+                        class="nav-link {{ Route::is('admin.idees.create') ? 'active' : '' }}">
+                        <i class="fas fa-pen nav-icon"></i>
+                        <p>Proposer une idée</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('admin.idees.index') }}"
+                        class="nav-link {{ Route::is('admin.idees.index') || Route::is('admin.idees.edit') ? 'active' : '' }}">
+                        <i class="fas fa-list nav-icon"></i>
+                        <p>Mes idées</p>
+                    </a>
+                </li>
+                @endif
+
+                @if ($peutVoirIdees)
+                <li class="nav-item">
+                    <a href="{{ route('admin.idees-direction.index') }}"
+                        class="nav-link {{ Route::is('admin.idees-direction.*') ? 'active' : '' }}">
+                        <i class="fas fa-inbox nav-icon"></i>
+                        <p>
+                            Toutes les idées
+                            @if ($ideesEnAttente > 0)
                             <span class="badge badge-warning right">{{ $ideesEnAttente }}</span>
-                        @else
-                            <i class="fas fa-angle-left right"></i>
-                        @endif
-                    </p>
-                </a>
-
-                <ul class="nav nav-treeview">
-                    @if ($peutSoumettreIdee)
-                        <li class="nav-item">
-                            <a href="{{ route('admin.idees.create') }}"
-                                class="nav-link {{ Route::is('admin.idees.create') ? 'active' : '' }}">
-                                <i class="fas fa-pen nav-icon"></i>
-                                <p>Proposer une idée</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{{ route('admin.idees.index') }}"
-                                class="nav-link {{ Route::is('admin.idees.index') || Route::is('admin.idees.edit') ? 'active' : '' }}">
-                                <i class="fas fa-list nav-icon"></i>
-                                <p>Mes idées</p>
-                            </a>
-                        </li>
-                    @endif
-
-                    @if ($peutVoirIdees)
-                        <li class="nav-item">
-                            <a href="{{ route('admin.idees-direction.index') }}"
-                                class="nav-link {{ Route::is('admin.idees-direction.*') ? 'active' : '' }}">
-                                <i class="fas fa-inbox nav-icon"></i>
-                                <p>
-                                    Toutes les idées
-                                    @if ($ideesEnAttente > 0)
-                                        <span class="badge badge-warning right">{{ $ideesEnAttente }}</span>
-                                    @endif
-                                </p>
-                            </a>
-                        </li>
-                    @endif
-                </ul>
-            </li>
+                            @endif
+                        </p>
+                    </a>
+                </li>
+                @endif
+            </ul>
+        </li>
         @endif
 
 
 
         {{-- ========================================================= --}}
-        {{-- TOUT LE RESTE DU MENU                                    --}}
-        {{-- INVISIBLE POUR LES RÔLES USER ET ENSEIGNANT              --}}
+        {{-- TOUT LE RESTE DU MENU --}}
+        {{-- INVISIBLE POUR LES RÔLES USER ET ENSEIGNANT --}}
         {{-- ========================================================= --}}
 
         @if (!$isUser && !$isEnseignant)
-            {{-- ===================================================== --}}
-            {{-- ACTUALITÉS                                           --}}
-            {{-- ===================================================== --}}
+        {{-- ===================================================== --}}
+        {{-- ACTUALITÉS --}}
+        {{-- ===================================================== --}}
 
-            <li class="nav-item {{ request()->routeIs('admin.actualites.*') ? 'menu-open' : '' }}">
+        <li class="nav-item {{ request()->routeIs('admin.actualites.*') ? 'menu-open' : '' }}">
 
-                <a href="#" class="nav-link {{ request()->routeIs('admin.actualites.*') ? 'active' : '' }}">
+            <a href="#" class="nav-link {{ request()->routeIs('admin.actualites.*') ? 'active' : '' }}">
 
-                    <i class="nav-icon fas fa-newspaper"></i>
+                <i class="nav-icon fas fa-newspaper"></i>
 
-                    <p>
-                        Actualités
-                        <i class="fas fa-angle-left right"></i>
-                    </p>
+                <p>
+                    Actualités
+                    <i class="fas fa-angle-left right"></i>
+                </p>
 
-                </a>
+            </a>
 
-                <ul class="nav nav-treeview">
+            <ul class="nav nav-treeview">
 
-                    {{-- Liste des actualités --}}
-                    <li class="nav-item">
-                        <a href="{{ route('admin.actualites.index') }}"
-                            class="nav-link {{ request()->routeIs('admin.actualites.index') ? 'active' : '' }}">
-
-                            <i class="far fa-circle nav-icon"></i>
-
-                            <p>
-                                Liste des actualités
-                            </p>
-
-                        </a>
-                    </li>
-
-
-                    {{-- Ajouter une actualité --}}
-                    {{-- <li class="nav-item">
-                    <a href="{{ route('admin.actualites.create') }}"
-                    class="nav-link {{ request()->routeIs('admin.actualites.create') ? 'active' : '' }}">
+                {{-- Liste des actualités --}}
+                <li class="nav-item">
+                    <a href="{{ route('admin.actualites.index') }}"
+                        class="nav-link {{ request()->routeIs('admin.actualites.index') ? 'active' : '' }}">
 
                         <i class="far fa-circle nav-icon"></i>
 
                         <p>
-                            Ajouter une actualité
+                            Liste des actualités
                         </p>
 
                     </a>
-                </li> --}}
+                </li>
 
-                </ul>
+            </ul>
 
-            </li>
+        </li>
 
-            {{-- ===================================================== --}}
-            {{-- RECHERCHE & INNOVATION                                 --}}
-            {{-- ===================================================== --}}
+        {{-- ===================================================== --}}
+        {{-- RECHERCHE & INNOVATION --}}
+        {{-- ===================================================== --}}
 
-            <li class="nav-item {{ request()->routeIs('admin.recherches-innovations.*') ? 'active' : '' }}">
+        <li class="nav-item {{ request()->routeIs('admin.recherches-innovations.*') ? 'active' : '' }}">
 
-                <a href="{{ route('admin.recherches-innovations.index') }}"
-                    class="nav-link {{ request()->routeIs('admin.recherches-innovations.*') ? 'active' : '' }}">
+            <a href="{{ route('admin.recherches-innovations.index') }}"
+                class="nav-link {{ request()->routeIs('admin.recherches-innovations.*') ? 'active' : '' }}">
 
-                    <i class="nav-icon fas fa-flask"></i>
+                <i class="nav-icon fas fa-flask"></i>
 
-                    <p>
-                        Recherche & Innovation
-                    </p>
+                <p>
+                    Recherche & Innovation
+                </p>
 
-                </a>
+            </a>
 
-            </li>
+        </li>
 
-            {{-- ===================================================== --}}
-            {{-- TÉMOIGNAGES (modération)                              --}}
-            {{-- ===================================================== --}}
-            @php $temoignagesEnAttente = \App\Models\Temoignage::where('est_publie', false)->count(); @endphp
+        {{-- ===================================================== --}}
+        {{-- TÉMOIGNAGES (modération) --}}
+        {{-- ===================================================== --}}
+        @php $temoignagesEnAttente = \App\Models\Temoignage::where('est_publie', false)->count(); @endphp
 
-            <li class="nav-item">
-                <a href="{{ route('admin.temoignages.index') }}"
-                    class="nav-link {{ $temoignagesActive ? 'active' : '' }}">
-                    <i class="nav-icon fas fa-comments"></i>
-                    <p>
-                        Témoignages
-                        @if ($temoignagesEnAttente > 0)
-                            <span class="badge badge-warning right">{{ $temoignagesEnAttente }}</span>
-                        @endif
-                    </p>
-                </a>
-            </li>
+        <li class="nav-item">
+            <a href="{{ route('admin.temoignages.index') }}" class="nav-link {{ $temoignagesActive ? 'active' : '' }}">
+                <i class="nav-icon fas fa-comments"></i>
+                <p>
+                    Témoignages
+                    @if ($temoignagesEnAttente > 0)
+                    <span class="badge badge-warning right">{{ $temoignagesEnAttente }}</span>
+                    @endif
+                </p>
+            </a>
+        </li>
 
 
 
-            {{-- ===================================================== --}}
-            {{-- FILIÈRES                                             --}}
-            {{-- ===================================================== --}}
+        {{-- ===================================================== --}}
+        {{-- FILIÈRES --}}
+        {{-- ===================================================== --}}
 
-            <li class="nav-item {{ $filieresActive ? 'menu-open' : '' }}">
+        <li class="nav-item {{ $filieresActive ? 'menu-open' : '' }}">
 
-                <a href="#" class="nav-link {{ $filieresActive ? 'active' : '' }}">
+            <a href="#" class="nav-link {{ $filieresActive ? 'active' : '' }}">
 
-                    <i class="nav-icon fas fa-sitemap"></i>
+                <i class="nav-icon fas fa-sitemap"></i>
 
-                    <p>
-                        Filières
-                        <i class="fas fa-angle-left right"></i>
-                    </p>
+                <p>
+                    Filières
+                    <i class="fas fa-angle-left right"></i>
+                </p>
 
-                </a>
+            </a>
 
 
-                <ul class="nav nav-treeview">
+            <ul class="nav nav-treeview">
 
-                    <li class="nav-item">
+                <li class="nav-item">
 
-                        <a href="{{ route('admin.filieres.create') }}"
-                            class="nav-link {{ Route::is('admin.filieres.create') ? 'active' : '' }}">
+                    <a href="{{ route('admin.filieres.create') }}"
+                        class="nav-link {{ Route::is('admin.filieres.create') ? 'active' : '' }}">
 
-                            <i class="fas fa-plus-circle nav-icon"></i>
+                        <i class="fas fa-plus-circle nav-icon"></i>
 
-                            <p>
-                                Nouvelle filière
-                            </p>
+                        <p>
+                            Nouvelle filière
+                        </p>
 
-                        </a>
+                    </a>
 
-                    </li>
+                </li>
 
 
-                    <li class="nav-item">
+                <li class="nav-item">
 
-                        <a href="{{ route('admin.filieres.index') }}"
-                            class="nav-link {{ Route::is('admin.filieres.index') || Route::is('admin.filieres.edit') ? 'active' : '' }}">
+                    <a href="{{ route('admin.filieres.index') }}"
+                        class="nav-link {{ Route::is('admin.filieres.index') || Route::is('admin.filieres.edit') ? 'active' : '' }}">
 
-                            <i class="fas fa-list nav-icon"></i>
+                        <i class="fas fa-list nav-icon"></i>
 
-                            <p>
-                                Liste des filières
-                            </p>
+                        <p>
+                            Liste des filières
+                        </p>
 
-                        </a>
+                    </a>
 
-                    </li>
+                </li>
 
-                </ul>
+            </ul>
 
-            </li>
+        </li>
 
 
 
-            {{-- ===================================================== --}}
-            {{-- CANDIDATURES                                         --}}
-            {{-- ===================================================== --}}
+        {{-- ===================================================== --}}
+        {{-- CANDIDATURES --}}
+        {{-- ===================================================== --}}
 
-            <li class="nav-item {{ $candidaturesActive ? 'menu-open' : '' }}">
+        <li class="nav-item {{ $candidaturesActive ? 'menu-open' : '' }}">
 
-                <a href="#" class="nav-link {{ $candidaturesActive ? 'active' : '' }}">
+            <a href="#" class="nav-link {{ $candidaturesActive ? 'active' : '' }}">
 
-                    <i class="nav-icon fas fa-user-graduate"></i>
+                <i class="nav-icon fas fa-user-graduate"></i>
 
-                    <p>
-                        Candidatures
-                        <i class="fas fa-angle-left right"></i>
-                    </p>
+                <p>
+                    Candidatures
+                    <i class="fas fa-angle-left right"></i>
+                </p>
 
-                </a>
+            </a>
 
 
-                <ul class="nav nav-treeview">
+            <ul class="nav nav-treeview">
 
 
-                    {{-- Liste des candidats --}}
-                    <li class="nav-item">
+                {{-- Liste des candidats --}}
+                <li class="nav-item">
 
-                        <a href="{{ route('admin.inscriptions.index') }}"
-                            class="nav-link {{ Route::is('admin.inscriptions.index') && !request('statut') ? 'active' : '' }}">
+                    <a href="{{ route('admin.inscriptions.index') }}"
+                        class="nav-link {{ Route::is('admin.inscriptions.index') && !request('statut') ? 'active' : '' }}">
 
-                            <i class="fas fa-list nav-icon"></i>
+                        <i class="fas fa-list nav-icon"></i>
 
-                            <p>
-                                Liste des candidats
-                            </p>
+                        <p>
+                            Liste des candidats
+                        </p>
 
-                        </a>
+                    </a>
 
-                    </li>
+                </li>
 
 
-                    {{-- Candidats admis --}}
-                    <li class="nav-item">
+                {{-- Candidats admis --}}
+                <li class="nav-item">
 
-                        <a href="{{ route('admin.inscriptions.index', ['statut' => 'valide']) }}"
-                            class="nav-link {{ request('statut') === 'valide' ? 'active' : '' }}">
+                    <a href="{{ route('admin.inscriptions.index', ['statut' => 'valide']) }}"
+                        class="nav-link {{ request('statut') === 'valide' ? 'active' : '' }}">
 
-                            <i class="fas fa-check-circle nav-icon"></i>
+                        <i class="fas fa-check-circle nav-icon"></i>
 
-                            <p>
-                                Candidats admis
-                            </p>
+                        <p>
+                            Candidats admis
+                        </p>
 
-                        </a>
+                    </a>
 
-                    </li>
+                </li>
 
-                </ul>
+            </ul>
 
-            </li>
+        </li>
 
 
 
-            {{-- ===================================================== --}}
-            {{-- BIBLIOTHÈQUE                                         --}}
-            {{-- ===================================================== --}}
+        {{-- ===================================================== --}}
+        {{-- BIBLIOTHÈQUE --}}
+        {{-- ===================================================== --}}
 
-            <li class="nav-item {{ $bibliothequeActive ? 'menu-open' : '' }}">
+        <li class="nav-item {{ $bibliothequeActive ? 'menu-open' : '' }}">
 
-                <a href="#" class="nav-link {{ $bibliothequeActive ? 'active' : '' }}">
+            <a href="#" class="nav-link {{ $bibliothequeActive ? 'active' : '' }}">
 
-                    <i class="nav-icon fas fa-book"></i>
+                <i class="nav-icon fas fa-book"></i>
 
-                    <p>
-                        Bibliothèque
-                        <i class="fas fa-angle-left right"></i>
-                    </p>
+                <p>
+                    Bibliothèque
+                    <i class="fas fa-angle-left right"></i>
+                </p>
 
-                </a>
+            </a>
 
 
-                <ul class="nav nav-treeview">
+            <ul class="nav nav-treeview">
 
 
-                    {{-- Documents --}}
-                    <li class="nav-item">
+                {{-- Documents --}}
+                <li class="nav-item">
 
-                        <a href="{{ route('admin.documents.index') }}"
-                            class="nav-link {{ Route::is('admin.documents.*') ? 'active' : '' }}">
+                    <a href="{{ route('admin.documents.index') }}"
+                        class="nav-link {{ Route::is('admin.documents.*') ? 'active' : '' }}">
 
-                            <i class="fas fa-list nav-icon"></i>
+                        <i class="fas fa-list nav-icon"></i>
 
-                            <p>
-                                Documents
-                            </p>
+                        <p>
+                            Documents
+                        </p>
 
-                        </a>
+                    </a>
 
-                    </li>
+                </li>
 
+            </ul>
 
-                    {{-- Catégories --}}
-                    {{-- <li class="nav-item">
+        </li>
 
-                        <a href="{{ route('admin.categories-documents.index') }}"
-                            class="nav-link {{ Route::is('admin.categories-documents.*') ? 'active' : '' }}">
 
-                            <i class="fas fa-tags nav-icon"></i>
 
-                            <p>
-                                Catégories
-                            </p>
+        {{-- ===================================================== --}}
+        {{-- GALERIES --}}
+        {{-- ===================================================== --}}
 
-                        </a>
+        <li class="nav-item {{ $galerieActive ? 'menu-open' : '' }}">
 
-                    </li> --}}
+            <a href="#" class="nav-link {{ $galerieActive ? 'active' : '' }}">
 
-                </ul>
+                <i class="nav-icon fas fa-images"></i>
 
-            </li>
+                <p>
+                    Galeries
+                    <i class="fas fa-angle-left right"></i>
+                </p>
 
+            </a>
 
+            <ul class="nav nav-treeview">
 
-            {{-- ===================================================== --}}
-            {{-- GALERIES                                             --}}
-            {{-- ===================================================== --}}
+                {{-- Photos --}}
+                <li class="nav-item">
 
+                    <a href="{{ route('admin.photos.index') }}"
+                        class="nav-link {{ Route::is('admin.photos.*') ? 'active' : '' }}">
 
-            <li class="nav-item {{ $galerieActive ? 'menu-open' : '' }}">
+                        <i class="fas fa-camera nav-icon"></i>
 
-                <a href="#" class="nav-link {{ $galerieActive ? 'active' : '' }}">
+                        <p>
+                            Photos
+                        </p>
 
-                    <i class="nav-icon fas fa-images"></i>
+                    </a>
 
-                    <p>
-                        Galeries
-                        <i class="fas fa-angle-left right"></i>
-                    </p>
+                </li>
 
-                </a>
+                {{-- Vidéos --}}
+                <li class="nav-item">
 
-                <ul class="nav nav-treeview">
+                    <a href="{{ route('admin.videos.index') }}"
+                        class="nav-link {{ Route::is('admin.videos.*') ? 'active' : '' }}">
 
-                    {{-- Photos --}}
-                    <li class="nav-item">
+                        <i class="fas fa-video nav-icon"></i>
 
-                        <a href="{{ route('admin.photos.index') }}"
-                            class="nav-link {{ Route::is('admin.photos.*') ? 'active' : '' }}">
+                        <p>
+                            Vidéos
+                        </p>
 
-                            <i class="fas fa-camera nav-icon"></i>
+                    </a>
 
-                            <p>
-                                Photos
-                            </p>
+                </li>
 
-                        </a>
+            </ul>
 
-                    </li>
+        </li>
 
 
-                    {{-- Vidéos --}}
-                    <li class="nav-item">
 
-                        <a href="{{ route('admin.videos.index') }}"
-                            class="nav-link {{ Route::is('admin.videos.*') ? 'active' : '' }}">
+        {{-- ===================================================== --}}
+        {{-- STATISTIQUES --}}
+        {{-- ===================================================== --}}
 
-                            <i class="fas fa-video nav-icon"></i>
+        <li class="nav-item">
 
-                            <p>
-                                Vidéos
-                            </p>
+            <a href="" class="nav-link">
 
-                        </a>
+                <i class="nav-icon fas fa-chart-bar"></i>
 
-                    </li>
+                <p>
+                    Statistiques
+                </p>
 
-                </ul>
+            </a>
 
-            </li>
+        </li>
 
 
 
+        {{-- ===================================================== --}}
+        {{-- DIVERS --}}
+        {{-- ===================================================== --}}
 
+        <li class="nav-header">
+            Divers
+        </li>
 
-            {{-- ===================================================== --}}
-            {{-- STATISTIQUES                                         --}}
-            {{-- ===================================================== --}}
 
-            <li class="nav-item">
 
-                <a href="" class="nav-link">
+        {{-- ===================================================== --}}
+        {{-- PARAMÈTRES --}}
+        {{-- ===================================================== --}}
 
-                    <i class="nav-icon fas fa-chart-bar"></i>
+        <li class="nav-item {{ $parametresActive ? 'menu-open' : '' }}">
 
-                    <p>
-                        Statistiques
-                    </p>
+            <a href="#" class="nav-link {{ $parametresActive ? 'active' : '' }}">
 
-                </a>
+                <i class="nav-icon fas fa-cogs"></i>
 
-            </li>
+                <p>
+                    Paramètres
+                    <i class="fas fa-angle-left right"></i>
+                </p>
 
+            </a>
 
 
-            {{-- ===================================================== --}}
-            {{-- DIVERS                                               --}}
-            {{-- ===================================================== --}}
+            <ul class="nav nav-treeview">
 
-            <li class="nav-header">
-                Divers
-            </li>
 
+                {{-- Utilisateurs --}}
+                <li class="nav-item">
 
+                    <a href="{{ route('admin.user.index') }}"
+                        class="nav-link {{ Route::is('admin.user.*') ? 'active' : '' }}">
 
-            {{-- ===================================================== --}}
-            {{-- PARAMÈTRES                                            --}}
-            {{-- ===================================================== --}}
+                        <i class="fas fa-users nav-icon"></i>
 
-            <li class="nav-item {{ $parametresActive ? 'menu-open' : '' }}">
+                        <p>
+                            Utilisateurs
+                        </p>
 
-                <a href="#" class="nav-link {{ $parametresActive ? 'active' : '' }}">
+                    </a>
 
-                    <i class="nav-icon fas fa-cogs"></i>
+                </li>
 
-                    <p>
-                        Paramètres
-                        <i class="fas fa-angle-left right"></i>
-                    </p>
 
-                </a>
+                {{-- Paramètres du site --}}
+                <li class="nav-item">
 
+                    <a href="{{ route('admin.parametres.index') }}"
+                        class="nav-link {{ Route::is('admin.parametres.*') ? 'active' : '' }}">
 
-                <ul class="nav nav-treeview">
+                        <i class="fas fa-sliders-h nav-icon"></i>
 
+                        <p>
+                            Paramètres du site
+                        </p>
 
-                    {{-- Utilisateurs --}}
-                    <li class="nav-item">
+                    </a>
 
-                        <a href="{{ route('admin.user.index') }}"
-                            class="nav-link {{ Route::is('admin.user.*') ? 'active' : '' }}">
+                </li>
 
-                            <i class="fas fa-users nav-icon"></i>
 
-                            <p>
-                                Utilisateurs
-                            </p>
+                {{-- Catégories de formation --}}
+                <li class="nav-item">
 
-                        </a>
+                    <a href="{{ route('admin.categories-formation.index') }}"
+                        class="nav-link {{ Route::is('admin.categories-formation.*') ? 'active' : '' }}">
 
-                    </li>
+                        <i class="fas fa-tags nav-icon"></i>
 
+                        <p>
+                            Catégories de formation
+                        </p>
 
-                    {{-- Paramètres du site --}}
-                    <li class="nav-item">
+                    </a>
 
-                        <a href="{{ route('admin.parametres.index') }}"
-                            class="nav-link {{ Route::is('admin.parametres.*') ? 'active' : '' }}">
+                </li>
 
-                            <i class="fas fa-sliders-h nav-icon"></i>
 
-                            <p>
-                                Paramètres du site
-                            </p>
+                {{-- Informations formations --}}
+                <li class="nav-item">
 
-                        </a>
+                    <a href="{{ route('admin.formation-informations.index') }}"
+                        class="nav-link {{ Route::is('admin.formation-informations.*') ? 'active' : '' }}">
 
-                    </li>
+                        <i class="fas fa-info-circle nav-icon"></i>
 
+                        <p>
+                            Informations formations
+                        </p>
 
-                    {{-- Catégories de formation --}}
-                    <li class="nav-item">
+                    </a>
 
-                        <a href="{{ route('admin.categories-formation.index') }}"
-                            class="nav-link {{ Route::is('admin.categories-formation.*') ? 'active' : '' }}">
+                </li>
 
-                            <i class="fas fa-tags nav-icon"></i>
 
-                            <p>
-                                Catégories de formation
-                            </p>
+                {{-- Catégories documents --}}
+                <li class="nav-item">
 
-                        </a>
+                    <a href="{{ route('admin.categories-documents.index') }}"
+                        class="nav-link {{ Route::is('admin.categories-documents.*') ? 'active' : '' }}">
 
-                    </li>
+                        <i class="fas fa-tags nav-icon"></i>
 
+                        <p>
+                            Catégories de documents
+                        </p>
 
-                    {{-- Informations formations --}}
-                    <li class="nav-item">
+                    </a>
 
-                        <a href="{{ route('admin.formation-informations.index') }}"
-                            class="nav-link {{ Route::is('admin.formation-informations.*') ? 'active' : '' }}">
+                </li>
 
-                            <i class="fas fa-info-circle nav-icon"></i>
 
-                            <p>
-                                Informations formations
-                            </p>
+                {{-- Types de pièces --}}
+                <li class="nav-item">
 
-                        </a>
+                    <a href="{{ route('admin.types-pieces.index') }}"
+                        class="nav-link {{ Route::is('admin.types-pieces.*') ? 'active' : '' }}">
 
-                    </li>
+                        <i class="fas fa-id-card nav-icon"></i>
 
+                        <p>
+                            Types de pièces
+                        </p>
 
-                    {{-- Catégories documents --}}
-                    <li class="nav-item">
+                    </a>
 
-                        <a href="{{ route('admin.categories-documents.index') }}"
-                            class="nav-link {{ Route::is('admin.categories-documents.*') ? 'active' : '' }}">
+                </li>
 
-                            <i class="fas fa-tags nav-icon"></i>
 
-                            <p>
-                                Catégories de documents
-                            </p>
+                {{-- Matières --}}
+                <li class="nav-item">
 
-                        </a>
+                    <a href="{{ route('admin.matieres.index') }}"
+                        class="nav-link {{ Route::is('admin.matieres.*') ? 'active' : '' }}">
 
-                    </li>
+                        <i class="fas fa-book nav-icon"></i>
 
+                        <p>
+                            Matières
+                        </p>
 
-                    {{-- Types de pièces --}}
-                    <li class="nav-item">
+                    </a>
 
-                        <a href="{{ route('admin.types-pieces.index') }}"
-                            class="nav-link {{ Route::is('admin.types-pieces.*') ? 'active' : '' }}">
+                </li>
 
-                            <i class="fas fa-id-card nav-icon"></i>
 
-                            <p>
-                                Types de pièces
-                            </p>
+                {{-- Partenaires --}}
+                <li class="nav-item">
 
-                        </a>
+                    <a href="{{ route('admin.partenaires.index') }}"
+                        class="nav-link {{ Route::is('admin.partenaires.*') ? 'active' : '' }}">
 
-                    </li>
+                        <i class="fas fa-handshake nav-icon"></i>
 
+                        <p>
+                            Partenaires
+                        </p>
 
-                    {{-- Partenaires --}}
-                    <li class="nav-item">
+                    </a>
 
-                        <a href="{{ route('admin.partenaires.index') }}"
-                            class="nav-link {{ Route::is('admin.partenaires.*') ? 'active' : '' }}">
+                </li>
 
-                            <i class="fas fa-handshake nav-icon"></i>
+            </ul>
 
-                            <p>
-                                Partenaires
-                            </p>
+        </li>
 
-                        </a>
 
-                    </li>
 
+        {{-- ===================================================== --}}
+        {{-- DOCUMENTATION. --}}
+        {{-- ===================================================== --}}
 
-                </ul>
+        <li class="nav-item">
 
-            </li>
+            <a href="{{ route('manual.index') }}" class="nav-link {{ Route::is('manual.index') ? 'active' : '' }}">
 
+                <i class="nav-icon fas fa-book-journal-whills"></i>
 
+                <p>
+                    Documentation
+                </p>
 
-            {{-- ===================================================== --}}
-            {{-- DOCUMENTATION.                                        --}}
-            {{-- ===================================================== --}}
-            {{-- fr --}}
+            </a>
 
-            <li class="nav-item">
-
-                <a href="{{ route('manual.index') }}"
-                    class="nav-link {{ Route::is('manual.index') ? 'active' : '' }}">
-
-                    <i class="nav-icon fas fa-book-journal-whills"></i>
-
-                    <p>
-                        Documentation
-                    </p>
-
-                </a>
-
-            </li>
+        </li>
         @endif
 
     </ul>

@@ -11,4 +11,4 @@
             </form>
         </div>
     @endsection
-</x-admi>
+</x-admin>
