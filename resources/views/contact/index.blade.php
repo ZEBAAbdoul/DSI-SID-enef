@@ -96,9 +96,8 @@
                     <div class="row">
                         <div class="field">
                             <label for="telephone">Téléphone <span class="opt">(optionnel)</span></label>
-                            <input type="tel" id="telephone" name="telephone" value="{{ old('telephone') }}"
-                                placeholder="+226 ...">
-                            @error('telephone')<small class="err">{{ $message }}</small>@enderror
+                            <input type="tel" id="telephone" name="telephone" value="{{ old('telephone') }}" ">
+                            @error('telephone')<small class=" err">{{ $message }}</small>@enderror
                         </div>
 
                         <div class="field">

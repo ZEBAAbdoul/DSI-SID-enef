@@ -26,11 +26,30 @@
                 {{ $actualite->contenu }}
             </div>
 
-            <div style="margin-top:36px;">
-                <a href="{{ url('/') }}#actualites" class="btn btn-outline">Retour aux actualités</a>
+            <div style="margin-top:36px; display:flex; gap:12px; flex-wrap:wrap;">
+                <a href="#" id="btn-retour" class="btn btn-primary">Retour à la page précédente</a>
+                <a href="{{ url('/') }}#actualites" class="btn btn-outline">Toutes les actualités</a>
             </div>
 
         </div>
     </section>
+
+    @push('scripts')
+        <script>
+            (function () {
+                var btn = document.getElementById('btn-retour');
+                if (!btn) return;
+
+                btn.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    if (window.history.length > 1) {
+                        window.history.back();
+                    } else {
+                        window.location.assign('{{ url('/') }}#actualites');
+                    }
+                });
+            })();
+        </script>
+    @endpush
 
 @endsection
