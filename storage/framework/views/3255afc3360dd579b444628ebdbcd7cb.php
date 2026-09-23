@@ -1866,7 +1866,7 @@
 </li>
 
                 <li><a href="<?php echo e(url('/')); ?>#actualites">Actualités</a></li>
-                <li><a href="<?php echo e(url('/')); ?>#contact">Contact</a></li>
+                <li><a href="<?php echo e(route('contact.index')); ?>">Contact</a></li>
 
             </ul>
 
@@ -1971,7 +1971,7 @@
                         <li><a href="#login">Espace personnel</a></li>
                         <li><a href="#register">Créer un compte</a></li>
                         <li><a href="<?php echo e(url('/')); ?>#bibliotheque">Bibliothèque en ligne</a></li>
-                        <li><a href="<?php echo e(url('/')); ?>#contact">Nous écrire</a></li>
+                        <li><a href="<?php echo e(route('contact.index')); ?>">Nous écrire</a></li>
                     </ul>
                 </div>
                 <?php if(!empty($liensUtilesFooter)): ?>

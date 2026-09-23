@@ -5,13 +5,14 @@
 @section('content')
 
     <!-- ===================== EN-TÊTE ===================== -->
-    <section class="hero" style="padding:60px 0;">
+    <section class="hero" style="padding:24px 0 4px;">
         <div class="container">
             <div class="eyebrow-line"><span class="rule"></span> Actualités</div>
-            <h1>Les actualités de l'ENEF</h1>
-            <p class="hero-lede">Suivez la vie de l'école : événements, formations, partenariats et communiqués
-                au service des eaux, des forêts et de l'environnement.</p>
-            <div style="margin-top:20px;">
+            <h1 style="margin:0 0 6px; font-size:1.55rem;">Les actualités de l'ENEF</h1>
+            <p class="hero-lede" style="margin:0 auto 14px; max-width:680px; font-size:0.95rem;">Suivez la vie de
+                l'école : événements, formations, partenariats et communiqués au service des eaux, des forêts et de
+                l'environnement.</p>
+            <div style="margin-bottom:10px;">
                 <a href="{{ url('/') }}#actualites" class="btn btn-outline btn-sm">&larr; Retour à l'accueil</a>
             </div>
         </div>
