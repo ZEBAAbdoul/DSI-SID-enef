@@ -116,32 +116,6 @@
                     </div>
                 </div>
 
-<<<<<<< HEAD
-                <button type="button" id="news-next" class="news-nav-btn news-arrow news-arrow--right"
-                    aria-label="Actualité suivante" title="Actualité suivante">&rarr;</button>
-            </div>
-
-            @if ($actualites->count() > 0)
-                <div class="news-scroll-row">
-                    <button type="button" id="news-retour" class="btn btn-outline">Retour</button>
-                    @if ($actualites->count() > 10)
-                        <button type="button" id="news-more" class="btn btn-outline">Voir plus</button>
-                    @endif
-                </div>
-            @endif
-        </div>
-
-        {{-- Données pour le "Voir plus" (batchs cachés) --}}
-        <div id="news-batches" hidden>
-            @forelse ($actualites->chunk(10) as $index => $batch)
-                <div class="news-batch" data-news-batch="{{ $index }}">
-                    @foreach ($batch as $actualite)
-                        @include('partials.news-card', ['actualite' => $actualite])
-                    @endforeach
-                </div>
-            @empty
-            @endforelse
-=======
                     {{-- Duplication du flux pour l'effet de défilement continu (CSS) --}}
                     @if ($actualites->count() > 2)
                         @foreach ($actualites as $actualite)
@@ -153,7 +127,6 @@
 
             <button type="button" id="news-next" class="news-nav-btn news-arrow news-arrow--right"
                 aria-label="Actualité suivante" title="Actualité suivante">&rarr;</button>
->>>>>>> a1beef04706e3f564f5709831d8642041e26273a
         </div>
     </section>
 
@@ -208,10 +181,125 @@
     <!-- ===================== CATALOGUE FORMATIONS ===================== -->
     {{-- Bloc commenté : à réactiver si nécessaire --}}
     {{--
-    <section id="catalogue" class="alt">
-        ...
-    </section>
-    --}}
+    À COLLER dans resources/views/.../accueil.blade.php
+    en remplaçant TOUT le bloc <section id="catalogue" class="alt"> ... </section> existant.
+
+    Puis, dans le @push('scripts'), remplacer une seule ligne :
+        var activeGroup = 'programmee';
+    par :
+        var activeGroup = 'initiale';
+--}}
+
+    <!-- ===================== CATALOGUE FORMATIONS ===================== -->
+    {{-- <section id="catalogue" class="alt">
+        <div class="container">
+            <div class="section-head">
+                <div>
+                    <span class="kicker">Formations</span>
+                    <h2>Catalogue de formations initiales et continues</h2>
+                    <p class="desc">Cycles de formation initiale (Eaux et Forêts, Environnement), formations
+                        programmées à dates fixes ou modules à la carte, conçus pour les professionnels de
+                        l'environnement et des ressources naturelles.</p>
+                </div>
+            </div>
+
+            <div class="tabs" role="tablist">
+                <button class="tab-btn" role="tab" aria-selected="true" data-filter-group="initiale">Formations
+                    initiales</button>
+                <button class="tab-btn" role="tab" aria-selected="false" data-filter-group="programmee">Formations
+                    programmées</button>
+                <button class="tab-btn" role="tab" aria-selected="false" data-filter-group="carte">Formations à la
+                    carte</button>
+            </div>
+
+
+
+            <div class="courses-grid">
+                @forelse ($formation as $item)
+                    @php
+                        $groupe = match ($item->type) {
+                            'continue_a_la_carte' => 'carte',
+                            'continue_programmee' => 'programmee',
+                            default => 'initiale',
+                        };
+                        $estALaCarte = $groupe === 'carte';
+                        $estInitiale = $groupe === 'initiale';
+                    @endphp
+                    <div class="course-card" data-group="{{ $groupe }}" data-cat="{{ $item->categorie_id }}">
+                        <div class="course-top">
+                            @if ($estALaCarte)
+                                <span class="badge carte">À la carte</span>
+                            @elseif ($estInitiale)
+                                <span class="badge prog">Formation initiale</span>
+                            @else
+                                <span class="badge prog">{{ $item->type_libelle }}</span>
+                            @endif
+                        </div>
+                        <h4>{{ $item->titre }}</h4>
+                        <p class="d">{{ $item->resume }}</p>
+                        <div class="course-meta">
+                            <span>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="9" />
+                                    <path d="M12 7v5l3 3" />
+                                </svg>
+                                {{ $item->duree_formate }}
+                            </span>
+                            @if ($estInitiale)
+                                <span>
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+                                    </svg>
+                                    {{ $item->cout_indicatif ? number_format($item->cout_indicatif, 0, ',', ' ') . ' F CFA / an' : 'Frais : nous consulter' }}
+                                </span>
+                            @else
+                                <span>
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                                        <circle cx="9" cy="7" r="4" />
+                                    </svg>
+                                    {{ $item->public_cible ?? 'Tous publics' }}
+                                </span>
+                            @endif
+                        </div>
+
+                        @if (!$estALaCarte && !$estInitiale && $item->sessions->isNotEmpty())
+                            <div class="sessions-block">
+                                <span class="sessions-title">Prochaines sessions</span>
+                                <ul class="sessions-list">
+                                    @foreach ($item->sessions->take(3) as $session)
+                                        <li class="session-item">
+                                            <span class="session-date">
+                                                {{ \Carbon\Carbon::parse($session->date_debut)->translatedFormat('d M Y') }}
+                                                @if ($session->date_fin)
+                                                    →
+                                                    {{ \Carbon\Carbon::parse($session->date_fin)->translatedFormat('d M Y') }}
+                                                @endif
+                                            </span>
+                                            <span class="session-lieu">{{ $session->lieu }}</span>
+                                            <span class="session-places">
+                                                {{ $session->places_disponibles }} place(s) disponible(s)
+                                            </span>
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        @endif
+
+                        @if ($estALaCarte)
+                        @else
+                            <a href="{{ route('formations.show', $item->slug) }}" class="btn btn-outline btn-sm">
+                                {{ $estInitiale ? 'Voir la fiche du cycle' : 'Voir la fiche du module' }}
+                            </a>
+                        @endif
+                    </div>
+                @empty
+                    <p style="color:var(--ink-soft);">Aucune formation disponible pour le moment.</p>
+                @endforelse
+            </div>
+
+        </div>
+    </section> --}}
 
     <!-- ===================== SESSIONS À VENIR ===================== -->
     @if ($sessions->isNotEmpty())

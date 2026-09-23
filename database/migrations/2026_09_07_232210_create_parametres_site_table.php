@@ -29,7 +29,11 @@ return new class extends Migration
             $table->string('facebook_url', 255)->nullable();
             $table->string('linkedin_url', 255)->nullable();
             $table->string('meta_description', 255)->nullable();
+<<<<<<< HEAD
             
+=======
+           
+>>>>>>> e87491e3163381340a6f115f0d82f344f1570dd0
 
             // Champ UUID pour la clé étrangère
             $table->uuid('updated_by')->nullable();

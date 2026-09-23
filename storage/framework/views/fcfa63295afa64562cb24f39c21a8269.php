@@ -995,6 +995,7 @@
             updateButtons();
         })();
     </script>
+    <script>
         // Catalogue tabs (visuel)
         document.querySelectorAll('.tab-btn').forEach(function(tab) {
             tab.addEventListener('click', function() {
@@ -1037,7 +1038,7 @@
                 });
             });
 
-            applyFilters(); // état initial : onglet "Programmées"
+            applyFilters();
         })();
     </script>
 <?php $__env->stopPush(); ?>

@@ -70,7 +70,7 @@
     <div class="card shadow-lg">
         <div class="card-header bg-primary text-white">
             <h3 class="card-title mb-0">
-                <i class="fas fa-edit"></i> 
+                <i class="fas fa-edit"></i>
                 {{ $parametres ? 'Modifier les paramètres' : 'Ajouter les paramètres' }}
             </h3>
         </div>
@@ -94,9 +94,9 @@
                         <label for="nom_site" class="form-label fw-bold">
                             Nom du site <span class="text-danger">*</span>
                         </label>
-                        <input type="text" class="form-control @error('nom_site') is-invalid @enderror" 
-                               id="nom_site" name="nom_site" 
-                               value="{{ old('nom_site', $parametres->nom_site ?? '') }}" 
+                        <input type="text" class="form-control @error('nom_site') is-invalid @enderror"
+                               id="nom_site" name="nom_site"
+                               value="{{ old('nom_site', $parametres->nom_site ?? '') }}"
                                placeholder="Ex: ENEF - École Nationale des Eaux et Forêts" required>
                         @error('nom_site')
                             <div class="invalid-feedback">{{ $message }}</div>
@@ -105,9 +105,9 @@
 
                     <div class="col-md-6 mb-3">
                         <label for="slogan" class="form-label fw-bold">Slogan</label>
-                        <input type="text" class="form-control @error('slogan') is-invalid @enderror" 
-                               id="slogan" name="slogan" 
-                               value="{{ old('slogan', $parametres->slogan ?? '') }}" 
+                        <input type="text" class="form-control @error('slogan') is-invalid @enderror"
+                               id="slogan" name="slogan"
+                               value="{{ old('slogan', $parametres->slogan ?? '') }}"
                                placeholder="Ex: Former les gestionnaires des ressources naturelles">
                         @error('slogan')
                             <div class="invalid-feedback">{{ $message }}</div>
@@ -116,7 +116,7 @@
 
                     <div class="col-md-6 mb-3">
                         <label for="logo_url" class="form-label fw-bold">Logo du site</label>
-                        <input type="file" class="form-control @error('logo_url') is-invalid @enderror" 
+                        <input type="file" class="form-control @error('logo_url') is-invalid @enderror"
                                id="logo_url" name="logo_url" accept="image/*">
                         @error('logo_url')
                             <div class="invalid-feedback">{{ $message }}</div>
@@ -131,7 +131,7 @@
 
                     <div class="col-md-6 mb-3">
                         <label for="favicon_url" class="form-label fw-bold">Favicon</label>
-                        <input type="file" class="form-control @error('favicon_url') is-invalid @enderror" 
+                        <input type="file" class="form-control @error('favicon_url') is-invalid @enderror"
                                id="favicon_url" name="favicon_url" accept="image/*">
                         @error('favicon_url')
                             <div class="invalid-feedback">{{ $message }}</div>
@@ -146,7 +146,7 @@
 
                     <div class="col-md-12 mb-3">
                         <label for="meta_description" class="form-label fw-bold">Meta Description (SEO)</label>
-                        <textarea class="form-control @error('meta_description') is-invalid @enderror" 
+                        <textarea class="form-control @error('meta_description') is-invalid @enderror"
                                   id="meta_description" name="meta_description" rows="2"
                                   placeholder="Description pour le référencement (max 255 caractères)">{{ old('meta_description', $parametres->meta_description ?? '') }}</textarea>
                         @error('meta_description')
@@ -164,9 +164,9 @@
 
                     <div class="col-md-6 mb-3">
                         <label for="mot_dg_titre" class="form-label fw-bold">Titre du message</label>
-                        <input type="text" class="form-control @error('mot_dg_titre') is-invalid @enderror" 
-                               id="mot_dg_titre" name="mot_dg_titre" 
-                               value="{{ old('mot_dg_titre', $parametres->mot_dg_titre ?? '') }}" 
+                        <input type="text" class="form-control @error('mot_dg_titre') is-invalid @enderror"
+                               id="mot_dg_titre" name="mot_dg_titre"
+                               value="{{ old('mot_dg_titre', $parametres->mot_dg_titre ?? '') }}"
                                placeholder="Ex: Message du Directeur Général">
                         @error('mot_dg_titre')
                             <div class="invalid-feedback">{{ $message }}</div>
@@ -175,9 +175,9 @@
 
                     <div class="col-md-6 mb-3">
                         <label for="mot_dg_nom" class="form-label fw-bold">Nom du Directeur Général</label>
-                        <input type="text" class="form-control @error('mot_dg_nom') is-invalid @enderror" 
-                               id="mot_dg_nom" name="mot_dg_nom" 
-                               value="{{ old('mot_dg_nom', $parametres->mot_dg_nom ?? '') }}" 
+                        <input type="text" class="form-control @error('mot_dg_nom') is-invalid @enderror"
+                               id="mot_dg_nom" name="mot_dg_nom"
+                               value="{{ old('mot_dg_nom', $parametres->mot_dg_nom ?? '') }}"
                                placeholder="Ex: Dr. Oumar Diallo">
                         @error('mot_dg_nom')
                             <div class="invalid-feedback">{{ $message }}</div>
@@ -186,7 +186,7 @@
 
                     <div class="col-md-12 mb-3">
                         <label for="mot_dg_contenu" class="form-label fw-bold">Contenu du message</label>
-                        <textarea class="form-control @error('mot_dg_contenu') is-invalid @enderror" 
+                        <textarea class="form-control @error('mot_dg_contenu') is-invalid @enderror"
                                   id="mot_dg_contenu" name="mot_dg_contenu" rows="5"
                                   placeholder="Écrivez le message du Directeur Général ici...">{{ old('mot_dg_contenu', $parametres->mot_dg_contenu ?? '') }}</textarea>
                         @error('mot_dg_contenu')
@@ -196,7 +196,7 @@
 
                     <div class="col-md-6 mb-3">
                         <label for="mot_dg_photo_url" class="form-label fw-bold">Photo du Directeur Général</label>
-                        <input type="file" class="form-control @error('mot_dg_photo_url') is-invalid @enderror" 
+                        <input type="file" class="form-control @error('mot_dg_photo_url') is-invalid @enderror"
                                id="mot_dg_photo_url" name="mot_dg_photo_url" accept="image/*">
                         @error('mot_dg_photo_url')
                             <div class="invalid-feedback">{{ $message }}</div>
@@ -218,9 +218,9 @@
 
                     <div class="col-md-12 mb-3">
                         <label for="adresse" class="form-label fw-bold">Adresse</label>
-                        <input type="text" class="form-control @error('adresse') is-invalid @enderror" 
-                               id="adresse" name="adresse" 
-                               value="{{ old('adresse', $parametres->adresse ?? '') }}" 
+                        <input type="text" class="form-control @error('adresse') is-invalid @enderror"
+                               id="adresse" name="adresse"
+                               value="{{ old('adresse', $parametres->adresse ?? '') }}"
                                placeholder="Ex: Route de Rufisque, Dakar, Sénégal">
                         @error('adresse')
                             <div class="invalid-feedback">{{ $message }}</div>
@@ -229,9 +229,9 @@
 
                     <div class="col-md-6 mb-3">
                         <label for="telephone" class="form-label fw-bold">Téléphone</label>
-                        <input type="text" class="form-control @error('telephone') is-invalid @enderror" 
-                               id="telephone" name="telephone" 
-                               value="{{ old('telephone', $parametres->telephone ?? '') }}" 
+                        <input type="text" class="form-control @error('telephone') is-invalid @enderror"
+                               id="telephone" name="telephone"
+                               value="{{ old('telephone', $parametres->telephone ?? '') }}"
                                placeholder="Ex: +221 33 859 12 34">
                         @error('telephone')
                             <div class="invalid-feedback">{{ $message }}</div>
@@ -240,11 +240,22 @@
 
                     <div class="col-md-6 mb-3">
                         <label for="email_contact" class="form-label fw-bold">Email de contact</label>
-                        <input type="email" class="form-control @error('email_contact') is-invalid @enderror" 
-                               id="email_contact" name="email_contact" 
-                               value="{{ old('email_contact', $parametres->email_contact ?? '') }}" 
+                        <input type="email" class="form-control @error('email_contact') is-invalid @enderror"
+                               id="email_contact" name="email_contact"
+                               value="{{ old('email_contact', $parametres->email_contact ?? '') }}"
                                placeholder="Ex: contact@enef.sn">
                         @error('email_contact')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <div class="col-md-12 mb-3">
+                        <label for="contact_rh" class="form-label fw-bold">Contact ressources humaines</label>
+                        <input type="text" class="form-control @error('contact_rh') is-invalid @enderror"
+                               id="contact_rh" name="contact_rh"
+                               value="{{ old('contact_rh', $parametres->contact_rh ?? '') }}"
+                               placeholder="Ex: (00226) 20 98 06 89">
+                        @error('contact_rh')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
@@ -258,9 +269,9 @@
 
                     <div class="col-md-6 mb-3">
                         <label for="annee_creation" class="form-label fw-bold">Année de création</label>
-                        <input type="number" class="form-control @error('annee_creation') is-invalid @enderror" 
-                               id="annee_creation" name="annee_creation" 
-                               value="{{ old('annee_creation', $parametres->annee_creation ?? '') }}" 
+                        <input type="number" class="form-control @error('annee_creation') is-invalid @enderror"
+                               id="annee_creation" name="annee_creation"
+                               value="{{ old('annee_creation', $parametres->annee_creation ?? '') }}"
                                placeholder="Ex: 1985" min="1900" max="{{ date('Y') }}">
                         @error('annee_creation')
                             <div class="invalid-feedback">{{ $message }}</div>
@@ -269,9 +280,9 @@
 
                     <div class="col-md-6 mb-3">
                         <label for="personne_forme" class="form-label fw-bold">Nombre de personnes formées</label>
-                        <input type="number" class="form-control @error('personne_forme') is-invalid @enderror" 
-                               id="personne_forme" name="personne_forme" 
-                               value="{{ old('personne_forme', $parametres->personne_forme ?? '') }}" 
+                        <input type="number" class="form-control @error('personne_forme') is-invalid @enderror"
+                               id="personne_forme" name="personne_forme"
+                               value="{{ old('personne_forme', $parametres->personne_forme ?? '') }}"
                                placeholder="Ex: 2500" min="0">
                         @error('personne_forme')
                             <div class="invalid-feedback">{{ $message }}</div>
@@ -289,9 +300,9 @@
                         <label for="facebook_url" class="form-label fw-bold">
                             <i class="fab fa-facebook text-primary"></i> Facebook
                         </label>
-                        <input type="url" class="form-control @error('facebook_url') is-invalid @enderror" 
-                               id="facebook_url" name="facebook_url" 
-                               value="{{ old('facebook_url', $parametres->facebook_url ?? '') }}" 
+                        <input type="url" class="form-control @error('facebook_url') is-invalid @enderror"
+                               id="facebook_url" name="facebook_url"
+                               value="{{ old('facebook_url', $parametres->facebook_url ?? '') }}"
                                placeholder="https://facebook.com/enef.sn">
                         @error('facebook_url')
                             <div class="invalid-feedback">{{ $message }}</div>
@@ -302,9 +313,9 @@
                         <label for="linkedin_url" class="form-label fw-bold">
                             <i class="fab fa-linkedin text-primary"></i> LinkedIn
                         </label>
-                        <input type="url" class="form-control @error('linkedin_url') is-invalid @enderror" 
-                               id="linkedin_url" name="linkedin_url" 
-                               value="{{ old('linkedin_url', $parametres->linkedin_url ?? '') }}" 
+                        <input type="url" class="form-control @error('linkedin_url') is-invalid @enderror"
+                               id="linkedin_url" name="linkedin_url"
+                               value="{{ old('linkedin_url', $parametres->linkedin_url ?? '') }}"
                                placeholder="https://linkedin.com/company/enef-sn">
                         @error('linkedin_url')
                             <div class="invalid-feedback">{{ $message }}</div>
@@ -376,10 +387,10 @@
                         <div class="col-12 mt-3">
                             <hr>
                             <p class="text-muted mb-0">
-                                <i class="fas fa-user-edit"></i> 
+                                <i class="fas fa-user-edit"></i>
                                 Dernière modification par : <strong>{{ $parametres->updatedBy->name ?? 'Inconnu' }}</strong>
                                 <span class="mx-2">|</span>
-                                <i class="fas fa-calendar-alt"></i> 
+                                <i class="fas fa-calendar-alt"></i>
                                 {{ $parametres->updated_at ? $parametres->updated_at->format('d/m/Y à H:i') : 'Non défini' }}
                             </p>
                         </div>
@@ -393,7 +404,7 @@
                                 <i class="fas fa-undo"></i> Réinitialiser
                             </button>
                             <button type="submit" class="btn btn-primary fw-bold">
-                                <i class="fas fa-save"></i> 
+                                <i class="fas fa-save"></i>
                                 {{ $parametres ? 'Mettre à jour' : 'Enregistrer' }}
                             </button>
                         </div>
@@ -491,11 +502,11 @@
 
                 // Récupérer le token CSRF du formulaire ou du meta tag
                 let csrfToken = $('input[name="_token"]').val() || $('meta[name="csrf-token"]').attr('content');
-                
+
                 let formData = new FormData(this);
                 // Ajouter explicitement le token CSRF
                 formData.append('_token', csrfToken);
-                
+
                 let url = $(this).attr('action');
                 // Toujours en POST : la vraie méthode (PUT pour la modification) est transmise
                 // via le champ caché `_method` du formulaire. Un PUT ajax + FormData multiplart
@@ -516,7 +527,7 @@
                     },
                     success: function(response) {
                         showToast(response.message || 'Paramètres enregistrés avec succès !', 'success');
-                        
+
                         setTimeout(() => {
                             location.reload();
                         }, 1500);
@@ -532,7 +543,7 @@
                         }
 
                         let errors = xhr.responseJSON?.errors || xhr.responseJSON?.message || 'Erreur lors de l\'enregistrement !';
-                        
+
                         if (typeof errors === 'object') {
                             let errorMessages = '';
                             $.each(errors, function(key, value) {
@@ -542,9 +553,9 @@
                         } else {
                             showToast(errors, 'error');
                         }
-                        
+
                         console.log('Erreur AJAX:', xhr.responseJSON);
-                        
+
                         submitBtn.prop('disabled', false).html('<i class="fas fa-save"></i> {{ $parametres ? "Mettre à jour" : "Enregistrer" }}');
                     }
                 });
