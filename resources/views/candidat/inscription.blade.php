@@ -207,7 +207,7 @@
                                                             </button>
                                                         @endif
 
-                                                        <form
+                                                        {{-- <form
                                                             action="{{ route('admin.inscription.piece.destroy', $piece) }}"
                                                             method="POST"
                                                             onsubmit="return confirm('Supprimer ce fichier ?');"
@@ -218,7 +218,7 @@
                                                                 class="btn btn-sm btn-link text-danger p-0">
                                                                 <i class="fas fa-trash"></i>
                                                             </button>
-                                                        </form>
+                                                        </form> --}}
                                                     @endif
                                                 </div>
 

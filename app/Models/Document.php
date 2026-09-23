@@ -21,6 +21,8 @@ class Document extends Model
         'format_fichier',
         'taille_fichier_ko',
         'acces',
+        'telechargeable',
+        'code_consultation',
         'version',
         'nombre_telechargements',
         'publie_le',
@@ -31,6 +33,7 @@ class Document extends Model
         'publie_le' => 'datetime',
         'taille_fichier_ko' => 'integer',
         'nombre_telechargements' => 'integer',
+        'telechargeable' => 'boolean',
         'publie_par' => 'string', // UUID
     ];
 

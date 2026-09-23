@@ -22,6 +22,8 @@ return new class extends Migration
             $table->string('format_fichier', 10)->nullable();
             $table->integer('taille_fichier_ko')->nullable();
             $table->string('acces', 20)->default('public');
+            $table->boolean('telechargeable')->default(true);
+            $table->string('code_consultation', 30)->nullable();
             $table->string('version', 20)->nullable();
             $table->integer('nombre_telechargements')->default(0);
             $table->timestamp('publie_le')->nullable();

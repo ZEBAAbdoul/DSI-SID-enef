@@ -20,10 +20,16 @@ class PieceInscription extends Model
         'taille_fichier_ko',
         'statut_verification',
         'commentaire',
+
+        'resoumis',
+        'verifie_le',
     ];
 
     protected $casts = [
         'taille_fichier_ko' => 'integer',
+        
+        'resoumis' => 'boolean',
+        'verifie_le' => 'datetime',
     ];
 
     public function inscription(): BelongsTo

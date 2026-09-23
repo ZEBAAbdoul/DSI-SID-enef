@@ -4,6 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Inscription;
 use App\Models\PieceInscription;
+use App\Notifications\InscriptionIncompleteNotification;
+use App\Notifications\InscriptionRejeteeNotification;
+use App\Notifications\InscriptionValideeNotification;
+use App\Notifications\PieceVerifieeNotification;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
@@ -29,25 +33,27 @@ class InscriptionAdminController extends Controller
     }
 
     public function valider(Inscription $inscription): RedirectResponse
-{
-    $toutesConformes = $inscription->pieces->isNotEmpty()
-        && $inscription->pieces->every(fn ($piece) => $piece->statut_verification === 'conforme');
+    {
+        $toutesConformes = $inscription->pieces->isNotEmpty()
+            && $inscription->pieces->every(fn ($piece) => $piece->statut_verification === 'conforme');
 
-    abort_unless(
-        $toutesConformes,
-        403,
-        'Toutes les pièces doivent être conformes avant de valider ce dossier.'
-    );
+        abort_unless(
+            $toutesConformes,
+            403,
+            'Toutes les pièces doivent être conformes avant de valider ce dossier.'
+        );
 
-    $inscription->update([
-        'statut' => 'valide',
-        'date_traitement' => now(),
-        'traite_par' => auth()->id(),
-        'motif_rejet' => null,
-    ]);
+        $inscription->update([
+            'statut' => 'valide',
+            'date_traitement' => now(),
+            'traite_par' => auth()->id(),
+            'motif_rejet' => null,
+        ]);
 
-    return back()->with('status', 'Dossier validé.');
-}
+        $inscription->candidat?->notify(new InscriptionValideeNotification($inscription));
+
+        return back()->with('status', 'Dossier validé.');
+    }
 
     public function rejeter(Request $request, Inscription $inscription): RedirectResponse
     {
@@ -67,6 +73,8 @@ class InscriptionAdminController extends Controller
             $inscription->session->increment('places_disponibles');
         }
 
+        $inscription->candidat?->notify(new InscriptionRejeteeNotification($inscription));
+
         return back()->with('status', 'Dossier rejeté et place libérée.');
     }
 
@@ -83,6 +91,8 @@ class InscriptionAdminController extends Controller
             'motif_rejet' => $request->motif_rejet,
         ]);
 
+        $inscription->candidat?->notify(new InscriptionIncompleteNotification($inscription));
+
         return back()->with('status', 'Dossier marqué incomplet.');
     }
 
@@ -96,7 +106,11 @@ class InscriptionAdminController extends Controller
         $piece->update([
             'statut_verification' => $request->statut_verification,
             'commentaire' => $request->commentaire,
+            'resoumis' => false,
+            'verifie_le' => now(),
         ]);
+
+        $piece->inscription?->candidat?->notify(new PieceVerifieeNotification($piece));
 
         return back()->with('status', 'Statut de la pièce mis à jour.');
     }
