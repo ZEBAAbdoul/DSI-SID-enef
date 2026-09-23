@@ -1,0 +1,1 @@
+<?php /**PATH C:\Users\HP\Desktop\ENEF\enefApp\resources\views\admin\parametres\partials\delete.blade.php ENDPATH**/ ?>

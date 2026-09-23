@@ -453,7 +453,10 @@
                     });
                 }
             });
+            
         </script>
+            @endpush
+
 
         <style>
             .piece-upload {
