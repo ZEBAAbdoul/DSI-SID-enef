@@ -102,7 +102,7 @@
                     <span class="kicker">Actualités</span>
                     <h2>La vie de l'école, au fil des promotions</h2>
                 </div>
-                <a href="#actualites" class="btn btn-outline btn-sm">Toutes les actualités</a>
+                <a href="{{ route('actualites.index') }}" class="btn btn-outline btn-sm">Toutes les actualités</a>
             </div>
             <div class="news-marquee" aria-label="Dernières actualités de l'ENEF">
                 <div class="news-track">
