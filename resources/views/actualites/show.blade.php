@@ -33,4 +33,22 @@
         </div>
     </section>
 
+    @push('scripts')
+        <script>
+            (function () {
+                var btn = document.getElementById('btn-retour');
+                if (!btn) return;
+
+                btn.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    if (window.history.length > 1) {
+                        window.history.back();
+                    } else {
+                        window.location.assign('{{ url('/') }}#actualites');
+                    }
+                });
+            })();
+        </script>
+    @endpush
+
 @endsection

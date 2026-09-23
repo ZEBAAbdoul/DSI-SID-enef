@@ -1,8 +1,6 @@
-@extends('layouts.site')
+<?php $__env->startSection('title', 'Contact — ENEF'); ?>
 
-@section('title', 'Contact — ENEF')
-
-@section('content')
+<?php $__env->startSection('content'); ?>
 
 <section style="padding:76px 0;">
     <div class="container">
@@ -15,17 +13,19 @@
             </div>
         </div>
 
-        @if (session('success'))
+        <?php if(session('success')): ?>
         <div class="cflash cflash-ok">
-            {{ session('success') }}
-        </div>
-        @endif
+            <?php echo e(session('success')); ?>
 
-        @if (session('error'))
-        <div class="cflash cflash-err">
-            {{ session('error') }}
         </div>
-        @endif
+        <?php endif; ?>
+
+        <?php if(session('error')): ?>
+        <div class="cflash cflash-err">
+            <?php echo e(session('error')); ?>
+
+        </div>
+        <?php endif; ?>
 
         <div class="contact-grid">
             <div class="contact-info">
@@ -38,7 +38,7 @@
                     </span>
                     <div>
                         <h4>Adresse</h4>
-                        <p>{{ $param_site->adresse ?? '01 BP 1105, Dindéresso — Bobo-Dioulasso, Burkina Faso' }}</p>
+                        <p><?php echo e($param_site->adresse ?? '01 BP 1105, Dindéresso — Bobo-Dioulasso, Burkina Faso'); ?></p>
                     </div>
                 </div>
 
@@ -51,7 +51,7 @@
                     </span>
                     <div>
                         <h4>Téléphone</h4>
-                        <p>{{ $param_site->telephone ?? '(00226) 20 98 06 89' }}</p>
+                        <p><?php echo e($param_site->telephone ?? '(00226) 20 98 06 89'); ?></p>
                     </div>
                 </div>
 
@@ -64,7 +64,7 @@
                     </span>
                     <div>
                         <h4>Email</h4>
-                        <p>{{ $param_site->email_contact ?? 'infos@enef.gov.bf' }}</p>
+                        <p><?php echo e($param_site->email_contact ?? 'infos@enef.gov.bf'); ?></p>
                     </div>
                 </div>
 
@@ -74,58 +74,100 @@
             </div>
 
             <div class="contact-form">
-                <form method="POST" action="{{ route('contact.send') }}" novalidate>
-                    @csrf
+                <form method="POST" action="<?php echo e(route('contact.send')); ?>" novalidate>
+                    <?php echo csrf_field(); ?>
 
                     <div class="row">
                         <div class="field">
                             <label for="nom">Nom complet <span>*</span></label>
-                            <input type="text" id="nom" name="nom" value="{{ old('nom') }}"
+                            <input type="text" id="nom" name="nom" value="<?php echo e(old('nom')); ?>"
                                 placeholder="Votre nom et prénom" required autocomplete="name">
-                            @error('nom')<small class="err">{{ $message }}</small>@enderror
+                            <?php $__errorArgs = ['nom'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?><small class="err"><?php echo e($message); ?></small><?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                         </div>
 
                         <div class="field">
                             <label for="email">Adresse email <span>*</span></label>
-                            <input type="email" id="email" name="email" value="{{ old('email') }}"
+                            <input type="email" id="email" name="email" value="<?php echo e(old('email')); ?>"
                                 placeholder="vous@exemple.com" required autocomplete="email">
-                            @error('email')<small class="err">{{ $message }}</small>@enderror
+                            <?php $__errorArgs = ['email'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?><small class="err"><?php echo e($message); ?></small><?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="field">
                             <label for="telephone">Téléphone <span class="opt">(optionnel)</span></label>
-                            <input type="tel" id="telephone" name="telephone" value="{{ old('telephone') }}" ">
-                            @error('telephone')<small class=" err">{{ $message }}</small>@enderror
+                            <input type="tel" id="telephone" name="telephone" value="<?php echo e(old('telephone')); ?>" ">
+                            <?php $__errorArgs = ['telephone'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?><small class=" err"><?php echo e($message); ?></small><?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                         </div>
 
                         <div class="field">
                             <label for="sujet">Sujet <span>*</span></label>
-                            <input type="text" id="sujet" name="sujet" value="{{ old('sujet') }}"
+                            <input type="text" id="sujet" name="sujet" value="<?php echo e(old('sujet')); ?>"
                                 placeholder="Objet de votre message" required>
-                            @error('sujet')<small class="err">{{ $message }}</small>@enderror
+                            <?php $__errorArgs = ['sujet'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?><small class="err"><?php echo e($message); ?></small><?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                         </div>
                     </div>
 
                     <div class="field">
                         <label for="message">Message <span>*</span></label>
                         <textarea id="message" name="message" rows="7" placeholder="Votre message..."
-                            required>{{ old('message') }}</textarea>
-                        @error('message')<small class="err">{{ $message }}</small>@enderror
+                            required><?php echo e(old('message')); ?></textarea>
+                        <?php $__errorArgs = ['message'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?><small class="err"><?php echo e($message); ?></small><?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                     </div>
 
                     <div class="field">
-                        <label for="math_answer">{{ $math['a'] }} + {{ $math['b'] }} = ? <span>*</span></label>
+                        <label for="math_answer"><?php echo e($math['a']); ?> + <?php echo e($math['b']); ?> = ? <span>*</span></label>
                         <input type="text" id="math_answer" name="math_answer" inputmode="numeric" autocomplete="off"
-                            placeholder="?" value="{{ old('math_answer') }}" required>
-                        @error('math_answer')<small class="err">{{ $message }}</small>@enderror
+                            placeholder="?" value="<?php echo e(old('math_answer')); ?>" required>
+                        <?php $__errorArgs = ['math_answer'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?><small class="err"><?php echo e($message); ?></small><?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                     </div>
 
                     <div class="hp-field" aria-hidden="true">
                         <label for="website">Ne renseignez pas ce champ</label>
                         <input type="text" id="website" name="website" tabindex="-1" autocomplete="off">
-                        <input type="hidden" name="honeypot_time" value="{{ time() }}">
+                        <input type="hidden" name="honeypot_time" value="<?php echo e(time()); ?>">
                     </div>
 
                     <button type="submit" id="btn-envoyer" class="btn btn-primary" disabled>Envoyer le message</button>
@@ -138,8 +180,8 @@
 
 <script>
     (function () {
-            var a = {{ $math['a'] }};
-            var b = {{ $math['b'] }};
+            var a = <?php echo e($math['a']); ?>;
+            var b = <?php echo e($math['b']); ?>;
             var total = a + b;
             var input = document.getElementById('math_answer');
             var btn = document.getElementById('btn-envoyer');
@@ -155,7 +197,7 @@
         })();
 </script>
 
-@push('styles')
+<?php $__env->startPush('styles'); ?>
 <style>
     .contact-grid {
         display: grid;
@@ -369,6 +411,8 @@
         }
     }
 </style>
-@endpush
+<?php $__env->stopPush(); ?>
 
-@endsection
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('layouts.site', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH C:\Users\HP\Desktop\ENEF\enefApp\resources\views\contact\index.blade.php ENDPATH**/ ?>

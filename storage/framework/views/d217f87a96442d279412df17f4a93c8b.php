@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title', 'ENEF — École Nationale des Eaux et Forêts')</title>
+    <title><?php echo $__env->yieldContent('title', 'ENEF — École Nationale des Eaux et Forêts'); ?></title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
@@ -1781,7 +1781,7 @@
             display: block;
         }
     </style>
-    @stack('styles')
+    <?php echo $__env->yieldPushContent('styles'); ?>
 </head>
 
 <body>
@@ -1827,7 +1827,7 @@
                         </svg></a>
                 </div>
                 <div class="lang-switch">
-                    {{-- <button type="button" aria-current="true">FR</button>/<button type="button">EN</button> --}}
+                    
                 </div>
             </div>
         </div>
@@ -1836,27 +1836,27 @@
     <!-- ===================== MAIN NAV ===================== -->
     <div class="navwrap">
         <div class="container nav">
-            <a href="{{ url('/') }}" class="brand"> <span class="brand-mark"> <img
-                        src="{{ asset('images/logo.jpg') }}" alt="Logo ENEF" class="logo-enef"> </span> <span
+            <a href="<?php echo e(url('/')); ?>" class="brand"> <span class="brand-mark"> <img
+                        src="<?php echo e(asset('images/logo.jpg')); ?>" alt="Logo ENEF" class="logo-enef"> </span> <span
                     class="brand-text"> <span class="full">ENEF</span> <span class="sub">École Nationale des Eaux
                         et Forêts</span>
                 </span> </a>
 
             <ul class="menu" id="mainMenu">
-                <li><a href="{{ url('/') }}">Accueil</a></li>
+                <li><a href="<?php echo e(url('/')); ?>">Accueil</a></li>
                 <li>
                     <button class="toplink" aria-expanded="false">L'ENEF <svg class="chev" viewBox="0 0 12 8"
                             fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M1 1l5 5 5-5" />
                         </svg></button>
                     <ul class="dropdown">
-                        <li><a href="{{ url('/') }}#dg">Mot du Directeur Général</a></li>
-                        {{-- <li><a href="{{ url('/formations/informations-complementaires') }}">Conditions d'entrée à l'ENEF</a></li> --}}
-                        {{-- <li><a href="{{ url('/') }}#presentation">Présentation &amp; historique</a></li> --}}
-                        <li><a href="{{ route('unites-pedagogiques') }}">Unités pédagogiques</a></li>
-                        <li><a href="{{ url('/') }}#partenaires">Nos partenaires</a></li>
-                        <li><a href="{{ route('recherches-innovations.index') }}">Recherche &amp; innovation</a></li>
-                        <li><a href="{{ route('galerie.index') }}">Galerie photo &amp; vidéo</a></li>
+                        <li><a href="<?php echo e(url('/')); ?>#dg">Mot du Directeur Général</a></li>
+                        
+                        
+                        <li><a href="<?php echo e(route('unites-pedagogiques')); ?>">Unités pédagogiques</a></li>
+                        <li><a href="<?php echo e(url('/')); ?>#partenaires">Nos partenaires</a></li>
+                        <li><a href="<?php echo e(route('recherches-innovations.index')); ?>">Recherche &amp; innovation</a></li>
+                        <li><a href="<?php echo e(route('galerie.index')); ?>">Galerie photo &amp; vidéo</a></li>
 
                     </ul>
                 </li>
@@ -1867,10 +1867,9 @@
                             <path d="M1 1l5 5 5-5" />
                         </svg></button>
                     <ul class="dropdown">
-                        <li><a href="{{ url('/catalogue-formations-initiales') }}">Formations initiales</a></li>
-                        <li><a href="{{ url('/catalogue-formations-continues') }}">Formations continues</a></li>
-                        {{-- <li><a href="mailto:infos@enef.gov.bf?subject=Demande%20de%20formation%20%C3%A0%20la%20carte">Demande
-                                de formation à la carte</a></li>  --}}
+                        <li><a href="<?php echo e(url('/catalogue-formations-initiales')); ?>">Formations initiales</a></li>
+                        <li><a href="<?php echo e(url('/catalogue-formations-continues')); ?>">Formations continues</a></li>
+                        
                     </ul>
                 </li>
 
@@ -1880,25 +1879,20 @@
             <path d="M1 1l5 5 5-5" />
         </svg></button>
     <ul class="dropdown">
-        <li><a href="{{ route('bibliotheque.consultation') }}">Bibliothèque en ligne</a></li>
-        <li><a href="{{ route('bibliotheque.index') }}">Centre de téléchargement</a></li>
+        <li><a href="<?php echo e(route('bibliotheque.consultation')); ?>">Bibliothèque en ligne</a></li>
+        <li><a href="<?php echo e(route('bibliotheque.index')); ?>">Centre de téléchargement</a></li>
     </ul>
 </li>
 
-                <li><a href="{{ url('/') }}#actualites">Actualités</a></li>
-                <li><a href="{{ route('contact.index') }}">Contact</a></li>
+                <li><a href="<?php echo e(url('/')); ?>#actualites">Actualités</a></li>
+                <li><a href="<?php echo e(route('contact.index')); ?>">Contact</a></li>
 
             </ul>
 
             <div class="nav-actions">
-                {{-- <button class="icon-btn" aria-label="Rechercher sur le site">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <circle cx="11" cy="11" r="7" />
-                        <path d="M21 21l-4.3-4.3" />
-                    </svg>
-                </button> --}}
+                
                 <div class="account-dd">
-                    <a href="{{ route('login') }}" class="btn btn-outline btn-sm toplink">
+                    <a href="<?php echo e(route('login')); ?>" class="btn btn-outline btn-sm toplink">
                         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                             stroke-width="2">
                             <circle cx="12" cy="8" r="4" />
@@ -1913,7 +1907,7 @@
                         <li><a href="#suivi">Suivre ma candidature</a></li>
                     </ul>
                 </div>
-                <a href="{{ url('/') }}#admissions" class="btn btn-primary btn-sm">Candidater en ligne</a>
+                <a href="<?php echo e(url('/')); ?>#admissions" class="btn btn-primary btn-sm">Candidater en ligne</a>
                 <button class="burger" id="burgerBtn" aria-label="Ouvrir le menu" aria-expanded="false">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M3 6h18M3 12h18M3 18h18" />
@@ -1924,30 +1918,29 @@
     </div>
 
     <main id="main">
-        @yield('content')
+        <?php echo $__env->yieldContent('content'); ?>
     </main>
 
     <!-- ===================== FOOTER ===================== -->
-    @php
+    <?php
         $liensUtilesFooter = \Illuminate\Support\Facades\Cache::remember(
             'site.liens_utiles',
             now()->addHours(1),
             fn () => optional(\App\Models\ParametresSite::first())->liens_utiles ?? []
         ) ?? [];
-    @endphp
+    ?>
     <footer id="contact">
         <div class="container">
-            <div class="footer-grid" style="grid-template-columns:1.4fr repeat({{ !empty($liensUtilesFooter) ? 5 : 4 }}, 1fr);">
+            <div class="footer-grid" style="grid-template-columns:1.4fr repeat(<?php echo e(!empty($liensUtilesFooter) ? 5 : 4); ?>, 1fr);">
                 <div class="footer-brand">
                     <div class="brand" style="gap:10px;">
-                        <a href="{{ url('/') }}" class="brand"> <span class="brand-mark"> <img
-                                    src="{{ asset('images/logo.jpg') }}" alt="Logo ENEF" class="logo-enef"> </span>
+                        <a href="<?php echo e(url('/')); ?>" class="brand"> <span class="brand-mark"> <img
+                                    src="<?php echo e(asset('images/logo.jpg')); ?>" alt="Logo ENEF" class="logo-enef"> </span>
                             <span class="brand-text"> <span class="full">ENEF</span> <span class="sub">École
                                     Nationale des Eaux
                                     et Forêts</span>
                             </span> </a>
-                        {{-- <span class="brand-text"><span class="full" style="color:#fff;">ENEF</span><span
-                                class="sub" style="color:#93a88e;">Eaux et Forêts</span></span> --}}
+                        
                     </div>
                     <p>École publique de formation aux métiers des eaux, des forêts et de l'environnement, au service de
                         la Nation depuis 1953.</p>
@@ -1965,30 +1958,30 @@
                 <div class="footer-col">
                     <h5>L'ENEF</h5>
                     <ul>
-                        <li><a href="{{ url('/') }}#dg">Mot du Directeur Général</a></li>
-                        <li><a href="{{ url('/') }}#presentation">Présentation &amp; historique</a></li>
-                        <li><a href="{{ url('/') }}#partenaires">Nos partenaires</a></li>
-                        <li><a href="{{ route('recherches-innovations.index') }}">Recherche &amp; innovation</a></li>
-                        <li><a href="{{ route('galerie.index') }}">Galerie photo &amp; vidéo</a></li>
-                        <li><a href="{{ url('/') }}#actualites">Actualités</a></li>
+                        <li><a href="<?php echo e(url('/')); ?>#dg">Mot du Directeur Général</a></li>
+                        <li><a href="<?php echo e(url('/')); ?>#presentation">Présentation &amp; historique</a></li>
+                        <li><a href="<?php echo e(url('/')); ?>#partenaires">Nos partenaires</a></li>
+                        <li><a href="<?php echo e(route('recherches-innovations.index')); ?>">Recherche &amp; innovation</a></li>
+                        <li><a href="<?php echo e(route('galerie.index')); ?>">Galerie photo &amp; vidéo</a></li>
+                        <li><a href="<?php echo e(url('/')); ?>#actualites">Actualités</a></li>
                     </ul>
                 </div>
                 <div class="footer-col">
                     <h5>Admissions</h5>
                     <ul>
-                        <li><a href="{{ url('/') }}#admissions">Conditions d'accès</a></li>
+                        <li><a href="<?php echo e(url('/')); ?>#admissions">Conditions d'accès</a></li>
                         <li><a href="#register">Candidature en ligne</a></li>
                         <li><a href="#suivi">Suivi de dossier</a></li>
-                        <li><a href="{{ url('/') }}#admissions">Résultats</a></li>
+                        <li><a href="<?php echo e(url('/')); ?>#admissions">Résultats</a></li>
                     </ul>
                 </div>
                 <div class="footer-col">
                     <h5>Formations</h5>
                     <ul>
-                        <li><a href="{{ url('/') }}#catalogue">Formations programmées</a></li>
-                        <li><a href="{{ url('/') }}#catalogue">Formations à la carte</a></li>
-                        <li><a href="{{ url('/') }}#prestations">Appui-conseil</a></li>
-                        <li><a href="{{ url('/') }}#bibliotheque">Bibliothèque</a></li>
+                        <li><a href="<?php echo e(url('/')); ?>#catalogue">Formations programmées</a></li>
+                        <li><a href="<?php echo e(url('/')); ?>#catalogue">Formations à la carte</a></li>
+                        <li><a href="<?php echo e(url('/')); ?>#prestations">Appui-conseil</a></li>
+                        <li><a href="<?php echo e(url('/')); ?>#bibliotheque">Bibliothèque</a></li>
                     </ul>
                 </div>
                 <div class="footer-col">
@@ -1996,24 +1989,24 @@
                     <ul>
                         <li><a href="#login">Espace personnel</a></li>
                         <li><a href="#register">Créer un compte</a></li>
-                        <li><a href="{{ url('/') }}#bibliotheque">Bibliothèque en ligne</a></li>
-                        <li><a href="{{ route('contact.index') }}">Nous écrire</a></li>
+                        <li><a href="<?php echo e(url('/')); ?>#bibliotheque">Bibliothèque en ligne</a></li>
+                        <li><a href="<?php echo e(route('contact.index')); ?>">Nous écrire</a></li>
                     </ul>
                 </div>
-                @if(!empty($liensUtilesFooter))
+                <?php if(!empty($liensUtilesFooter)): ?>
                     <div class="footer-col">
                         <h5>Liens utiles</h5>
                         <ul>
-                            @foreach($liensUtilesFooter as $lien)
-                                @if(!empty($lien['titre']) && !empty($lien['url']))
+                            <?php $__currentLoopData = $liensUtilesFooter; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $lien): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                <?php if(!empty($lien['titre']) && !empty($lien['url'])): ?>
                                     <li>
-                                        <a href="{{ $lien['url'] }}" target="_blank" rel="noopener">{{ $lien['titre'] }}</a>
+                                        <a href="<?php echo e($lien['url']); ?>" target="_blank" rel="noopener"><?php echo e($lien['titre']); ?></a>
                                     </li>
-                                @endif
-                            @endforeach
+                                <?php endif; ?>
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                         </ul>
                     </div>
-                @endif
+                <?php endif; ?>
             </div>
             <div class="footer-bottom">
                 <span>© 2026 École Nationale des Eaux et Forêts (ENEF) — Burkina Faso. Tous droits réservés.</span>
@@ -2077,7 +2070,8 @@
             }
         });
     </script>
-    @stack('scripts')
+    <?php echo $__env->yieldPushContent('scripts'); ?>
 </body>
 
 </html>
+<?php /**PATH C:\Users\HP\Desktop\ENEF\enefApp\resources\views/layouts/site.blade.php ENDPATH**/ ?>
