@@ -7,6 +7,7 @@ use App\Models\Inscription;
 use App\Models\PieceInscription;
 use App\Models\SessionFormation;
 use App\Models\TypePiece;
+use App\Notifications\InscriptionDeposeeNotification;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -147,11 +148,11 @@ class InscriptionController extends Controller
             ->enCours()
             ->first();
 
-       if ($existante) {
-    return redirect()
-        ->route('admin.inscription.show', $existante->id)
-        ->with('status', 'Vous avez déjà un dossier de candidature en cours.');
-}
+        if ($existante) {
+            return redirect()
+                ->route('admin.inscription.show', $existante->id)
+                ->with('status', 'Vous avez déjà un dossier de candidature en cours.');
+        }
 
         $typesPieces = TypePiece::actifs()->get();
 
@@ -205,6 +206,8 @@ class InscriptionController extends Controller
                     'format_fichier' => $fichier->getClientOriginalExtension(),
                     'taille_fichier_ko' => round($fichier->getSize() / 1024),
                     'statut_verification' => 'en_attente',
+                    'resoumis' => false,
+                    'verifie_le' => null,
                 ]);
             }
 
@@ -215,12 +218,15 @@ class InscriptionController extends Controller
             return $inscription;
         });
 
+        // Envoie de mail
+        $inscription->candidat?->notify(new InscriptionDeposeeNotification($inscription));
+
         return redirect()
-    ->route('admin.inscription.show', $inscription->id)
-    ->with(
-        'status',
-        "Votre candidature a été enregistrée sous le numéro {$inscription->numero_dossier}."
-    );
+            ->route('admin.inscription.show', $inscription->id)
+            ->with(
+                'status',
+                "Votre candidature a été enregistrée sous le numéro {$inscription->numero_dossier}."
+            );
     }
 
     public function storePiece(StorePieceInscriptionRequest $request, Inscription $inscription): RedirectResponse
@@ -261,38 +267,42 @@ class InscriptionController extends Controller
 
 
     public function updatePiece(Request $request, PieceInscription $piece): RedirectResponse
-{
-    $inscription = $piece->inscription;
+    {
+        $inscription = $piece->inscription;
 
-    // Sécurité : seul le propriétaire peut modifier
-    abort_if($inscription->candidat_id !== auth()->id(), 403);
+        // Sécurité : seul le propriétaire peut modifier
+        abort_if($inscription->candidat_id !== auth()->id(), 403);
 
-    // Interdire la modif si la pièce est déjà conforme ou le dossier validé
-    abort_if($piece->estConforme(), 403, 'Cette pièce est déjà validée, vous ne pouvez plus la modifier.');
-    abort_if($inscription->statut === 'valide', 403, 'Impossible de modifier un dossier déjà validé.');
+        // Interdire la modif si la pièce est déjà conforme ou le dossier validé
+        abort_if($piece->estConforme(), 403, 'Cette pièce est déjà validée, vous ne pouvez plus la modifier.');
+        abort_if($inscription->statut === 'valide', 403, 'Impossible de modifier un dossier déjà validé.');
 
-    $request->validate([
-        'fichier' => ['required', 'file', 'mimes:pdf,jpg,jpeg,png', 'max:5120'],
-    ]);
+        $request->validate([
+            'fichier' => ['required', 'file', 'mimes:pdf,jpg,jpeg,png', 'max:5120'],
+        ]);
 
-    // Supprimer l'ancien fichier physique (uniquement s'il existe réellement)
-    if ($piece->fichier_url && Storage::disk('local')->exists($piece->fichier_url)) {
-        Storage::disk('local')->delete($piece->fichier_url);
+        // On sait qu'il y a resoumission si la pièce a déjà été vérifiée au moins une fois
+        $etaitDejaVerifiee = $piece->verifie_le !== null;
+
+        // Supprimer l'ancien fichier physique (uniquement s'il existe réellement)
+        if ($piece->fichier_url && Storage::disk('local')->exists($piece->fichier_url)) {
+            Storage::disk('local')->delete($piece->fichier_url);
+        }
+
+        $fichier = $request->file('fichier');
+        $chemin = $fichier->store('inscriptions/' . $inscription->id, 'local');
+
+        $piece->update([
+            'fichier_url' => $chemin,
+            'format_fichier' => $fichier->getClientOriginalExtension(),
+            'taille_fichier_ko' => round($fichier->getSize() / 1024),
+            'statut_verification' => 'en_attente', // remet en vérification
+            'commentaire' => null,
+            'resoumis' => $etaitDejaVerifiee,
+        ]);
+
+        return back()->with('status', 'Fichier remplacé avec succès, en attente de vérification.');
     }
-
-    $fichier = $request->file('fichier');
-    $chemin = $fichier->store('inscriptions/' . $inscription->id, 'local');
-
-    $piece->update([
-        'fichier_url' => $chemin,
-        'format_fichier' => $fichier->getClientOriginalExtension(),
-        'taille_fichier_ko' => round($fichier->getSize() / 1024),
-        'statut_verification' => 'en_attente', // remet en vérification
-        'commentaire' => null,
-    ]);
-
-    return back()->with('status', 'Fichier remplacé avec succès, en attente de vérification.');
-}
 
     public function destroyPiece(PieceInscription $piece): RedirectResponse
     {
