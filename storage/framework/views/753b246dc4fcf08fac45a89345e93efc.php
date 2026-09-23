@@ -23,7 +23,7 @@
 
     
     <?php if(session('status')): ?>
-        <div class="alert alert-info alert-dismissible fade show">
+        <div class="alert alert-success alert-dismissible fade show">
             <i class="fas fa-info-circle mr-2"></i>
             <?php echo e(session('status')); ?>
 
@@ -256,18 +256,18 @@
                 <div class="card-header">
 
                     <h3 class="card-title">
-    <i class="fas fa-paperclip mr-2"></i>
-    Pièces jointes
-    (<?php echo e($inscription->pieces->count()); ?>)
+                        <i class="fas fa-paperclip mr-2"></i>
+                        Pièces jointes
+                        (<?php echo e($inscription->pieces->count()); ?>)
 
-    <?php $nbResoumises = $inscription->pieces->where('resoumis', true)->count(); ?>
-    <?php if($nbResoumises > 0): ?>
-        <span class="badge badge-info ml-2">
-            <i class="fas fa-sync-alt mr-1"></i>
-            <?php echo e($nbResoumises); ?> <?php echo e(Str::plural('fichier', $nbResoumises)); ?> resoumis
-        </span>
-    <?php endif; ?>
-</h3>
+                        <?php $nbResoumises = $inscription->pieces->where('resoumis', true)->count(); ?>
+                        <?php if($nbResoumises > 0): ?>
+                            <span class="badge badge-info ml-2">
+                                <i class="fas fa-sync-alt mr-1"></i>
+                                <?php echo e($nbResoumises); ?> <?php echo e(Str::plural('fichier', $nbResoumises)); ?> resoumis
+                            </span>
+                        <?php endif; ?>
+                    </h3>
 
                 </div>
 
@@ -336,41 +336,41 @@
 
                                         
                                         
-<td>
+                                        <td>
 
-    <span class="badge verif-badge-<?php echo e($piece->statut_verification); ?>">
-        <?php switch($piece->statut_verification):
-            case ('conforme'): ?>
-                <i class="fas fa-check mr-1"></i>
-                Conforme
-            <?php break; ?>
+                                            <span class="badge verif-badge-<?php echo e($piece->statut_verification); ?>">
+                                                <?php switch($piece->statut_verification):
+                                                    case ('conforme'): ?>
+                                                        <i class="fas fa-check mr-1"></i>
+                                                        Conforme
+                                                    <?php break; ?>
 
-            <?php case ('non_conforme'): ?>
-                <i class="fas fa-times mr-1"></i>
-                Non conforme
-            <?php break; ?>
+                                                    <?php case ('non_conforme'): ?>
+                                                        <i class="fas fa-times mr-1"></i>
+                                                        Non conforme
+                                                    <?php break; ?>
 
-            <?php default: ?>
-                <i class="fas fa-clock mr-1"></i>
-                En attente
-        <?php endswitch; ?>
-    </span>
+                                                    <?php default: ?>
+                                                        <i class="fas fa-clock mr-1"></i>
+                                                        En attente
+                                                <?php endswitch; ?>
+                                            </span>
 
-    <?php if($piece->resoumis): ?>
-        <span class="badge badge-info mt-1 d-block" style="width:fit-content;">
-            <i class="fas fa-sync-alt mr-1"></i>
-            Nouveau fichier déposé
-        </span>
-    <?php endif; ?>
+                                            <?php if($piece->resoumis): ?>
+                                                <span class="badge badge-info mt-1 d-block" style="width:fit-content;">
+                                                    <i class="fas fa-sync-alt mr-1"></i>
+                                                    Nouveau fichier déposé
+                                                </span>
+                                            <?php endif; ?>
 
-    <?php if($piece->commentaire): ?>
-        <small class="text-muted d-block mt-1">
-            <?php echo e($piece->commentaire); ?>
+                                            <?php if($piece->commentaire): ?>
+                                                <small class="text-muted d-block mt-1">
+                                                    <?php echo e($piece->commentaire); ?>
 
-        </small>
-    <?php endif; ?>
+                                                </small>
+                                            <?php endif; ?>
 
-</td>
+                                        </td>
 
 
                                         

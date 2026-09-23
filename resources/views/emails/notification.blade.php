@@ -27,6 +27,26 @@
                                 <p style="color:#333333; font-size:15px; line-height:1.6;">{{ $line }}</p>
                             @endforeach
 
+                            {{-- Bloc de contact (optionnel) : affiché seulement si $contactPhone est fourni --}}
+                            @if (!empty($contactPhone))
+                                <table role="presentation" width="100%" cellpadding="0" cellspacing="0"
+                                    style="margin: 20px 0;">
+                                    <tr>
+                                        <td
+                                            style="background-color:#e8f5e9; border-left:4px solid #2e7d32; padding:16px 20px;">
+                                            <p
+                                                style="margin:0 0 6px 0; color:#2e7d32; font-size:12px; font-weight:bold; text-transform:uppercase; letter-spacing:0.5px;">
+                                                {{ $contactLabel ?? 'Contact' }}
+                                            </p>
+                                            <a href="tel:{{ preg_replace('/[^\d+]/', '', $contactPhone) }}"
+                                                style="color:#1a1a1a; font-size:20px; font-weight:bold; text-decoration:none;">
+                                                Tél. : {{ $contactPhone }}
+                                            </a>
+                                        </td>
+                                    </tr>
+                                </table>
+                            @endif
+
                             @if (isset($actionText) && isset($actionUrl))
                                 <table role="presentation" cellpadding="0" cellspacing="0" style="margin: 24px 0;">
                                     <tr>

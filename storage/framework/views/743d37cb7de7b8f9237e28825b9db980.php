@@ -27,6 +27,28 @@
                                 <p style="color:#333333; font-size:15px; line-height:1.6;"><?php echo e($line); ?></p>
                             <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
 
+                            
+                            <?php if(!empty($contactPhone)): ?>
+                                <table role="presentation" width="100%" cellpadding="0" cellspacing="0"
+                                    style="margin: 20px 0;">
+                                    <tr>
+                                        <td
+                                            style="background-color:#e8f5e9; border-left:4px solid #2e7d32; padding:16px 20px;">
+                                            <p
+                                                style="margin:0 0 6px 0; color:#2e7d32; font-size:12px; font-weight:bold; text-transform:uppercase; letter-spacing:0.5px;">
+                                                <?php echo e($contactLabel ?? 'Contact'); ?>
+
+                                            </p>
+                                            <a href="tel:<?php echo e(preg_replace('/[^\d+]/', '', $contactPhone)); ?>"
+                                                style="color:#1a1a1a; font-size:20px; font-weight:bold; text-decoration:none;">
+                                                Tél. : <?php echo e($contactPhone); ?>
+
+                                            </a>
+                                        </td>
+                                    </tr>
+                                </table>
+                            <?php endif; ?>
+
                             <?php if(isset($actionText) && isset($actionUrl)): ?>
                                 <table role="presentation" cellpadding="0" cellspacing="0" style="margin: 24px 0;">
                                     <tr>
@@ -56,5 +78,4 @@
     </table>
 </body>
 
-</html>
-<?php /**PATH C:\wamp64\www\Les projets finis\ENEF\resources\views/emails/notification.blade.php ENDPATH**/ ?>
+</html><?php /**PATH C:\wamp64\www\Les projets finis\ENEF\resources\views/emails/notification.blade.php ENDPATH**/ ?>

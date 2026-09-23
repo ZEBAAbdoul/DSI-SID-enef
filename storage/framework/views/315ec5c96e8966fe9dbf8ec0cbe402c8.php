@@ -1,68 +1,79 @@
-{{-- resources/views/admin/enseignants/notes/index.blade.php --}}
 
-{{-- Cette vue est partagée entre l'enseignant (NoteController) et l'administration (NoteAdminController).
-     Les routes doivent donc dépendre du rôle : la route "enseignant" refuse (403) les notes
-     qui n'appartiennent pas à l'enseignant connecté. --}}
-@php
+
+
+<?php
     $estEnseignant = auth()->user()->hasRole('enseignant'); // même condition que dans le contrôleur
 
     $routeIndex = $estEnseignant ? 'admin.enseignant.notes.index' : 'admin.notes.index';
     $routeTelecharger = $estEnseignant ? 'admin.enseignant.notes.telecharger' : 'admin.notes.telecharger';
-@endphp
+?>
 
-<x-admin title="{{ $estEnseignant ? 'Mes notes déposées' : 'Notes déposées' }}">
+<?php if (isset($component)) { $__componentOriginal2812d824e80b3a65bceda8e6a9bfa7a0 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal2812d824e80b3a65bceda8e6a9bfa7a0 = $attributes; } ?>
+<?php $component = App\View\Components\Admin::resolve([] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component->withName('admin'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(App\View\Components\Admin::class))->getConstructor()): ?>
+<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['title' => ''.e($estEnseignant ? 'Mes notes déposées' : 'Notes déposées').'']); ?>
 
     <div class="container-fluid py-4">
 
-        {{-- En-tête --}}
+        
         <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-4">
             <div>
                 <h1 class="h4 mb-1">Les notes déposées</h1>
                 <p class="text-muted mb-0">
-                    {{ $estEnseignant ? 'Liste des fichiers de notes que vous avez déposés.' : 'Liste des fichiers de notes déposés par les enseignants.' }}
+                    <?php echo e($estEnseignant ? 'Liste des fichiers de notes que vous avez déposés.' : 'Liste des fichiers de notes déposés par les enseignants.'); ?>
+
                 </p>
             </div>
 
-            @if ($estEnseignant)
-                <a href="{{ route('admin.enseignant.notes.create') }}" class="btn btn-success">
+            <?php if($estEnseignant): ?>
+                <a href="<?php echo e(route('admin.enseignant.notes.create')); ?>" class="btn btn-success">
                     <i class="fas fa-upload me-1"></i>
                     Déposer des notes
                 </a>
-            @endif
+            <?php endif; ?>
         </div>
 
-        {{-- Message de succès --}}
-        @if (session('success'))
+        
+        <?php if(session('success')): ?>
             <div class="alert alert-success alert-dismissible fade show" role="alert">
                 <i class="fas fa-check-circle me-1"></i>
-                {{ session('success') }}
+                <?php echo e(session('success')); ?>
+
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fermer"></button>
             </div>
-        @endif
+        <?php endif; ?>
 
-        {{-- Erreurs --}}
-        @if (session('error'))
+        
+        <?php if(session('error')): ?>
             <div class="alert alert-danger alert-dismissible fade show" role="alert">
                 <i class="fas fa-exclamation-circle me-1"></i>
-                {{ session('error') }}
+                <?php echo e(session('error')); ?>
+
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fermer"></button>
             </div>
-        @endif
+        <?php endif; ?>
 
-        {{-- Barre de filtres --}}
+        
         <div class="card shadow-sm border-0 mb-3">
             <div class="card-body py-3">
-                <form method="GET" action="{{ route($routeIndex) }}" class="row g-2 align-items-end">
+                <form method="GET" action="<?php echo e(route($routeIndex)); ?>" class="row g-2 align-items-end">
 
                     <div class="col-md-3">
                         <label class="form-label small text-muted mb-1">Matière</label>
                         <select name="matiere_id" class="form-select form-select-sm">
                             <option value="">Toutes</option>
-                            @foreach ($matieres ?? [] as $matiere)
-                                <option value="{{ $matiere->id }}" @selected(request('matiere_id') == $matiere->id)>
-                                    {{ $matiere->nom }}
+                            <?php $__currentLoopData = $matieres ?? []; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $matiere): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                <option value="<?php echo e($matiere->id); ?>" <?php if(request('matiere_id') == $matiere->id): echo 'selected'; endif; ?>>
+                                    <?php echo e($matiere->nom); ?>
+
                                 </option>
-                            @endforeach
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                         </select>
                     </div>
 
@@ -70,17 +81,18 @@
                         <label class="form-label small text-muted mb-1">Type d'évaluation</label>
                         <select name="type_evaluation" class="form-select form-select-sm">
                             <option value="">Tous</option>
-                            @foreach (['controle' => 'Contrôle', 'examen' => 'Examen', 'tp' => 'TP', 'oral' => 'Oral', 'projet' => 'Projet'] as $value => $label)
-                                <option value="{{ $value }}" @selected(request('type_evaluation') === $value)>
-                                    {{ $label }}
+                            <?php $__currentLoopData = ['controle' => 'Contrôle', 'examen' => 'Examen', 'tp' => 'TP', 'oral' => 'Oral', 'projet' => 'Projet']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $value => $label): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                <option value="<?php echo e($value); ?>" <?php if(request('type_evaluation') === $value): echo 'selected'; endif; ?>>
+                                    <?php echo e($label); ?>
+
                                 </option>
-                            @endforeach
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                         </select>
                     </div>
 
                     <div class="col-md-3">
                         <label class="form-label small text-muted mb-1">Date d'évaluation</label>
-                        <input type="date" name="date_evaluation" value="{{ request('date_evaluation') }}"
+                        <input type="date" name="date_evaluation" value="<?php echo e(request('date_evaluation')); ?>"
                             class="form-control form-control-sm">
                     </div>
 
@@ -88,30 +100,30 @@
                         <button type="submit" class="btn btn-sm btn-outline-success">
                             <i class="fas fa-filter me-1"></i>Filtrer
                         </button>
-                        @if (request()->hasAny(['matiere_id', 'type_evaluation', 'date_evaluation']))
-                            <a href="{{ route($routeIndex) }}" class="btn btn-sm btn-outline-secondary">
+                        <?php if(request()->hasAny(['matiere_id', 'type_evaluation', 'date_evaluation'])): ?>
+                            <a href="<?php echo e(route($routeIndex)); ?>" class="btn btn-sm btn-outline-secondary">
                                 Réinitialiser
                             </a>
-                        @endif
+                        <?php endif; ?>
                     </div>
 
                 </form>
             </div>
         </div>
 
-        {{-- Tableau --}}
+        
         <div class="card shadow-sm border-0">
 
             <div class="card-header bg-white border-0 py-3">
                 <div class="d-flex align-items-center">
                     <i class="fas fa-file-alt text-success me-2"></i>
-                    <strong>{{ $estEnseignant ? 'Mes notes' : 'Toutes les notes' }}</strong>
+                    <strong><?php echo e($estEnseignant ? 'Mes notes' : 'Toutes les notes'); ?></strong>
 
-                    @if (
+                    <?php if(
                         $notes instanceof \Illuminate\Contracts\Pagination\Paginator ||
-                            $notes instanceof \Illuminate\Contracts\Pagination\LengthAwarePaginator)
-                        <span class="badge bg-secondary ms-2">{{ $notes->total() }}</span>
-                    @endif
+                            $notes instanceof \Illuminate\Contracts\Pagination\LengthAwarePaginator): ?>
+                        <span class="badge bg-secondary ms-2"><?php echo e($notes->total()); ?></span>
+                    <?php endif; ?>
                 </div>
             </div>
 
@@ -135,8 +147,8 @@
 
                         <tbody>
 
-                            @forelse($notes as $note)
-                                @php
+                            <?php $__empty_1 = true; $__currentLoopData = $notes; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $note): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
+                                <?php
                                     $extension = strtolower(pathinfo($note->nom_original, PATHINFO_EXTENSION));
 
                                     $fileIcon = match (true) {
@@ -156,89 +168,90 @@
                                     };
 
                                     $tailleKo = $note->taille ? round($note->taille / 1024, 1) : null;
-                                @endphp
+                                ?>
 
                                 <tr>
 
                                     <td>
-                                        {{ $note->formation->nom ?? ($note->formation->titre ?? '—') }}
+                                        <?php echo e($note->formation->nom ?? ($note->formation->titre ?? '—')); ?>
+
                                     </td>
 
                                     <td>
-                                        {{ $note->enseignant->user->personne->nom_complet ?? '—' }}
+                                        <?php echo e($note->enseignant->user->personne->nom_complet ?? '—'); ?>
+
                                     </td>
 
                                     <td>
-                                        @if ($note->session)
+                                        <?php if($note->session): ?>
                                             <div class="small">
                                                 <div>
                                                     <i class="fas fa-calendar-alt text-primary me-1"></i>
                                                     <strong>
-                                                        {{ $note->session->date_debut?->format('d/m/Y') ?? '—' }}
+                                                        <?php echo e($note->session->date_debut?->format('d/m/Y') ?? '—'); ?>
+
                                                     </strong>
                                                 </div>
 
                                                 <div class="text-muted">
                                                     <i class="fas fa-arrow-down me-1"></i>
-                                                    {{ $note->session->date_fin?->format('d/m/Y') ?? '—' }}
+                                                    <?php echo e($note->session->date_fin?->format('d/m/Y') ?? '—'); ?>
+
                                                 </div>
                                             </div>
-                                        @else
+                                        <?php else: ?>
                                             <span class="text-muted">—</span>
-                                        @endif
+                                        <?php endif; ?>
                                     </td>
 
-                                    <td>{{ $note->matiere->nom ?? '—' }}</td>
+                                    <td><?php echo e($note->matiere->nom ?? '—'); ?></td>
 
                                     <td>
-                                        <span class="badge {{ $typeBadge }} text-capitalize">
-                                            {{ $note->type_evaluation ?? '—' }}
+                                        <span class="badge <?php echo e($typeBadge); ?> text-capitalize">
+                                            <?php echo e($note->type_evaluation ?? '—'); ?>
+
                                         </span>
                                     </td>
 
-                                    <td>{{ $note->date_evaluation?->format('d/m/Y') ?? '—' }}</td>
+                                    <td><?php echo e($note->date_evaluation?->format('d/m/Y') ?? '—'); ?></td>
 
                                     <td>
                                         <div class="d-flex align-items-center">
-                                            <i class="fas {{ $fileIcon }} me-2"></i>
+                                            <i class="fas <?php echo e($fileIcon); ?> me-2"></i>
                                             <div>
                                                 <span class="text-truncate d-block" style="max-width: 220px;"
-                                                    title="{{ $note->nom_original }}">
-                                                    {{ $note->nom_original }}
+                                                    title="<?php echo e($note->nom_original); ?>">
+                                                    <?php echo e($note->nom_original); ?>
+
                                                 </span>
-                                                @if ($tailleKo)
-                                                    <small class="text-muted">{{ $tailleKo }} Ko</small>
-                                                @endif
+                                                <?php if($tailleKo): ?>
+                                                    <small class="text-muted"><?php echo e($tailleKo); ?> Ko</small>
+                                                <?php endif; ?>
                                             </div>
                                         </div>
                                     </td>
 
                                     <td>
                                         <small class="text-muted">
-                                            {{ $note->created_at->format('d/m/Y H:i') }}
+                                            <?php echo e($note->created_at->format('d/m/Y H:i')); ?>
+
                                         </small>
                                     </td>
 
                                     <td class="text-end">
-                                        {{-- Route adaptée au rôle (enseignant ≠ administration) --}}
-                                        <a href="{{ route($routeTelecharger, $note) }}"
+                                        
+                                        <a href="<?php echo e(route($routeTelecharger, $note)); ?>"
                                             class="btn btn-sm btn-outline-primary" title="Télécharger">
                                             <i class="fas fa-download"></i>
                                         </a>
 
-                                        {{-- Suppression : uniquement côté enseignant (pas de route destroy côté admin) --}}
-                                        {{-- @if ($estEnseignant)
-                                            <button type="button" class="btn btn-sm btn-outline-danger"
-                                                data-bs-toggle="modal"
-                                                data-bs-target="#modalSuppression{{ $note->id }}" title="Supprimer">
-                                                <i class="fas fa-trash"></i>
-                                            </button>
-                                        @endif --}}
+                                        
+                                        
                                     </td>
 
                                 </tr>
 
-                            @empty
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
 
                                 <tr>
                                     <td colspan="9" class="text-center py-5">
@@ -246,12 +259,13 @@
                                             <i class="fas fa-folder-open fa-3x mb-3 opacity-50"></i>
                                             <h5>Aucun fichier déposé</h5>
                                             <p class="mb-0">
-                                                {{ $estEnseignant ? "Vous n'avez encore déposé aucune note." : "Aucune note n'a encore été déposée." }}
+                                                <?php echo e($estEnseignant ? "Vous n'avez encore déposé aucune note." : "Aucune note n'a encore été déposée."); ?>
+
                                             </p>
                                         </div>
                                     </td>
                                 </tr>
-                            @endforelse
+                            <?php endif; ?>
 
                         </tbody>
 
@@ -259,44 +273,45 @@
                 </div>
             </div>
 
-            {{-- Pagination --}}
-            @if (
+            
+            <?php if(
                 $notes instanceof \Illuminate\Contracts\Pagination\Paginator ||
-                    $notes instanceof \Illuminate\Contracts\Pagination\LengthAwarePaginator)
+                    $notes instanceof \Illuminate\Contracts\Pagination\LengthAwarePaginator): ?>
 
-                @if ($notes->hasPages())
+                <?php if($notes->hasPages()): ?>
                     <div class="card-footer bg-white border-0">
                         <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
                             <small class="text-muted">
-                                Affichage de <strong>{{ $notes->firstItem() }}</strong>
-                                à <strong>{{ $notes->lastItem() }}</strong>
-                                sur <strong>{{ $notes->total() }}</strong> résultats
+                                Affichage de <strong><?php echo e($notes->firstItem()); ?></strong>
+                                à <strong><?php echo e($notes->lastItem()); ?></strong>
+                                sur <strong><?php echo e($notes->total()); ?></strong> résultats
                             </small>
                             <div>
-                                {{ $notes->onEachSide(1)->links() }}
+                                <?php echo e($notes->onEachSide(1)->links()); ?>
+
                             </div>
                         </div>
                     </div>
-                @endif
+                <?php endif; ?>
 
-            @endif
+            <?php endif; ?>
 
         </div>
 
     </div>
 
 
-    {{-- MODALES DE SUPPRESSION (enseignant uniquement) --}}
-    @if ($estEnseignant)
-        @foreach ($notes as $note)
-            <div class="modal fade" id="modalSuppression{{ $note->id }}" tabindex="-1"
-                aria-labelledby="modalSuppressionLabel{{ $note->id }}" aria-hidden="true">
+    
+    <?php if($estEnseignant): ?>
+        <?php $__currentLoopData = $notes; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $note): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+            <div class="modal fade" id="modalSuppression<?php echo e($note->id); ?>" tabindex="-1"
+                aria-labelledby="modalSuppressionLabel<?php echo e($note->id); ?>" aria-hidden="true">
 
                 <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content">
 
                         <div class="modal-header">
-                            <h2 class="modal-title h5 mb-0" id="modalSuppressionLabel{{ $note->id }}">
+                            <h2 class="modal-title h5 mb-0" id="modalSuppressionLabel<?php echo e($note->id); ?>">
                                 <i class="fas fa-trash text-danger me-2"></i>
                                 Supprimer ce fichier ?
                             </h2>
@@ -308,13 +323,15 @@
                             <p>Vous êtes sur le point de supprimer le fichier :</p>
 
                             <div class="alert alert-light border">
-                                <strong>{{ $note->nom_original }}</strong>
+                                <strong><?php echo e($note->nom_original); ?></strong>
                                 <br>
                                 <small class="text-muted">
-                                    {{ $note->matiere->nom ?? 'Matière inconnue' }}
-                                    @if ($note->type_evaluation)
-                                        — {{ $note->type_evaluation }}
-                                    @endif
+                                    <?php echo e($note->matiere->nom ?? 'Matière inconnue'); ?>
+
+                                    <?php if($note->type_evaluation): ?>
+                                        — <?php echo e($note->type_evaluation); ?>
+
+                                    <?php endif; ?>
                                 </small>
                             </div>
 
@@ -329,9 +346,9 @@
                                 Annuler
                             </button>
 
-                            <form method="POST" action="{{ route('admin.enseignant.notes.destroy', $note) }}">
-                                @csrf
-                                @method('DELETE')
+                            <form method="POST" action="<?php echo e(route('admin.enseignant.notes.destroy', $note)); ?>">
+                                <?php echo csrf_field(); ?>
+                                <?php echo method_field('DELETE'); ?>
                                 <button type="submit" class="btn btn-danger">
                                     <i class="fas fa-trash me-1"></i>
                                     Supprimer
@@ -342,7 +359,16 @@
                     </div>
                 </div>
             </div>
-        @endforeach
-    @endif
+        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+    <?php endif; ?>
 
-</x-admin>
+ <?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal2812d824e80b3a65bceda8e6a9bfa7a0)): ?>
+<?php $attributes = $__attributesOriginal2812d824e80b3a65bceda8e6a9bfa7a0; ?>
+<?php unset($__attributesOriginal2812d824e80b3a65bceda8e6a9bfa7a0); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal2812d824e80b3a65bceda8e6a9bfa7a0)): ?>
+<?php $component = $__componentOriginal2812d824e80b3a65bceda8e6a9bfa7a0; ?>
+<?php unset($__componentOriginal2812d824e80b3a65bceda8e6a9bfa7a0); ?>
+<?php endif; ?><?php /**PATH C:\wamp64\www\Les projets finis\ENEF\resources\views/admin/enseignants/notes/index.blade.php ENDPATH**/ ?>

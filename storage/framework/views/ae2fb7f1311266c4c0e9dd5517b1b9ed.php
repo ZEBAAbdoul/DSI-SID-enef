@@ -308,7 +308,7 @@ $filieresActive = Route::is('admin.filieres.*');
                     <a href="<?php echo e(route('admin.enseignant.notes.create')); ?>"
                         class="nav-link <?php echo e(request()->routeIs('admin.enseignant.notes.create') ? 'active' : ''); ?>">
                         <i class="fas fa-upload nav-icon"></i>
-                        <p>Déposer un fichier</p>
+                        <p>Déposer une note</p>
                     </a>
                 </li>
                 <?php endif; ?>
@@ -784,7 +784,7 @@ $filieresActive = Route::is('admin.filieres.*');
                         <i class="fas fa-tags nav-icon"></i>
 
                         <p>
-                            Catégories de formation
+                            Catégories formations
                         </p>
 
                     </a>
@@ -818,7 +818,7 @@ $filieresActive = Route::is('admin.filieres.*');
                         <i class="fas fa-tags nav-icon"></i>
 
                         <p>
-                            Catégories de documents
+                            Catégories documents
                         </p>
 
                     </a>

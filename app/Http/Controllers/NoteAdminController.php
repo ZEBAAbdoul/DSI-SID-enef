@@ -17,16 +17,16 @@ use Maatwebsite\Excel\Facades\Excel;
 class NoteAdminController extends Controller
 {
     public function index()
-{
-    $notes = auth()->user()->hasRole('enseignant')
-        ? Note::with(['formation', 'session', 'matiere'])
+    {
+        $notes = auth()->user()->hasRole('enseignant')
+            ? Note::with(['formation', 'session', 'matiere'])
             ->where('enseignant_id', auth()->user()->enseignant->id)
             ->latest()->get()
-        : Note::with(['enseignant.user', 'formation', 'session', 'matiere'])
+            : Note::with(['enseignant.user', 'formation', 'session', 'matiere'])
             ->latest()->get();
 
-    return view('admin.enseignants.notes.index', compact('notes'));
-}
+        return view('admin.enseignants.notes.index', compact('notes'));
+    }
 
     public function telecharger(Note $note)
     {
