@@ -82,7 +82,7 @@
     <div class="card shadow-lg">
         <div class="card-header bg-primary text-white">
             <h3 class="card-title mb-0">
-                <i class="fas fa-edit"></i> 
+                <i class="fas fa-edit"></i>
                 <?php echo e($parametres ? 'Modifier les paramètres' : 'Ajouter les paramètres'); ?>
 
             </h3>
@@ -114,9 +114,9 @@ if (isset($message)) { $__messageOriginal = $message; }
 $message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
 if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
-unset($__errorArgs, $__bag); ?>" 
-                               id="nom_site" name="nom_site" 
-                               value="<?php echo e(old('nom_site', $parametres->nom_site ?? '')); ?>" 
+unset($__errorArgs, $__bag); ?>"
+                               id="nom_site" name="nom_site"
+                               value="<?php echo e(old('nom_site', $parametres->nom_site ?? '')); ?>"
                                placeholder="Ex: ENEF - École Nationale des Eaux et Forêts" required>
                         <?php $__errorArgs = ['nom_site'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
@@ -139,9 +139,9 @@ if (isset($message)) { $__messageOriginal = $message; }
 $message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
 if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
-unset($__errorArgs, $__bag); ?>" 
-                               id="slogan" name="slogan" 
-                               value="<?php echo e(old('slogan', $parametres->slogan ?? '')); ?>" 
+unset($__errorArgs, $__bag); ?>"
+                               id="slogan" name="slogan"
+                               value="<?php echo e(old('slogan', $parametres->slogan ?? '')); ?>"
                                placeholder="Ex: Former les gestionnaires des ressources naturelles">
                         <?php $__errorArgs = ['slogan'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
@@ -164,7 +164,7 @@ if (isset($message)) { $__messageOriginal = $message; }
 $message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
 if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
-unset($__errorArgs, $__bag); ?>" 
+unset($__errorArgs, $__bag); ?>"
                                id="logo_url" name="logo_url" accept="image/*">
                         <?php $__errorArgs = ['logo_url'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
@@ -193,7 +193,7 @@ if (isset($message)) { $__messageOriginal = $message; }
 $message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
 if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
-unset($__errorArgs, $__bag); ?>" 
+unset($__errorArgs, $__bag); ?>"
                                id="favicon_url" name="favicon_url" accept="image/*">
                         <?php $__errorArgs = ['favicon_url'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
@@ -222,7 +222,7 @@ if (isset($message)) { $__messageOriginal = $message; }
 $message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
 if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
-unset($__errorArgs, $__bag); ?>" 
+unset($__errorArgs, $__bag); ?>"
                                   id="meta_description" name="meta_description" rows="2"
                                   placeholder="Description pour le référencement (max 255 caractères)"><?php echo e(old('meta_description', $parametres->meta_description ?? '')); ?></textarea>
                         <?php $__errorArgs = ['meta_description'];
@@ -254,9 +254,9 @@ if (isset($message)) { $__messageOriginal = $message; }
 $message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
 if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
-unset($__errorArgs, $__bag); ?>" 
-                               id="mot_dg_titre" name="mot_dg_titre" 
-                               value="<?php echo e(old('mot_dg_titre', $parametres->mot_dg_titre ?? '')); ?>" 
+unset($__errorArgs, $__bag); ?>"
+                               id="mot_dg_titre" name="mot_dg_titre"
+                               value="<?php echo e(old('mot_dg_titre', $parametres->mot_dg_titre ?? '')); ?>"
                                placeholder="Ex: Message du Directeur Général">
                         <?php $__errorArgs = ['mot_dg_titre'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
@@ -279,9 +279,9 @@ if (isset($message)) { $__messageOriginal = $message; }
 $message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
 if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
-unset($__errorArgs, $__bag); ?>" 
-                               id="mot_dg_nom" name="mot_dg_nom" 
-                               value="<?php echo e(old('mot_dg_nom', $parametres->mot_dg_nom ?? '')); ?>" 
+unset($__errorArgs, $__bag); ?>"
+                               id="mot_dg_nom" name="mot_dg_nom"
+                               value="<?php echo e(old('mot_dg_nom', $parametres->mot_dg_nom ?? '')); ?>"
                                placeholder="Ex: Dr. Oumar Diallo">
                         <?php $__errorArgs = ['mot_dg_nom'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
@@ -304,7 +304,7 @@ if (isset($message)) { $__messageOriginal = $message; }
 $message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
 if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
-unset($__errorArgs, $__bag); ?>" 
+unset($__errorArgs, $__bag); ?>"
                                   id="mot_dg_contenu" name="mot_dg_contenu" rows="5"
                                   placeholder="Écrivez le message du Directeur Général ici..."><?php echo e(old('mot_dg_contenu', $parametres->mot_dg_contenu ?? '')); ?></textarea>
                         <?php $__errorArgs = ['mot_dg_contenu'];
@@ -328,7 +328,7 @@ if (isset($message)) { $__messageOriginal = $message; }
 $message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
 if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
-unset($__errorArgs, $__bag); ?>" 
+unset($__errorArgs, $__bag); ?>"
                                id="mot_dg_photo_url" name="mot_dg_photo_url" accept="image/*">
                         <?php $__errorArgs = ['mot_dg_photo_url'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
@@ -364,9 +364,9 @@ if (isset($message)) { $__messageOriginal = $message; }
 $message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
 if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
-unset($__errorArgs, $__bag); ?>" 
-                               id="adresse" name="adresse" 
-                               value="<?php echo e(old('adresse', $parametres->adresse ?? '')); ?>" 
+unset($__errorArgs, $__bag); ?>"
+                               id="adresse" name="adresse"
+                               value="<?php echo e(old('adresse', $parametres->adresse ?? '')); ?>"
                                placeholder="Ex: Route de Rufisque, Dakar, Sénégal">
                         <?php $__errorArgs = ['adresse'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
@@ -389,9 +389,9 @@ if (isset($message)) { $__messageOriginal = $message; }
 $message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
 if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
-unset($__errorArgs, $__bag); ?>" 
-                               id="telephone" name="telephone" 
-                               value="<?php echo e(old('telephone', $parametres->telephone ?? '')); ?>" 
+unset($__errorArgs, $__bag); ?>"
+                               id="telephone" name="telephone"
+                               value="<?php echo e(old('telephone', $parametres->telephone ?? '')); ?>"
                                placeholder="Ex: +221 33 859 12 34">
                         <?php $__errorArgs = ['telephone'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
@@ -414,11 +414,36 @@ if (isset($message)) { $__messageOriginal = $message; }
 $message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
 if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
-unset($__errorArgs, $__bag); ?>" 
-                               id="email_contact" name="email_contact" 
-                               value="<?php echo e(old('email_contact', $parametres->email_contact ?? '')); ?>" 
+unset($__errorArgs, $__bag); ?>"
+                               id="email_contact" name="email_contact"
+                               value="<?php echo e(old('email_contact', $parametres->email_contact ?? '')); ?>"
                                placeholder="Ex: contact@enef.sn">
                         <?php $__errorArgs = ['email_contact'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                            <div class="invalid-feedback"><?php echo e($message); ?></div>
+                        <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
+                    </div>
+
+                    <div class="col-md-12 mb-3">
+                        <label for="contact_rh" class="form-label fw-bold">Contact ressources humaines</label>
+                        <input type="text" class="form-control <?php $__errorArgs = ['contact_rh'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>"
+                               id="contact_rh" name="contact_rh"
+                               value="<?php echo e(old('contact_rh', $parametres->contact_rh ?? '')); ?>"
+                               placeholder="Exemple: 70000000">
+                        <?php $__errorArgs = ['contact_rh'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
 if ($__bag->has($__errorArgs[0])) :
 if (isset($message)) { $__messageOriginal = $message; }
@@ -446,9 +471,9 @@ if (isset($message)) { $__messageOriginal = $message; }
 $message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
 if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
-unset($__errorArgs, $__bag); ?>" 
-                               id="annee_creation" name="annee_creation" 
-                               value="<?php echo e(old('annee_creation', $parametres->annee_creation ?? '')); ?>" 
+unset($__errorArgs, $__bag); ?>"
+                               id="annee_creation" name="annee_creation"
+                               value="<?php echo e(old('annee_creation', $parametres->annee_creation ?? '')); ?>"
                                placeholder="Ex: 1985" min="1900" max="<?php echo e(date('Y')); ?>">
                         <?php $__errorArgs = ['annee_creation'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
@@ -471,9 +496,9 @@ if (isset($message)) { $__messageOriginal = $message; }
 $message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
 if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
-unset($__errorArgs, $__bag); ?>" 
-                               id="personne_forme" name="personne_forme" 
-                               value="<?php echo e(old('personne_forme', $parametres->personne_forme ?? '')); ?>" 
+unset($__errorArgs, $__bag); ?>"
+                               id="personne_forme" name="personne_forme"
+                               value="<?php echo e(old('personne_forme', $parametres->personne_forme ?? '')); ?>"
                                placeholder="Ex: 2500" min="0">
                         <?php $__errorArgs = ['personne_forme'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
@@ -505,9 +530,9 @@ if (isset($message)) { $__messageOriginal = $message; }
 $message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
 if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
-unset($__errorArgs, $__bag); ?>" 
-                               id="facebook_url" name="facebook_url" 
-                               value="<?php echo e(old('facebook_url', $parametres->facebook_url ?? '')); ?>" 
+unset($__errorArgs, $__bag); ?>"
+                               id="facebook_url" name="facebook_url"
+                               value="<?php echo e(old('facebook_url', $parametres->facebook_url ?? '')); ?>"
                                placeholder="https://facebook.com/enef.sn">
                         <?php $__errorArgs = ['facebook_url'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
@@ -532,9 +557,9 @@ if (isset($message)) { $__messageOriginal = $message; }
 $message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
 if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
-unset($__errorArgs, $__bag); ?>" 
-                               id="linkedin_url" name="linkedin_url" 
-                               value="<?php echo e(old('linkedin_url', $parametres->linkedin_url ?? '')); ?>" 
+unset($__errorArgs, $__bag); ?>"
+                               id="linkedin_url" name="linkedin_url"
+                               value="<?php echo e(old('linkedin_url', $parametres->linkedin_url ?? '')); ?>"
                                placeholder="https://linkedin.com/company/enef-sn">
                         <?php $__errorArgs = ['linkedin_url'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
@@ -620,10 +645,10 @@ unset($__errorArgs, $__bag); ?>
                         <div class="col-12 mt-3">
                             <hr>
                             <p class="text-muted mb-0">
-                                <i class="fas fa-user-edit"></i> 
+                                <i class="fas fa-user-edit"></i>
                                 Dernière modification par : <strong><?php echo e($parametres->updatedBy->name ?? 'Inconnu'); ?></strong>
                                 <span class="mx-2">|</span>
-                                <i class="fas fa-calendar-alt"></i> 
+                                <i class="fas fa-calendar-alt"></i>
                                 <?php echo e($parametres->updated_at ? $parametres->updated_at->format('d/m/Y à H:i') : 'Non défini'); ?>
 
                             </p>
@@ -638,7 +663,7 @@ unset($__errorArgs, $__bag); ?>
                                 <i class="fas fa-undo"></i> Réinitialiser
                             </button>
                             <button type="submit" class="btn btn-primary fw-bold">
-                                <i class="fas fa-save"></i> 
+                                <i class="fas fa-save"></i>
                                 <?php echo e($parametres ? 'Mettre à jour' : 'Enregistrer'); ?>
 
                             </button>
@@ -737,11 +762,11 @@ unset($__errorArgs, $__bag); ?>
 
                 // Récupérer le token CSRF du formulaire ou du meta tag
                 let csrfToken = $('input[name="_token"]').val() || $('meta[name="csrf-token"]').attr('content');
-                
+
                 let formData = new FormData(this);
                 // Ajouter explicitement le token CSRF
                 formData.append('_token', csrfToken);
-                
+
                 let url = $(this).attr('action');
                 // Toujours en POST : la vraie méthode (PUT pour la modification) est transmise
                 // via le champ caché `_method` du formulaire. Un PUT ajax + FormData multiplart
@@ -762,7 +787,7 @@ unset($__errorArgs, $__bag); ?>
                     },
                     success: function(response) {
                         showToast(response.message || 'Paramètres enregistrés avec succès !', 'success');
-                        
+
                         setTimeout(() => {
                             location.reload();
                         }, 1500);
@@ -778,7 +803,7 @@ unset($__errorArgs, $__bag); ?>
                         }
 
                         let errors = xhr.responseJSON?.errors || xhr.responseJSON?.message || 'Erreur lors de l\'enregistrement !';
-                        
+
                         if (typeof errors === 'object') {
                             let errorMessages = '';
                             $.each(errors, function(key, value) {
@@ -788,9 +813,9 @@ unset($__errorArgs, $__bag); ?>
                         } else {
                             showToast(errors, 'error');
                         }
-                        
+
                         console.log('Erreur AJAX:', xhr.responseJSON);
-                        
+
                         submitBtn.prop('disabled', false).html('<i class="fas fa-save"></i> <?php echo e($parametres ? "Mettre à jour" : "Enregistrer"); ?>');
                     }
                 });
@@ -884,4 +909,5 @@ unset($__errorArgs, $__bag); ?>
 <?php if (isset($__componentOriginal2812d824e80b3a65bceda8e6a9bfa7a0)): ?>
 <?php $component = $__componentOriginal2812d824e80b3a65bceda8e6a9bfa7a0; ?>
 <?php unset($__componentOriginal2812d824e80b3a65bceda8e6a9bfa7a0); ?>
-<?php endif; ?><?php /**PATH C:\wamp64\www\Les projets finis\ENEF\resources\views/admin/parametres/index.blade.php ENDPATH**/ ?>
+<?php endif; ?>
+<?php /**PATH C:\wamp64\www\Les projets finis\ENEF\resources\views/admin/parametres/index.blade.php ENDPATH**/ ?>
