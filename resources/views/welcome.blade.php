@@ -116,94 +116,19 @@
                             <p style="color:var(--ink-soft);">Aucune actualité publiée pour le moment.</p>
                         @endforelse
 
-                        @forelse ($actualites->chunk(10) as $index => $batch)
-                            <div class="news-batch" data-news-batch="{{ $index }}">
-                                @foreach ($batch as $actualite)
-                                    @include('partials.news-card', ['actualite' => $actualite])
-                                @endforeach
-                            </div>
-                        @empty
-                            <p style="color:var(--ink-soft);">Aucune actualité publiée pour le moment.</p>
-                        @endforelse
-
-                        @if ($actualites->count() > 0)
-                            <div class="news-scroll-row">
-                                <button type="button" id="news-retour" class="btn btn-outline">Retour</button>
-                                <div class="news-marquee" aria-label="Dernières actualités de l'ENEF">
-                                    <div class="news-track" id="news-track"></div>
-                                </div>
-                                @if ($actualites->count() > 10)
-                                    <button type="button" id="news-more" class="btn btn-outline">Voir plus</button>
-                                @endif
-                            </div>
-                    </div>
+                    {{-- Duplication du flux pour l'effet de défilement continu (CSS) --}}
+                    @if ($actualites->count() > 2)
+                        @foreach ($actualites as $actualite)
+                            @include('partials.news-card', ['actualite' => $actualite, 'hidden' => true])
+                        @endforeach
+                    @endif
+                </div>
+            </div>
 
                     <button type="button" id="news-next" class="news-nav-btn news-arrow news-arrow--right"
                         aria-label="Actualité suivante" title="Actualité suivante">&rarr;</button>
                 </div>
     </section>
-
-    @push('scripts')
-        <script>
-            (function() {
-                var track = document.getElementById('news-track');
-                if (!track) return;
-
-                var bouton = document.getElementById('news-more');
-                var retour = document.getElementById('news-retour');
-                var batches = Array.prototype.slice.call(document.querySelectorAll('.news-batch'));
-                var affichees = 1;
-
-                if (retour) {
-                    retour.addEventListener('click', function() {
-                        if (window.history.length > 1) {
-                            window.history.back();
-                        } else {
-                            window.location.assign('{{ url('/') }}');
-                        }
-                    });
-                }
-
-                function batir() {
-                    var cartes = [];
-                    for (var i = 0; i < affichees && i < batches.length; i++) {
-                        var cds = batches[i].querySelectorAll('.news-card');
-                        for (var j = 0; j < cds.length; j++) {
-                            cartes.push(cds[j]);
-                        }
-                    }
-
-                    track.innerHTML = '';
-                    cartes.forEach(function(c) {
-                        track.appendChild(c.cloneNode(true));
-                    });
-                    cartes.forEach(function(c) {
-                        var clone = c.cloneNode(true);
-                        clone.setAttribute('aria-hidden', 'true');
-                        track.appendChild(clone);
-                    });
-
-                    track.style.animation = 'none';
-                    void track.offsetWidth;
-                    track.style.animationDuration = Math.max(24, cartes.length * 1.5) + 's';
-                    track.style.animation = '';
-                }
-
-                if (bouton) {
-                    bouton.addEventListener('click', function() {
-                        if (affichees >= batches.length) return;
-                        affichees++;
-                        batir();
-                        if (affichees >= batches.length) {
-                            bouton.remove();
-                        }
-                    });
-                }
-
-                batir();
-            })();
-        </script>
-    @endpush
 
     <!-- ===================== ADMISSIONS ===================== -->
     <section id="admissions">
@@ -1286,15 +1211,16 @@
             updateButtons();
         })();
     </script>
-    // Catalogue tabs (visuel)
-    document.querySelectorAll('.tab-btn').forEach(function(tab) {
-    tab.addEventListener('click', function() {
-    document.querySelectorAll('.tab-btn').forEach(function(t) {
-    t.setAttribute('aria-selected', 'false');
-    });
-    tab.setAttribute('aria-selected', 'true');
-    });
-    });
+    <script>
+        // Catalogue tabs (visuel)
+        document.querySelectorAll('.tab-btn').forEach(function(tab) {
+            tab.addEventListener('click', function() {
+                document.querySelectorAll('.tab-btn').forEach(function(t) {
+                    t.setAttribute('aria-selected', 'false');
+                });
+                tab.setAttribute('aria-selected', 'true');
+            });
+        });
 
     // Catalogue tabs + chips : filtrage réel des formations affichées
     (function() {
