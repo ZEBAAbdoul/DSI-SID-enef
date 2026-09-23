@@ -60,6 +60,7 @@ class ParametresSiteController extends Controller
                 'adresse' => 'nullable|string|max:255',
                 'telephone' => 'nullable|string|max:30',
                 'email_contact' => 'nullable|string|max:150|email',
+                'contact_rh' => 'nullable|string|max:20',
                 'annee_creation' => 'nullable|integer|min:1900|max:' . date('Y'),
                 'personne_forme' => 'nullable|integer|min:0',
                 'facebook_url' => 'nullable|string|max:255|url',
@@ -103,6 +104,7 @@ class ParametresSiteController extends Controller
 
             Cache::forget('site.parametres');
             Cache::forget('site.liens_utiles');
+            Cache::forget('site.parametres.contact');
 
             return redirect()->route('admin.parametres.index')
                 ->with('success', 'Paramètres créés avec succès !');
@@ -141,6 +143,7 @@ class ParametresSiteController extends Controller
                 'adresse' => 'nullable|string|max:255',
                 'telephone' => 'nullable|string|max:30',
                 'email_contact' => 'nullable|string|max:150|email',
+                'contact_rh' => 'nullable|string|max:20',
                 'annee_creation' => 'nullable|integer|min:1900|max:' . date('Y'),
                 'personne_forme' => 'nullable|integer|min:0',
                 'facebook_url' => 'nullable|string|max:255|url',
@@ -184,6 +187,7 @@ class ParametresSiteController extends Controller
 
             Cache::forget('site.parametres');
             Cache::forget('site.liens_utiles');
+            Cache::forget('site.parametres.contact');
 
             return redirect()->route('admin.parametres.index')
                 ->with('success', 'Paramètres mis à jour avec succès !');
@@ -271,6 +275,7 @@ class ParametresSiteController extends Controller
 
             Cache::forget('site.parametres');
             Cache::forget('site.liens_utiles');
+            Cache::forget('site.parametres.contact');
 
             return redirect()->route('admin.parametres.index')
                 ->with('success', 'Paramètres supprimés avec succès !');

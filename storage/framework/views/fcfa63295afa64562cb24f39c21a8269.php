@@ -995,6 +995,7 @@
             updateButtons();
         })();
     </script>
+    <script>
         // Catalogue tabs (visuel)
         document.querySelectorAll('.tab-btn').forEach(function(tab) {
             tab.addEventListener('click', function() {
