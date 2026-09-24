@@ -526,11 +526,14 @@
                         'X-CSRF-TOKEN': csrfToken
                     },
                     success: function(response) {
-                        showToast(response.message || 'Paramètres enregistrés avec succès !', 'success');
+                        // Le contrôleur répond en JSON en cas de requête AJAX :
+                        // on affiche le vrai message (« mises à jour avec succès »…)
+                        let message = (response && response.message)
+                            ? response.message
+                            : 'Paramètres enregistrés avec succès !';
+                        showToast(message, 'success');
 
-                        setTimeout(() => {
-                            location.reload();
-                        }, 1500);
+                        submitBtn.prop('disabled', false).html('<i class="fas fa-save"></i> {{ $parametres ? "Mettre à jour" : "Enregistrer" }}');
                     },
                     error: function(xhr) {
                         // Gérer spécifiquement l'erreur CSRF
@@ -579,8 +582,10 @@
 
                 let formattedMessage = message.replace(/\n/g, '<br>');
 
+                // Pas de classe Bootstrap `.toast` : celle-ci force opacity:0 sans `.show`
+                // et rendrait le message invisible. On utilise un simple bloc coloré.
                 let toast = $(`
-                    <div class="toast ${colors[type]} p-3 mb-2 rounded shadow-lg" role="alert" style="display:none; min-width: 300px; border-radius: 8px;">
+                    <div class="${colors[type]} p-3 mb-2 rounded shadow-lg" role="alert" style="display:none; min-width: 300px; border-radius: 8px; opacity: 1;">
                         <div class="d-flex align-items-start">
                             <div class="me-2 fs-5">
                                 <i class="fas ${icon[type]}"></i>
@@ -588,13 +593,19 @@
                             <div class="flex-grow-1">
                                 ${formattedMessage}
                             </div>
-                            <button type="button" class="btn-close btn-close-white ms-3" data-bs-dismiss="toast" aria-label="Close"></button>
+                            <button type="button" class="btn-close btn-close-white ms-3" aria-label="Close"></button>
                         </div>
                     </div>
                 `);
 
                 $('#toastContainer').append(toast);
                 toast.fadeIn(300);
+
+                toast.on('click', '.btn-close', function() {
+                    toast.fadeOut(300, function() {
+                        $(this).remove();
+                    });
+                });
 
                 setTimeout(() => {
                     toast.fadeOut(300, function() {
