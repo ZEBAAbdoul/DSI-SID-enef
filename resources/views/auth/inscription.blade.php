@@ -318,7 +318,7 @@
         }
 
         .auth-side {
-            background: linear-gradient(165deg, #254a34, #153a49);
+            background: linear-gradient(135deg, #1b5e20 0%, #2e7d32 60%, #3f9443 100%);
             color: #fff;
             padding: 52px 40px;
             display: flex;

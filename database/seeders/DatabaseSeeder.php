@@ -21,7 +21,6 @@ class DatabaseSeeder extends Seeder
         $this->call(CategoriesFormationSeeder::class);
         $this->call(FilieresSeeder::class);
         $this->call(FormationsSeeder::class);
-        $this->call(SessionsFormationSeeder::class);
         $this->call(TemoignagesSeeder::class);
         $this->call(ActualitesSeeder::class);
         $this->call(RecherchesInnovationsSeeder::class);
@@ -36,6 +35,7 @@ class DatabaseSeeder extends Seeder
         $this->call(PhotoSeeder::class);
         $this->call(VideosSeeder::class);
         $this->call(FormationsInitialesSeeder::class);
+        $this->call(SessionsFormationSeeder::class);
         $this->call(FormationInformationsSeeder::class);
     }
 }

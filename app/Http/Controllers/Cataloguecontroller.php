@@ -29,12 +29,21 @@ class CatalogueController extends Controller
             ->orderBy('code_module')
             ->get();
 
+        $informations = FormationInformation::orderBy('ordre')->get()->groupBy('categorie');
+
+
         return view('formations.catalogue', [
             'formationsProgrammees' => $formationsProgrammees,
             'formationsALaCarte' => $formationsALaCarte,
             'formationsInitiales' => $formationsInitiales,
+
+            'frais' => $informations->get('frais', collect()),
+            'paiementIntermediaire' => $informations->get('paiement_intermediaire', collect()),
+            'paiementTerminale' => $informations->get('paiement_terminale', collect()),
+            'dossier' => $informations->get('dossier', collect()),
         ]);
     }
+
 
     public function formationContinue()
     {
@@ -54,7 +63,7 @@ class CatalogueController extends Controller
             ->orderBy('code_module')
             ->get();
 
-                    $informations = FormationInformation::orderBy('ordre')->get()->groupBy('categorie');
+        $informations = FormationInformation::orderBy('ordre')->get()->groupBy('categorie');
 
 
         return view('formations.Catalogue_formation_continue', [

@@ -5,11 +5,11 @@
         <div class="col-lg-3 col-6">
             <div class="small-box bg-info">
                 <div class="inner">
-                    <h3>{{ $stats['candidatures_total'] ?? 0 }}</h3>
+                    <h3><?php echo e($stats['candidatures_total'] ?? 0); ?></h3>
                     <p>Candidatures reçues</p>
                 </div>
                 <div class="icon"><i class="fa fa-user-graduate"></i></div>
-                <a href="{{ route('admin.user.index') }}" class="small-box-footer">Voir <i
+                <a href="<?php echo e(route('admin.user.index')); ?>" class="small-box-footer">Voir <i
                         class="fas fa-arrow-circle-right"></i></a>
             </div>
         </div>
@@ -17,7 +17,7 @@
         <div class="col-lg-3 col-6">
             <div class="small-box bg-success">
                 <div class="inner">
-                    <h3>{{ $stats['formations_ouvertes'] ?? 0 }}</h3>
+                    <h3><?php echo e($stats['formations_ouvertes'] ?? 0); ?></h3>
                     <p>Formations ouvertes</p>
                 </div>
                 <div class="icon"><i class="fas fa-book-open"></i></div>
@@ -28,8 +28,8 @@
         <div class="col-lg-3 col-6">
             <div class="small-box bg-warning">
                 <div class="inner">
-                    <h3>{{ $stats['sessions_a_venir'] ?? 0 }}</h3>
-                    <p>Sessions à venir ({{ $stats['places_disponibles'] ?? 0 }} places dispo.)</p>
+                    <h3><?php echo e($stats['sessions_a_venir'] ?? 0); ?></h3>
+                    <p>Sessions à venir (<?php echo e($stats['places_disponibles'] ?? 0); ?> places dispo.)</p>
                 </div>
                 <div class="icon"><i class="fas fa-calendar-alt"></i></div>
                 <a href="#" class="small-box-footer">Voir <i class="fas fa-arrow-circle-right"></i></a>
@@ -39,11 +39,11 @@
         <div class="col-lg-3 col-6">
             <div class="small-box bg-secondary">
                 <div class="inner">
-                    <h3>{{ $stats['documents_publies'] ?? 0 }}</h3>
+                    <h3><?php echo e($stats['documents_publies'] ?? 0); ?></h3>
                     <p>Documents publiés</p>
                 </div>
                 <div class="icon"><i class="fas fa-file-alt"></i></div>
-                <a href="{{ route('bibliotheque.index') }}" class="small-box-footer">Voir <i
+                <a href="<?php echo e(route('bibliotheque.index')); ?>" class="small-box-footer">Voir <i
                         class="fas fa-arrow-circle-right"></i></a>
             </div>
         </div>
@@ -75,23 +75,25 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @forelse ($prochainesSessions as $session)
+                                    <?php $__empty_1 = true; $__currentLoopData = $prochainesSessions; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $session): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
                                         <tr>
-                                            <td>{{ $session->formation->titre ?? 'Formation supprimée' }}</td>
-                                            <td>{{ $session->lieu ?? '—' }}</td>
-                                            <td>{{ \Carbon\Carbon::parse($session->date_debut)->translatedFormat('d M Y') }}
+                                            <td><?php echo e($session->formation->titre ?? 'Formation supprimée'); ?></td>
+                                            <td><?php echo e($session->lieu ?? '—'); ?></td>
+                                            <td><?php echo e(\Carbon\Carbon::parse($session->date_debut)->translatedFormat('d M Y')); ?>
+
                                             </td>
-                                            <td>{{ $session->places_disponibles }} / {{ $session->places_totales }}
+                                            <td><?php echo e($session->places_disponibles); ?> / <?php echo e($session->places_totales); ?>
+
                                             </td>
-                                            <td><span class="badge bg-success">{{ ucfirst($session->statut) }}</span>
+                                            <td><span class="badge bg-success"><?php echo e(ucfirst($session->statut)); ?></span>
                                             </td>
                                         </tr>
-                                    @empty
+                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                                         <tr>
                                             <td colspan="5" class="text-center text-muted">Aucune session à venir.
                                             </td>
                                         </tr>
-                                    @endforelse
+                                    <?php endif; ?>
                                 </tbody>
                             </table>
                         </div>
@@ -126,7 +128,7 @@
             }
 
             function dessiner() {
-                fetch('{{ route('admin.dashboard.chart-data') }}', {
+                fetch('<?php echo e(route('admin.dashboard.chart-data')); ?>', {
                         headers: { 'Accept': 'application/json' },
                         credentials: 'same-origin'
                     })
@@ -203,16 +205,16 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @forelse ($formationsPopulaires as $formation)
+                                <?php $__empty_1 = true; $__currentLoopData = $formationsPopulaires; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $formation): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
                                     <tr>
-                                        <td>{{ $formation->titre }}</td>
-                                        <td>{{ $formation->sessions_count }}</td>
+                                        <td><?php echo e($formation->titre); ?></td>
+                                        <td><?php echo e($formation->sessions_count); ?></td>
                                     </tr>
-                                @empty
+                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                                     <tr>
                                         <td colspan="2" class="text-center text-muted">Aucune formation.</td>
                                     </tr>
-                                @endforelse
+                                <?php endif; ?>
                             </tbody>
                         </table>
                     </div>
@@ -225,13 +227,13 @@
     </div>
 </div>
 
-@push('scripts')
+<?php $__env->startPush('scripts'); ?>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             var canvas = document.getElementById('barChart');
 
-            fetch('{{ route('admin.dashboard.chart-data') }}', {
+            fetch('<?php echo e(route('admin.dashboard.chart-data')); ?>', {
                     headers: {
                         'Accept': 'application/json',
                         'X-Requested-With': 'XMLHttpRequest'
@@ -285,4 +287,5 @@
                 });
         });
     </script>
-@endpush
+<?php $__env->stopPush(); ?>
+<?php /**PATH C:\wamp64\www\Les projets finis\ENEF\resources\views/components/dashboard.blade.php ENDPATH**/ ?>
