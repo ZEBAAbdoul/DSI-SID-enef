@@ -25,3 +25,4 @@ collection-pdf
 product-slider-images
 ./product-image
 product-image
+/storage/framework/views/*
