@@ -11,7 +11,7 @@ return new class extends Migration
     {
         Schema::create('formations', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->enum('type', ['academique', 'continue_programmee', 'continue_a_la_carte']);
+            $table->enum('type', ['academique', 'continue_programmee', 'continue_a_la_carte'])->nullable();
             $table->foreignUuid('filiere_id')->nullable()->constrained('filieres')->onDelete('set null');
             $table->foreignUuid('categorie_id')->nullable()->constrained('categories_formation')->onDelete('set null');
             $table->string('titre', 255);

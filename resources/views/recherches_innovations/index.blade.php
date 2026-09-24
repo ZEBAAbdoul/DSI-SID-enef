@@ -13,7 +13,7 @@
                 au service des eaux, des forêts et de l'environnement : projets, expérimentations, prototypes et
                 réalisations menés par les enseignants et les apprenants de l'ENEF.</p>
             <div style="margin-top:20px;">
-                <a href="{{ url('/') }}" class="btn btn-outline btn-sm">&larr; Retour à l'accueil</a>
+                {{-- <a href="{{ url('/') }}" class="btn btn-outline btn-sm">&larr; Retour à l'accueil</a> --}}
             </div>
         </div>
     </section>

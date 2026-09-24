@@ -167,7 +167,7 @@
                             <tr>
                                 <th width="60">#</th>
                                 <th>Formation</th>
-                                <th>Type</th>
+                                {{-- <th>Type</th> --}}
                                 <th>Filière</th>
                                 <th>Catégorie</th>
                                 <th>Durée</th>
@@ -198,11 +198,11 @@
                                         @endif
                                     </td>
 
-                                    <td>
+                                    {{-- <td>
                                         <span class="badge badge-info">
                                             {{ $formation->type_libelle }}
                                         </span>
-                                    </td>
+                                    </td> --}}
 
                                     <td>
                                         {{ $formation->filiere->nom ?? '—' }}

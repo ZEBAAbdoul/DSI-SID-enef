@@ -10,8 +10,8 @@ use App\Models\Formation;
 /**
  * Seeder des formations initiales de l'ENEF (cycles professionnels).
  *
- * - Filière Gestion des ressources naturelles (Eaux et Forêts) : 3 cycles
- * - Filière Gestion de l'environnement                        : 3 cycles
+ * - Filière Eaux et forêts (code EF) : 3 cycles
+ * - Filière Environnement (code ENV) : 3 cycles
  *
  * Une formation = un cycle. Les options du cycle sont listées dans `contenu_programme`.
  * Aucune nouvelle colonne n'est nécessaire, tout tient dans les colonnes existantes :
@@ -21,10 +21,10 @@ use App\Models\Formation;
  *   - objectifs      : diplôme délivré
  *   - resume         : récapitulatif (cycle, filière, diplôme, durée, frais en F CFA et €)
  *
- * ⚠️ Prérequis : CategoriesFormationSeeder (catégorie "Formation initiale") et FilieresSeeder.
+ * ⚠️ Prérequis : CategoriesFormationSeeder (catégorie "Formation initiale") et FilieresSeeder
+ *    (à lancer avant : les filières sont recherchées par leur `code`, EF et ENV).
  * ⚠️ À vérifier : la valeur de `type` ('academique') doit correspondre à celle utilisée
- *    par ton module Formations ; les filières sont recherchées par nom (ILIKE, PostgreSQL)
- *    et restent à null si elles ne sont pas trouvées.
+ *    par ton module Formations. `filiere_id` doit être dans le $fillable du modèle Formation.
  *
  * Utilise updateOrCreate sur `code_module` : relançable sans doublons.
  */
@@ -35,8 +35,13 @@ class FormationsInitialesSeeder extends Seeder
         $categorieId = DB::table('categories_formation')->where('slug', 'formation-initiale')->value('id');
         $userId = DB::table('users')->value('id'); // null si aucun utilisateur en base
 
-        $filiereGrnId = DB::table('filieres')->whereRaw('nom ILIKE ?', ['%ressources naturelles%'])->value('id');
-        $filiereEnvId = DB::table('filieres')->whereRaw("nom ILIKE ?", ['%gestion de l%environnement%'])->value('id');
+        // Filières créées par FilieresSeeder, recherchées par code
+        $filiereGrnId = DB::table('filieres')->where('code', 'EF')->value('id');
+        $filiereEnvId = DB::table('filieres')->where('code', 'ENV')->value('id');
+
+        if (! $filiereGrnId || ! $filiereEnvId) {
+            throw new \RuntimeException('Filières introuvables (codes EF et ENV) : lancez d\'abord FilieresSeeder.');
+        }
 
         $sansOption = 'Aucune option : cycle sans spécialisation.';
 
@@ -48,7 +53,7 @@ class FormationsInitialesSeeder extends Seeder
             . "- Conservation des écosystèmes aquatiques";
 
         $formations = [
-            // ───────────── Filière : Gestion des ressources naturelles (Eaux et Forêts) ─────────────
+            // ───────────── Filière : Eaux et forêts (EF) ─────────────
             [
                 'code_module' => 'FI-GRN-AEF',
                 'filiere_id' => $filiereGrnId,
@@ -89,7 +94,7 @@ class FormationsInitialesSeeder extends Seeder
                 'contenu' => $optionsEauxForets,
             ],
 
-            // ───────────── Filière : Gestion de l'environnement ─────────────
+            // ───────────── Filière : Environnement (ENV) ─────────────
             [
                 'code_module' => 'FI-ENV-ATE',
                 'filiere_id' => $filiereEnvId,

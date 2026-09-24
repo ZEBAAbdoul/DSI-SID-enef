@@ -181,7 +181,7 @@
                 production spécialisées — de véritables espaces réels d'apprentissage où les connaissances sont
                 mises en pratique à travers des situations professionnelles concrètes.</p>
             <div style="margin-top:20px;">
-                <a href="{{ url('/') }}#dg" class="btn btn-outline btn-sm">&larr; Retour à l'accueil</a>
+                {{-- <a href="{{ url('/') }}#dg" class="btn btn-outline btn-sm">&larr; Retour à l'accueil</a> --}}
             </div>
         </div>
     </section>

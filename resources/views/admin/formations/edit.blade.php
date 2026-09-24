@@ -39,7 +39,7 @@
                     <div class="row">
 
                         {{-- Type --}}
-                        <div class="col-md-6">
+                        {{-- <div class="col-md-6">
                             <div class="form-group">
                                 <label>
                                     Type <span class="text-danger">*</span>
@@ -69,6 +69,31 @@
                                 @error('type')
                                     <span class="text-danger">{{ $message }}</span>
                                 @enderror
+                            </div>
+                        </div> --}}
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>
+                                    Catégorie <span class="text-danger">*</span>
+                                </label>
+
+                                <select name="categorie_id"
+                                        class="form-control"
+                                        required>
+
+                                    <option value="">
+                                        -- Sélectionner --
+                                    </option>
+
+                                    @foreach ($categories as $categorie)
+                                        <option value="{{ $categorie->id }}"
+                                            {{ old('categorie_id', $formation->categorie_id) == $categorie->id ? 'selected' : '' }}>
+                                            {{ $categorie->nom }}
+                                        </option>
+                                    @endforeach
+
+                                </select>
                             </div>
                         </div>
 
@@ -107,7 +132,7 @@
                         </div>
 
                         {{-- Titre --}}
-                        <div class="col-md-12">
+                        <div class="col-md-6">
                             <div class="form-group">
                                 <label>
                                     Titre <span class="text-danger">*</span>
@@ -149,30 +174,7 @@
                         </div>
 
                         {{-- Catégorie --}}
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label>
-                                    Catégorie <span class="text-danger">*</span>
-                                </label>
-
-                                <select name="categorie_id"
-                                        class="form-control"
-                                        required>
-
-                                    <option value="">
-                                        -- Sélectionner --
-                                    </option>
-
-                                    @foreach ($categories as $categorie)
-                                        <option value="{{ $categorie->id }}"
-                                            {{ old('categorie_id', $formation->categorie_id) == $categorie->id ? 'selected' : '' }}>
-                                            {{ $categorie->nom }}
-                                        </option>
-                                    @endforeach
-
-                                </select>
-                            </div>
-                        </div>
+                        
 
                         {{-- Résumé --}}
                         <div class="col-md-12">
