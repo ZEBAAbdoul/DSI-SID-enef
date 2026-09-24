@@ -57,6 +57,13 @@ Route::is('admin.partenaires.*');
 
 /*
 |--------------------------------------------------------------------------
+| Statistiques
+|--------------------------------------------------------------------------
+*/
+$statistiquesActive = Route::is('admin.statistiques.*');
+
+/*
+|--------------------------------------------------------------------------
 | Filières
 |--------------------------------------------------------------------------
 */
@@ -694,17 +701,57 @@ $filieresActive = Route::is('admin.filieres.*');
         {{-- STATISTIQUES --}}
         {{-- ===================================================== --}}
 
-        <li class="nav-item">
+        <li class="nav-item {{ $statistiquesActive ? 'menu-open' : '' }}">
 
-            <a href="" class="nav-link">
+            <a href="#" class="nav-link {{ $statistiquesActive ? 'active' : '' }}">
 
                 <i class="nav-icon fas fa-chart-bar"></i>
 
                 <p>
                     Statistiques
+                    <i class="fas fa-angle-left right"></i>
                 </p>
 
             </a>
+
+
+            <ul class="nav nav-treeview">
+
+                                {{-- Fonctionnalités du site --}}
+                <li class="nav-item">
+
+                    <a href="{{ route('admin.statistiques.fonctionnalites') }}"
+                        class="nav-link {{ Route::is('admin.statistiques.fonctionnalites') ? 'active' : '' }}">
+
+                        <i class="fas fa-th-large nav-icon"></i>
+
+                        <p>
+                            Statistiques globales
+                        </p>
+
+                    </a>
+
+                </li>
+
+                {{-- Visiteurs du site --}}
+                <li class="nav-item">
+
+                    <a href="{{ route('admin.statistiques.visiteurs') }}"
+                        class="nav-link {{ Route::is('admin.statistiques.visiteurs') ? 'active' : '' }}">
+
+                        <i class="fas fa-users nav-icon"></i>
+
+                        <p>
+                            Visiteurs du site
+                        </p>
+
+                    </a>
+
+                </li>
+
+
+
+            </ul>
 
         </li>
 

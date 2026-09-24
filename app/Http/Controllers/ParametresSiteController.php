@@ -44,6 +44,13 @@ class ParametresSiteController extends Controller
             // Vérifier si des paramètres existent déjà
             $existing = ParametresSite::first();
             if ($existing) {
+                if ($request->ajax()) {
+                    return response()->json([
+                        'status' => false,
+                        'message' => 'Les paramètres existent déjà. Utilisez la modification pour les mettre à jour.',
+                    ], 422);
+                }
+
                 return redirect()->route('admin.parametres.index')
                     ->with('error', 'Les paramètres existent déjà. Utilisez la modification pour les mettre à jour.');
             }
@@ -73,6 +80,14 @@ class ParametresSiteController extends Controller
             ]);
 
             if ($validator->fails()) {
+                if ($request->ajax()) {
+                    return response()->json([
+                        'status' => false,
+                        'message' => 'Veuillez corriger les erreurs du formulaire.',
+                        'errors' => $validator->errors()->toArray(),
+                    ], 422);
+                }
+
                 return redirect()->route('admin.parametres.index')
                     ->withErrors($validator)
                     ->withInput();
@@ -106,6 +121,13 @@ class ParametresSiteController extends Controller
             Cache::forget('site.liens_utiles');
             Cache::forget('site.parametres.contact');
 
+            if ($request->ajax()) {
+                return response()->json([
+                    'status' => true,
+                    'message' => 'Paramètres créés avec succès !',
+                ]);
+            }
+
             return redirect()->route('admin.parametres.index')
                 ->with('success', 'Paramètres créés avec succès !');
 
@@ -127,6 +149,13 @@ class ParametresSiteController extends Controller
             $parametres = ParametresSite::find($parametre);
 
             if (!$parametres) {
+                if ($request->ajax()) {
+                    return response()->json([
+                        'status' => false,
+                        'message' => 'Paramètres non trouvés',
+                    ], 404);
+                }
+
                 return redirect()->route('admin.parametres.index')
                     ->with('error', 'Paramètres non trouvés');
             }
@@ -156,6 +185,14 @@ class ParametresSiteController extends Controller
             ]);
 
             if ($validator->fails()) {
+                if ($request->ajax()) {
+                    return response()->json([
+                        'status' => false,
+                        'message' => 'Veuillez corriger les erreurs du formulaire.',
+                        'errors' => $validator->errors()->toArray(),
+                    ], 422);
+                }
+
                 return redirect()->route('admin.parametres.index')
                     ->withErrors($validator)
                     ->withInput();
@@ -188,6 +225,13 @@ class ParametresSiteController extends Controller
             Cache::forget('site.parametres');
             Cache::forget('site.liens_utiles');
             Cache::forget('site.parametres.contact');
+
+            if ($request->ajax()) {
+                return response()->json([
+                    'status' => true,
+                    'message' => 'Paramètres mis à jour avec succès !',
+                ]);
+            }
 
             return redirect()->route('admin.parametres.index')
                 ->with('success', 'Paramètres mis à jour avec succès !');

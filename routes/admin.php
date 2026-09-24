@@ -28,6 +28,8 @@ use App\Http\Controllers\TypePieceController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VideoAdminController;
 use App\Http\Controllers\RechercheInnovationController;
+use App\Http\Controllers\StatistiqueVisiteController;
+use App\Http\Controllers\StatistiqueFonctionnaliteController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(function () {
@@ -473,6 +475,21 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(
     Route::patch('recherches-innovations/{recherches_innovation}/publier', [RechercheInnovationController::class, 'publier'])
         ->name('recherches-innovations.publier');
 
-    Route::patch('recherches-innovations/{recherches_innovation}/depublier', [RechercheInnovationController::class, 'depublier'])
-        ->name('recherches-innovations.depublier');
+Route::patch('recherches-innovations/{recherches_innovation}/depublier', [RechercheInnovationController::class, 'depublier'])
+    ->name('recherches-innovations.depublier');
+
+
+    // ==================== STATISTIQUES ====================
+
+    Route::prefix('statistiques')->name('statistiques.')->group(function () {
+
+        Route::get('/visiteurs', [StatistiqueVisiteController::class, 'index'])
+            ->name('visiteurs');
+
+        Route::get('/fonctionnalites', [StatistiqueFonctionnaliteController::class, 'index'])
+            ->name('fonctionnalites');
+
+    });
+
+
 });
