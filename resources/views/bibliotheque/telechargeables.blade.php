@@ -11,7 +11,8 @@
             <h1>Documents téléchargeables</h1>
             <p class="hero-lede">Rapports, brochures, textes réglementaires et supports pédagogiques librement
                 téléchargeables. Pour les documents à consultation restreinte, rendez-vous sur la
-                <a href="{{ route('bibliotheque.consultation') }}">page de consultation sur place</a>.</p>
+                <a href="{{ route('bibliotheque.consultation') }}">page de consultation sur place</a>.
+            </p>
         </div>
     </section>
 
@@ -24,8 +25,7 @@
                     <select name="categorie_id" id="categorie_id" onchange="this.form.submit()">
                         <option value="">Toutes les catégories</option>
                         @foreach ($categories as $categorie)
-                            <option value="{{ $categorie->id }}"
-                                @selected(request('categorie_id') == $categorie->id)>
+                            <option value="{{ $categorie->id }}" @selected(request('categorie_id') == $categorie->id)>
                                 {{ $categorie->nom }}
                             </option>
                         @endforeach
@@ -47,7 +47,7 @@
                 <div class="filter-field">
                     <label for="q">Recherche</label>
                     <input type="text" name="q" id="q" value="{{ request('q') }}"
-                           placeholder="Titre, mot-clé...">
+                        placeholder="Titre, mot-clé...">
                 </div>
 
                 <div class="filter-actions">
@@ -66,7 +66,8 @@
 
             @if ($documents->isEmpty())
                 <div class="biblio-empty">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="42" height="42">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="42"
+                        height="42">
                         <path d="M12 3v12m0 0-4-4m4 4 4-4" />
                         <path d="M4 19.5h16" />
                     </svg>
@@ -113,15 +114,19 @@
 
                             <div class="biblio-card-footer">
                                 <a href="{{ route('documents.telecharger', $document) }}"
-                                   class="btn btn-primary btn-sm">
+                                    class="btn btn-primary btn-sm js-download"
+                                    data-count-target="count-{{ $document->id }}">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                         width="15" height="15">
+                                        width="15" height="15">
                                         <path d="M12 3v12m0 0-4-4m4 4 4-4" />
                                         <path d="M4 19.5h16" />
                                     </svg>
                                     Télécharger
                                 </a>
-                                {{-- <span class="biblio-count">{{ $document->nombre_telechargements }} téléchargement(s)</span> --}}
+                                <span class="biblio-count">
+                                    <span id="count-{{ $document->id }}">{{ $document->nombre_telechargements }}</span>
+                                    téléchargement(s)
+                                </span>
                             </div>
                         </article>
                     @endforeach
@@ -137,6 +142,19 @@
 
     @push('styles')
         @include('bibliotheque._styles')
+    @endpush
+
+    @push('scripts')
+        <script>
+            document.querySelectorAll('.js-download').forEach(function(link) {
+                link.addEventListener('click', function() {
+                    var el = document.getElementById(link.dataset.countTarget);
+                    if (el) {
+                        el.textContent = parseInt(el.textContent, 10) + 1;
+                    }
+                });
+            });
+        </script>
     @endpush
 
 @endsection

@@ -6,7 +6,7 @@
 <x-admin title="Mon dossier de candidature">
 
     @if (session('status'))
-        <div class="alert alert-info">{{ session('status') }}</div>
+        <div class="alert alert-success">{{ session('status') }}</div>
     @endif
 
     @if ($errors->any())

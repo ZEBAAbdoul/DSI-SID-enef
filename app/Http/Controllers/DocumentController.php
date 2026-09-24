@@ -28,23 +28,23 @@ class DocumentController extends Controller
     ];
 
     public function index(Request $request): View
-{
-    $categories = CategorieDocument::orderBy('nom')->get();
+    {
+        $categories = CategorieDocument::orderBy('nom')->get();
 
-    $documents = Document::with(['categorie', 'publiePar'])
-        ->when($request->filled('categorie_id'), fn($q) => $q->where('categorie_id', $request->categorie_id))
-        ->when($request->filled('type'), fn($q) => $q->where('type', $request->type))
-        ->when($request->filled('acces'), fn($q) => $q->where('acces', $request->acces))
-        ->when($request->filled('telechargeable'), fn($q) => $q->where('telechargeable', $request->boolean('telechargeable')))
-        ->orderByDesc('publie_le')
-        ->paginate(15)
-        ->withQueryString();
+        $documents = Document::with(['categorie', 'publiePar'])
+            ->when($request->filled('categorie_id'), fn($q) => $q->where('categorie_id', $request->categorie_id))
+            ->when($request->filled('type'), fn($q) => $q->where('type', $request->type))
+            ->when($request->filled('acces'), fn($q) => $q->where('acces', $request->acces))
+            ->when($request->filled('telechargeable'), fn($q) => $q->where('telechargeable', $request->boolean('telechargeable')))
+            ->orderByDesc('publie_le')
+            ->paginate(15)
+            ->withQueryString();
 
-    return view('admin.documents.index', [
-        'documents' => $documents,
-        'categories' => $categories,
-    ]);
-}
+        return view('admin.documents.index', [
+            'documents' => $documents,
+            'categories' => $categories,
+        ]);
+    }
 
     public function create(): View
     {
@@ -163,6 +163,7 @@ class DocumentController extends Controller
 
         return Storage::disk('public')->download($document->fichier_url, $nomTelecharge);
     }
+    
 
     private function validateRequest(Request $request, ?Document $document = null): array
     {
