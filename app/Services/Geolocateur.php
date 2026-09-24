@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Http;
  * Géolocalise une adresse IP (pays, région, ville) via ip-api.com
  * (service gratuit sans clé). Chaque résultat est mis en cache par IP
  * dans la table statistiques_geo pour éviter un appel externe à chaque page.
+ * La fraîcheur du cache est réglable (config/statistiques.php) : la position
+ * est re-recherchée dès qu'elle est périmée, pour rester en temps réel.
  */
 class Geolocateur
 {
@@ -23,8 +25,11 @@ class Geolocateur
             return $this->localisationDuReseauLocal();
         }
 
+        $ttl = (int) config('statistiques.geo_ttl_secondes', 300);
         $cache = StatistiqueGeo::find($ip);
-        if ($cache) {
+
+        // Cache encore frais (sous le TTL) : position connue renvoyée telle quelle.
+        if ($cache && $cache->recherche_a !== null && $cache->recherche_a->gte(now()->subSeconds($ttl))) {
             return [
                 'pays' => $cache->pays,
                 'pays_code' => $cache->pays_code,
@@ -41,8 +46,8 @@ class Geolocateur
     }
 
     /**
-     * Localisation du réseau local = géolocalisation de l'IP publique du serveur,
-     * mise en cache (la position change rarement).
+     * Localisation du réseau local = géolocalisation de l'IP publique du serveur.
+     * Mise en cache courte (fraîcheur réglable) pour rester en temps réel.
      */
     private function localisationDuReseauLocal(): array
     {
@@ -67,7 +72,8 @@ class Geolocateur
                     'ville' => $donnees['city'] ?? null,
                 ];
 
-                Cache::put('statistiques.localisation_reseau', $geo, now()->addDays(7));
+                $ttl = (int) config('statistiques.geo_ttl_secondes', 300);
+                Cache::put('statistiques.localisation_reseau', $geo, now()->addSeconds($ttl));
 
                 return $geo;
             }
