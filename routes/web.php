@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\RegisteredUserController;
+use App\Http\Controllers\ActualitePublicController;
 use App\Http\Controllers\BibliothequeController;
 use App\Http\Controllers\CatalogueController;
 use App\Http\Controllers\ContactController;
@@ -9,11 +10,10 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\InformationsComplementairesController;
 use App\Http\Controllers\LoginWithOTPController;
 use App\Http\Controllers\ManualController;
+use App\Http\Controllers\RechercheInnovationPublicController;
 use App\Http\Controllers\SocialiteController;
 use App\Http\Controllers\UserController;
-use App\Models\Actualite;
 use App\Models\ParametresSite;
-use App\Models\RechercheInnovation;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\InscriptionController;
 use App\Http\Controllers\PhotoPublicController;
@@ -85,40 +85,17 @@ Route::get('/catalogue-formations-continues', [CatalogueController::class, 'form
     ->name('catalogue.formations.continue');
 
 
-Route::get('/toutes-les-actualites', function (\Illuminate\Http\Request $request) {
-    $actualites = \App\Models\Actualite::publiees()
-        ->latest()
-        ->paginate(10)
-        ->withQueryString();
+Route::get('/toutes-les-actualites', [ActualitePublicController::class, 'index'])
+    ->name('actualites.index');
 
-    return view('actualites.index', compact('actualites'));
-})->name('actualites.index');
+Route::get('/actualites/{actualite:slug}', [ActualitePublicController::class, 'show'])
+    ->name('actualites.show');
 
+Route::get('/recherches-innovations', [RechercheInnovationPublicController::class, 'index'])
+    ->name('recherches-innovations.index');
 
-Route::get('/actualites/{actualite:slug}', function (Actualite $actualite) {
-    return view('actualites.show', compact('actualite'));
-})->name('actualites.show');
-
-
-Route::get('/recherches-innovations', function (\Illuminate\Http\Request $request) {
-    $recherchesInnovations = \App\Models\RechercheInnovation::publiees()
-        ->deType($request->query('type'))
-        ->latest()
-        ->paginate(9)
-        ->withQueryString();
-
-    $types = [
-        'recherche'  => 'Recherche',
-        'innovation' => 'Innovation',
-    ];
-
-    return view('recherches_innovations.index', compact('recherchesInnovations', 'types'));
-})->name('recherches-innovations.index');
-
-
-Route::get('/recherches-innovations/{recherches_innovation:slug}', function (RechercheInnovation $recherches_innovation) {
-    return view('recherches_innovations.show', ['rechercheInnovation' => $recherches_innovation]);
-})->name('recherches-innovations.show');
+Route::get('/recherches-innovations/{recherches_innovation:slug}', [RechercheInnovationPublicController::class, 'show'])
+    ->name('recherches-innovations.show');
 
 
 Route::get('/mot-du-directeur', [HomeController::class, 'motDuDirecteur']) ->name('mot-directeur');

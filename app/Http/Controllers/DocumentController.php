@@ -152,7 +152,11 @@ class DocumentController extends Controller
             abort(404, 'Fichier introuvable.');
         }
 
-        $document->increment('nombre_telechargements');
+        // Seuls les téléchargements effectués par le public depuis le centre de
+        // téléchargement (bibliothèque) incrémentent le compteur de statistiques.
+        if (request()->routeIs('documents.telecharger')) {
+            $document->increment('nombre_telechargements');
+        }
 
         $nomTelecharge = Str::slug($document->titre)
             . ($document->format_fichier ? '.' . $document->format_fichier : '');
