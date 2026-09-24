@@ -31,7 +31,7 @@ class DocumentSeeder extends Seeder
                 'telechargeable' => true,
                 'code_consultation' => 'DOC-RA-001',
                 'version' => '1.0',
-                'nombre_telechargements' => 312,
+                'nombre_telechargements' => 0,
                 'publie_le' => now()->subMonths(2),
             ],
             [
@@ -46,7 +46,7 @@ class DocumentSeeder extends Seeder
                 'telechargeable' => true,
                 'code_consultation' => 'DOC-RA-002',
                 'version' => '1.0',
-                'nombre_telechargements' => 489,
+                'nombre_telechargements' => 0,
                 'publie_le' => now()->subYear(),
             ],
             [
@@ -61,7 +61,7 @@ class DocumentSeeder extends Seeder
                 'telechargeable' => true,
                 'code_consultation' => 'DOC-RD-001',
                 'version' => '1.0',
-                'nombre_telechargements' => 145,
+                'nombre_telechargements' => 0,
                 'publie_le' => now()->subDays(20),
             ],
             [
@@ -76,7 +76,7 @@ class DocumentSeeder extends Seeder
                 'telechargeable' => true,
                 'code_consultation' => 'DOC-RD-002',
                 'version' => '1.0',
-                'nombre_telechargements' => 203,
+                'nombre_telechargements' => 0,
                 'publie_le' => now()->subMonths(5),
             ],
             [
@@ -91,7 +91,7 @@ class DocumentSeeder extends Seeder
                 'telechargeable' => false,
                 'code_consultation' => 'DOC-RM-001',
                 'version' => '1.0',
-                'nombre_telechargements' => 28,
+                'nombre_telechargements' => 0,
                 'publie_le' => now()->subMonths(4),
             ],
             [
@@ -106,7 +106,7 @@ class DocumentSeeder extends Seeder
                 'telechargeable' => false,
                 'code_consultation' => 'DOC-RM-002',
                 'version' => '1.0',
-                'nombre_telechargements' => 15,
+                'nombre_telechargements' => 0,
                 'publie_le' => now()->subMonths(7),
             ],
             [
@@ -121,7 +121,7 @@ class DocumentSeeder extends Seeder
                 'telechargeable' => true,
                 'code_consultation' => 'DOC-BR-001',
                 'version' => '2.1',
-                'nombre_telechargements' => 567,
+                'nombre_telechargements' => 0,
                 'publie_le' => now()->subMonths(6),
             ],
             [
@@ -136,7 +136,7 @@ class DocumentSeeder extends Seeder
                 'telechargeable' => true,
                 'code_consultation' => 'DOC-BR-002',
                 'version' => '1.0',
-                'nombre_telechargements' => 823,
+                'nombre_telechargements' => 0,
                 'publie_le' => now()->subMonth(),
             ],
             [
@@ -151,7 +151,7 @@ class DocumentSeeder extends Seeder
                 'telechargeable' => true,
                 'code_consultation' => 'DOC-BR-003',
                 'version' => '1.1',
-                'nombre_telechargements' => 412,
+                'nombre_telechargements' => 0,
                 'publie_le' => now()->subMonths(3),
             ],
             [
@@ -166,7 +166,7 @@ class DocumentSeeder extends Seeder
                 'telechargeable' => true,
                 'code_consultation' => 'DOC-DC-001',
                 'version' => '1.0',
-                'nombre_telechargements' => 94,
+                'nombre_telechargements' => 0,
                 'publie_le' => now()->subYears(2),
             ],
             [
@@ -181,7 +181,7 @@ class DocumentSeeder extends Seeder
                 'telechargeable' => true,
                 'code_consultation' => 'DOC-DC-002',
                 'version' => '1.0',
-                'nombre_telechargements' => 137,
+                'nombre_telechargements' => 0,
                 'publie_le' => now()->subMonths(18),
             ],
             [
@@ -196,7 +196,7 @@ class DocumentSeeder extends Seeder
                 'telechargeable' => true,
                 'code_consultation' => 'DOC-AR-001',
                 'version' => '1.0',
-                'nombre_telechargements' => 61,
+                'nombre_telechargements' => 0,
                 'publie_le' => now()->subMonths(3),
             ],
             [
@@ -211,7 +211,7 @@ class DocumentSeeder extends Seeder
                 'telechargeable' => true,
                 'code_consultation' => 'DOC-AR-002',
                 'version' => '1.0',
-                'nombre_telechargements' => 356,
+                'nombre_telechargements' => 0,
                 'publie_le' => now()->subMonths(2),
             ],
             [
@@ -226,7 +226,7 @@ class DocumentSeeder extends Seeder
                 'telechargeable' => false,
                 'code_consultation' => 'DOC-SR-001',
                 'version' => '3.0',
-                'nombre_telechargements' => 189,
+                'nombre_telechargements' => 0,
                 'publie_le' => now()->subYear(),
             ],
             [
@@ -241,7 +241,7 @@ class DocumentSeeder extends Seeder
                 'telechargeable' => false,
                 'code_consultation' => 'DOC-SR-002',
                 'version' => '2.0',
-                'nombre_telechargements' => 42,
+                'nombre_telechargements' => 0,
                 'publie_le' => now()->subMonths(14),
             ],
             [
@@ -256,7 +256,7 @@ class DocumentSeeder extends Seeder
                 'telechargeable' => true,
                 'code_consultation' => 'DOC-GP-001',
                 'version' => '1.2',
-                'nombre_telechargements' => 276,
+                'nombre_telechargements' => 0,
                 'publie_le' => now()->subMonths(8),
             ],
             [
@@ -271,7 +271,7 @@ class DocumentSeeder extends Seeder
                 'telechargeable' => true,
                 'code_consultation' => 'DOC-GP-002',
                 'version' => '1.0',
-                'nombre_telechargements' => 164,
+                'nombre_telechargements' => 0,
                 'publie_le' => now()->subMonths(10),
             ],
             [
@@ -286,7 +286,7 @@ class DocumentSeeder extends Seeder
                 'telechargeable' => true,
                 'code_consultation' => 'DOC-MC-001',
                 'version' => '1.0',
-                'nombre_telechargements' => 198,
+                'nombre_telechargements' => 0,
                 'publie_le' => now()->subMonths(5),
             ],
             [
@@ -301,7 +301,7 @@ class DocumentSeeder extends Seeder
                 'telechargeable' => true,
                 'code_consultation' => 'DOC-MC-002',
                 'version' => '1.1',
-                'nombre_telechargements' => 221,
+                'nombre_telechargements' => 0,
                 'publie_le' => now()->subMonths(9),
             ],
             [
@@ -316,7 +316,7 @@ class DocumentSeeder extends Seeder
                 'telechargeable' => false,
                 'code_consultation' => 'DOC-MC-003',
                 'version' => '1.0',
-                'nombre_telechargements' => 37,
+                'nombre_telechargements' => 0,
                 'publie_le' => now()->subMonths(11),
             ],
         ];
