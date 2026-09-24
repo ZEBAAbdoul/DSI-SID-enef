@@ -6,7 +6,7 @@
 
     <br>
     <br>
-    
+
     <div class="enef-auth">
         <div class="enef-card">
 
@@ -61,7 +61,7 @@
                             <i class="fas fa-lock enef-icon" aria-hidden="true"></i>
                             <input id="password" name="password" type="password"
                                 class="enef-input @error('password') is-invalid @enderror"
-                                placeholder="Saisissez votre nouveau mot de passe" required autofocus
+                                placeholder="12 caractères minimum" required autofocus minlength="12"
                                 autocomplete="new-password" aria-describedby="enefStrengthText"
                                 @error('password') aria-invalid="true" @enderror>
                             <button type="button" class="enef-toggle" data-target="password"
@@ -75,7 +75,7 @@
                             <span class="enef-meter-bar" id="enefStrengthBar"></span>
                         </div>
                         <small class="enef-hint" id="enefStrengthText" aria-live="polite">
-                            Utilisez des majuscules, des minuscules, des chiffres et des symboles.
+                            12 caractères minimum. Mélangez majuscules, minuscules, chiffres et symboles pour plus de sécurité.
                         </small>
                     </div>
 
@@ -175,6 +175,7 @@
             var strengthText = document.getElementById('enefStrengthText');
             var matchText = document.getElementById('enefMatchText');
             var defaultHint = strengthText.textContent;
+            var MIN = 12; // longueur minimale obligatoire (règle aussi appliquée côté serveur)
 
             // Afficher / masquer (un bouton par champ)
             document.querySelectorAll('.enef-toggle[data-target]').forEach(function(btn) {
@@ -198,8 +199,8 @@
 
             function score(v) {
                 var s = 0;
-                if (v.length >= 8) s++;
-                if (v.length >= 12) s++;
+                if (v.length >= MIN) s++;
+                if (v.length >= 16) s++;
                 if (/[a-z]/.test(v) && /[A-Z]/.test(v)) s++;
                 if (/\d/.test(v)) s++;
                 if (/[^A-Za-z0-9]/.test(v)) s++;
@@ -214,8 +215,19 @@
                     strengthText.className = 'enef-hint';
                     return;
                 }
-                var s = Math.min(score(v), 5);
-                var niveau = niveaux[Math.max(s - 1, 0)];
+                // Longueur insuffisante : on indique combien de caractères manquent
+                if (v.length < MIN) {
+                    var reste = MIN - v.length;
+                    bar.style.width = (v.length / MIN * 100) + '%';
+                    bar.style.backgroundColor = niveaux[0].color;
+                    strengthText.textContent = 'Encore ' + reste + ' caractère' + (reste > 1 ? 's' : '') +
+                        ' pour atteindre le minimum de ' + MIN + '.';
+                    strengthText.className = 'enef-hint is-bad';
+                    return;
+                }
+
+                var s = Math.max(Math.min(score(v), 5), 1); // au moins 1 pour que la barre reste visible
+                var niveau = niveaux[s - 1];
                 bar.style.width = (s / 5 * 100) + '%';
                 bar.style.backgroundColor = niveau.color;
                 strengthText.textContent = 'Robustesse : ' + niveau.txt;
@@ -244,6 +256,13 @@
             var texte = label.textContent;
 
             form.addEventListener('submit', function(e) {
+                if (pwd.value.length < MIN) {
+                    e.preventDefault();
+                    majRobustesse();
+                    pwd.focus();
+                    return;
+                }
+
                 if (pwd.value !== conf.value) {
                     e.preventDefault();
                     majCorrespondance();

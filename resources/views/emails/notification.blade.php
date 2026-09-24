@@ -27,6 +27,28 @@
                                 <p style="color:#333333; font-size:15px; line-height:1.6;">{{ $line }}</p>
                             @endforeach
 
+                            {{-- Bloc d'informations (optionnel) : ex. identifiants de connexion, affiché si $details est fourni --}}
+                            @if (!empty($details))
+                                <table role="presentation" width="100%" cellpadding="0" cellspacing="0"
+                                    style="margin: 20px 0;">
+                                    <tr>
+                                        <td
+                                            style="background-color:#f4f8f4; border:1px solid #cfe2d1; border-left:4px solid #2e7d32; padding:16px 20px;">
+                                            @foreach ($details as $label => $value)
+                                                <p
+                                                    style="margin:0 0 4px 0; color:#2e7d32; font-size:12px; font-weight:bold; text-transform:uppercase; letter-spacing:0.5px;">
+                                                    {{ $label }}
+                                                </p>
+                                                <p
+                                                    style="margin:0 0 {{ $loop->last ? '0' : '14px' }} 0; color:#1a1a1a; font-size:18px; font-weight:bold; font-family:'Courier New', Courier, monospace; word-break:break-all;">
+                                                    {{ $value }}
+                                                </p>
+                                            @endforeach
+                                        </td>
+                                    </tr>
+                                </table>
+                            @endif
+
                             {{-- Bloc de contact (optionnel) : affiché seulement si $contactPhone est fourni --}}
                             @if (!empty($contactPhone))
                                 <table role="presentation" width="100%" cellpadding="0" cellspacing="0"
@@ -58,6 +80,7 @@
                                 </table>
                             @endif
 
+                            {{-- Lien de secours (optionnel) : utile si le bouton est bloqué par le client mail --}}
                             @if (!empty($showFallbackLink) && isset($actionUrl))
                                 <p style="color:#666666; font-size:12px; line-height:1.5; word-break:break-all;">
                                     Si le bouton ne fonctionne pas, copiez ce lien dans votre navigateur :<br>

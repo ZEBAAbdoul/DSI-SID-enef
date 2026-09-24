@@ -8,6 +8,7 @@ use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Validation\Rules\Password;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -26,6 +27,10 @@ class AppServiceProvider extends ServiceProvider
     {
         Schema::defaultStringLength(191);
         Paginator::useBootstrapFive();
+
+        // Règle de mot de passe appliquée partout où le code utilise Password::defaults()
+        // (inscription, réinitialisation, changement depuis le profil, création d'utilisateur) : 12 caractères minimum
+        Password::defaults(fn () => Password::min(12));
 
         // ---------- E-mail « Réinitialisation du mot de passe » ----------
         ResetPassword::toMailUsing(function ($notifiable, string $token) {

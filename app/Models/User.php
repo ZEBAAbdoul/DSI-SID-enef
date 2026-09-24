@@ -6,6 +6,7 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Spatie\Permission\Traits\HasRoles;
 
@@ -13,6 +14,11 @@ use Spatie\Permission\Traits\HasRoles;
 class User extends Authenticatable
 {
     use HasFactory, Notifiable, HasRoles;
+
+    /**
+     * Rôles dont les comptes sont masqués de la gestion des utilisateurs (noms en minuscules).
+     */
+    public const ROLES_MASQUES = ['super-admin'];
 
 
     /**
@@ -22,7 +28,16 @@ class User extends Authenticatable
     protected $keyType = 'string';
 
     /**
+     * Valeurs par défaut (évite que est_actif soit null sur un utilisateur
+     * tout juste créé, avant rechargement depuis la base)
+     */
+    protected $attributes = [
+        'est_actif' => true,
+    ];
+
+    /**
      * Champs remplissables
+     * (est_actif n'y figure volontairement pas : il ne se modifie que via toggle())
      */
     protected $fillable = [
         'personne_id',
@@ -47,8 +62,7 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'created_at'        => 'datetime:d/m/Y H:i',
         'updated_at'        => 'datetime:d/m/Y H:i',
-        'est_actif' => 'boolean',
-
+        'est_actif'         => 'boolean',
     ];
 
     /**
@@ -103,6 +117,44 @@ class User extends Authenticatable
         return $query;
     }
 
+    /**
+     * Scope : filtre par statut du compte ('actif' | 'inactif' | vide = tous)
+     */
+    public function scopeByStatut($query, $statut)
+    {
+        return match ($statut) {
+            'actif'   => $query->where('est_actif', true),
+            'inactif' => $query->where('est_actif', false),
+            default   => $query,
+        };
+    }
+
+    /**
+     * Scope : exclut les comptes ayant un rôle masqué (ex. super-admin)
+     */
+    public function scopeVisibles($query)
+    {
+        $table = config('permission.table_names.roles', 'roles');
+
+        return $query->whereDoesntHave(
+            'roles',
+            fn($r) => $r->whereIn(DB::raw("LOWER({$table}.name)"), self::ROLES_MASQUES)
+        );
+    }
+
+    /**
+     * Scopes raccourcis
+     */
+    public function scopeActifs($query)
+    {
+        return $query->where('est_actif', true);
+    }
+
+    public function scopeInactifs($query)
+    {
+        return $query->where('est_actif', false);
+    }
+
     /* =====================================================
      |                ATTRIBUTS VIRTUELS
      ===================================================== */
@@ -142,6 +194,24 @@ class User extends Authenticatable
         $name = $this->name ?? '—';
 
         return "{$name} ({$this->email})";
+    }
+
+    /**
+     * Ce compte est-il masqué de la liste des utilisateurs (rôle super-admin) ?
+     */
+    public function estMasque(): bool
+    {
+        return $this->roles->contains(
+            fn($role) => in_array(mb_strtolower($role->name), self::ROLES_MASQUES, true)
+        );
+    }
+
+    /**
+     * Le compte est-il autorisé à se connecter ?
+     */
+    public function estActif(): bool
+    {
+        return (bool) $this->est_actif;
     }
 
     public function enseignant()

@@ -111,8 +111,76 @@
                         </div>
                     </div>
                     <div class="card-body">
-                        <canvas id="barChart" style="height: 250px; min-height: 250px"></canvas>
-                    </div>
+    <div style="position: relative; height: 250px;">
+        <canvas id="barChart"></canvas>
+    </div>
+    <p id="barChartMsg" class="text-center text-muted mt-3" style="display:none;"></p>
+
+    <script>
+        (function () {
+            var msg = document.getElementById('barChartMsg');
+
+            function afficher(texte) {
+                msg.textContent = texte;
+                msg.style.display = 'block';
+            }
+
+            function dessiner() {
+                fetch('{{ route('admin.dashboard.chart-data') }}', {
+                        headers: { 'Accept': 'application/json' },
+                        credentials: 'same-origin'
+                    })
+                    .then(function (r) {
+                        if (!r.ok) throw new Error('HTTP ' + r.status);
+                        return r.json();
+                    })
+                    .then(function (data) {
+                        new Chart(document.getElementById('barChart').getContext('2d'), {
+                            type: 'bar',
+                            data: {
+                                labels: data.labels,
+                                datasets: [{
+                                    label: 'Inscriptions',
+                                    data: data.values,
+                                    backgroundColor: 'rgba(60,141,188,0.9)',
+                                    borderColor: 'rgba(60,141,188,0.8)',
+                                    borderWidth: 1,
+                                    minBarLength: 3
+                                }]
+                            },
+                            options: {
+                                responsive: true,
+                                maintainAspectRatio: false,
+                                plugins: { legend: { display: false } },
+                                scales: {
+                                    y: {
+                                        beginAtZero: true,
+                                        suggestedMax: 5,
+                                        ticks: { stepSize: 1, precision: 0 }
+                                    }
+                                }
+                            }
+                        });
+                    })
+                    .catch(function (e) {
+                        console.error('Graphique inscriptions :', e);
+                        afficher('Impossible de charger les données du graphique (' + e.message + ').');
+                    });
+            }
+
+            // Charge Chart.js seulement s'il n'est pas déjà présent sur la page
+            if (window.Chart) {
+                dessiner();
+            } else {
+                var s = document.createElement('script');
+                s.src = 'https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js';
+                s.onload = dessiner;
+                s.onerror = function () { afficher('Chart.js n\'a pas pu être chargé (connexion ou CDN bloqué).'); };
+                document.head.appendChild(s);
+            }
+        })();
+    </script>
+</div>
                 </div>
             </div>
 
@@ -158,14 +226,24 @@
 </div>
 
 @push('scripts')
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            fetch('{{ route('admin.dashboard.chart-data') }}')
-                .then(response => response.json())
-                .then(data => {
-                    var ctx = document.getElementById('barChart').getContext('2d');
-                    new Chart(ctx, {
+            var canvas = document.getElementById('barChart');
+
+            fetch('{{ route('admin.dashboard.chart-data') }}', {
+                    headers: {
+                        'Accept': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    credentials: 'same-origin'
+                })
+                .then(function(response) {
+                    if (!response.ok) throw new Error('HTTP ' + response.status);
+                    return response.json();
+                })
+                .then(function(data) {
+                    new Chart(canvas.getContext('2d'), {
                         type: 'bar',
                         data: {
                             labels: data.labels,
@@ -178,13 +256,32 @@
                             }]
                         },
                         options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: {
+                                    display: false
+                                }
+                            },
                             scales: {
                                 y: {
-                                    beginAtZero: true
+                                    beginAtZero: true,
+                                    suggestedMax: 5,
+                                    ticks: {
+                                        stepSize: 1,
+                                        precision: 0
+                                    }
                                 }
                             }
                         }
                     });
+                })
+                .catch(function(error) {
+                    console.error('Graphique des inscriptions :', error);
+                    canvas.parentElement.insertAdjacentHTML(
+                        'afterend',
+                        '<p class="text-center text-muted mt-3">Impossible de charger les données du graphique.</p>'
+                    );
                 });
         });
     </script>

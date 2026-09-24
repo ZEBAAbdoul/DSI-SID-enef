@@ -13,7 +13,7 @@ use Illuminate\View\View;
 
 class EnseignantController extends Controller
 {
-    private const MOT_DE_PASSE_PAR_DEFAUT = '123456789';
+    private const MOT_DE_PASSE_PAR_DEFAUT = 'enef@enef2026';
     private const ROLE = 'enseignant';
 
     public function index(Request $request): View

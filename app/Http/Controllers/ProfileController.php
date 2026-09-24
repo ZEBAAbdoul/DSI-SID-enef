@@ -12,6 +12,7 @@ use Illuminate\View\View;
 
 use App\Models\Document;
 use App\Models\Formation;
+use App\Models\Inscription;
 use App\Models\SessionFormation;
 
 class ProfileController extends Controller
@@ -59,15 +60,29 @@ class ProfileController extends Controller
 
     private function getMonthlyInscriptionsData(): array
     {
-        $data = User::selectRaw("TO_CHAR(created_at, 'YYYY-MM') as mois, COUNT(*) as total")
-            ->where('created_at', '>=', now()->subMonths(6))
+        // 6 mois calendaires : le mois courant + les 5 précédents
+        $debut = now()->startOfMonth()->subMonths(5);
+
+        $comptes = Inscription::query()
+            ->whereRaw('COALESCE(date_soumission, created_at) >= ?', [$debut])
+            ->selectRaw("TO_CHAR(COALESCE(date_soumission, created_at), 'YYYY-MM') as mois, COUNT(*) as total")
             ->groupBy('mois')
-            ->orderBy('mois')
-            ->get();
+            ->pluck('total', 'mois');
+
+        $labels = [];
+        $values = [];
+
+        // Les mois sans inscription apparaissent avec la valeur 0
+        for ($i = 0; $i < 6; $i++) {
+            $mois = $debut->copy()->addMonths($i);
+
+            $labels[] = ucfirst($mois->translatedFormat('M Y'));
+            $values[] = (int) $comptes->get($mois->format('Y-m'), 0);
+        }
 
         return [
-            'labels' => $data->pluck('mois')->toArray(),
-            'values' => $data->pluck('total')->toArray(),
+            'labels' => $labels,
+            'values' => $values,
         ];
     }
 

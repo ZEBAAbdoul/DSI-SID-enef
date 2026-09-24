@@ -61,6 +61,14 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(
     Route::get('/users/stats', [UserController::class, 'stats'])
         ->name('user.stats');
 
+    Route::patch('users/{user}/toggle-actif', [UserController::class, 'toggle'])
+        ->middleware('role:super-admin')
+        ->name('user.toggle-actif');
+
+    Route::patch('users/{user}/reset-password', [UserController::class, 'resetPassword'])
+        ->middleware('role:super-admin')
+        ->name('user.reset-password');
+
 
     // ==================== RÔLES ET PERMISSIONS ====================
 
@@ -430,11 +438,11 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(
     });
 
 
-// Personnel : ses propres idées (l'accès est contrôlé par IdeePolicy)
-Route::resource('mes-idees', IdeeController::class)
-    ->parameters(['mes-idees' => 'idee'])
-    ->names('idees')
-    ->except(['show']);
+    // Personnel : ses propres idées (l'accès est contrôlé par IdeePolicy)
+    Route::resource('mes-idees', IdeeController::class)
+        ->parameters(['mes-idees' => 'idee'])
+        ->names('idees')
+        ->except(['show']);
 
     // DG / SG : toutes les idées
     Route::resource('boite-a-idees', IdeeDirectionController::class)
@@ -448,7 +456,7 @@ Route::resource('mes-idees', IdeeController::class)
     Route::resource('photos', PhotoAdminController::class)
         ->names('photos');
 
-  Route::resource('partenaires', PartenaireController::class)
+    Route::resource('partenaires', PartenaireController::class)
         ->names('partenaires');
 
 
@@ -456,15 +464,15 @@ Route::resource('mes-idees', IdeeController::class)
 
     Route::resource('videos', VideoAdminController::class);
 
-Route::resource(
-    'recherches-innovations',
-    RechercheInnovationController::class
-);
+    Route::resource(
+        'recherches-innovations',
+        RechercheInnovationController::class
+    );
 
-// Publier / dépublier une recherche ou une innovation
-Route::patch('recherches-innovations/{recherches_innovation}/publier', [RechercheInnovationController::class, 'publier'])
-    ->name('recherches-innovations.publier');
+    // Publier / dépublier une recherche ou une innovation
+    Route::patch('recherches-innovations/{recherches_innovation}/publier', [RechercheInnovationController::class, 'publier'])
+        ->name('recherches-innovations.publier');
 
-Route::patch('recherches-innovations/{recherches_innovation}/depublier', [RechercheInnovationController::class, 'depublier'])
-    ->name('recherches-innovations.depublier');
+    Route::patch('recherches-innovations/{recherches_innovation}/depublier', [RechercheInnovationController::class, 'depublier'])
+        ->name('recherches-innovations.depublier');
 });

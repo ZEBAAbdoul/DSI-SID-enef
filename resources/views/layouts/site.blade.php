@@ -12,8 +12,8 @@
         rel="stylesheet">
     <style>
         :root {
-            --forest-deep: #173226;
-            --forest-mid: #28503a;
+            --forest-deep: linear-gradient(135deg, #1b5e20 0%, #2e7d32 60%, #3f9443 100%);
+            --forest-mid: #504028;
             --forest-accent: #4c7a45;
             --leaf: #7fa66b;
             --water: #2c6c85;
@@ -111,11 +111,17 @@
         }
 
         /* ---------- Top utility bar ---------- */
-        .topbar {
+        /* .topbar {
             background: var(--forest-deep);
             color: #dfe8de;
             font-size: 13.5px;
-        }
+        } */
+
+        .topbar {
+    background: linear-gradient(135deg, #1b5e20 0%, #2e7d32 60%, #3f9443 100%);
+    color: #e8f3e8;
+    font-size: 13.5px;
+}
 
         .topbar .container {
             display: flex;
@@ -125,6 +131,8 @@
             padding-bottom: 8px;
             gap: 16px;
             flex-wrap: wrap;
+                background: linear-gradient(135deg, #1b5e20 0%, #2e7d32 60%, #3f9443 100%);
+
         }
 
         .topbar-contacts {
@@ -1579,7 +1587,7 @@
 
         /* Footer */
         footer {
-            background: #122820;
+            background: linear-gradient(135deg, #1b5e20 0%, #2e7d32 60%, #3f9443 100%);
             color: #c7d6c3;
             padding-top: 64px;
         }
@@ -1875,15 +1883,15 @@
                 </li>
 
                 <li>
-    <button class="toplink" aria-expanded="false">E-services <svg class="chev" viewBox="0 0 12 8"
-            fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M1 1l5 5 5-5" />
-        </svg></button>
-    <ul class="dropdown">
-        <li><a href="{{ route('bibliotheque.consultation') }}">Bibliothèque en ligne</a></li>
-        <li><a href="{{ route('bibliotheque.index') }}">Centre de téléchargement</a></li>
-    </ul>
-</li>
+                    <button class="toplink" aria-expanded="false">E-services <svg class="chev" viewBox="0 0 12 8"
+                            fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M1 1l5 5 5-5" />
+                        </svg></button>
+                    <ul class="dropdown">
+                        <li><a href="{{ route('bibliotheque.consultation') }}">Bibliothèque en ligne</a></li>
+                        <li><a href="{{ route('bibliotheque.index') }}">Centre de téléchargement</a></li>
+                    </ul>
+                </li>
 
                 <li><a href="{{ url('/') }}#actualites">Actualités</a></li>
                 <li><a href="{{ route('contact.index') }}">Contact</a></li>
@@ -1942,7 +1950,7 @@
                     <div class="brand" style="gap:10px;">
                         <a href="{{ url('/') }}" class="brand"> <span class="brand-mark"> <img
                                     src="{{ asset('images/logo.jpg') }}" alt="Logo ENEF" class="logo-enef"> </span>
-                            <span class="brand-text"> <span class="full">ENEF</span> <span class="sub">École
+                            <span class="brand-text"> <span class="full" style="color:#fff;">ENEF</span> <span class="sub" style="color:#fff;">École
                                     Nationale des Eaux
                                     et Forêts</span>
                             </span> </a>
@@ -2016,9 +2024,9 @@
                 @endif
             </div>
             <div class="footer-bottom">
-                <span>© 2026 École Nationale des Eaux et Forêts (ENEF) — Burkina Faso. Tous droits réservés.</span>
+                <span>© {{ date('Y') }} École Nationale des Eaux et Forêts (ENEF) — Burkina Faso. Tous droits réservés.</span>
                 <div style="display:flex;align-items:center;gap:18px;">
-                    <a href="#">Mentions légales</a>
+                    <a href="{{ route('mentionLegale')}}">Mentions légales</a>
                     <a href="#">Protection des données</a>
                     <a href="#top" class="back-to-top" aria-label="Haut de page">
                         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
