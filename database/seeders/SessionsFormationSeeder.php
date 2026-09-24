@@ -34,8 +34,8 @@ class SessionsFormationSeeder extends Seeder
             ],
             [
                 'formation_titre'    => 'Contrôleurs des Eaux et Forêts',
-                'date_debut'         => '2026-10-01',
-                'date_fin'           => '2028-06-30', // 21 mois
+                'date_debut'         => '2028-10-01',
+                'date_fin'           => '2029-06-30', // 21 mois
                 'lieu'               => 'Bobo-Dioulasso - ENEF',
                 'places_totales'     => 30,
                 'places_disponibles' => 30,
@@ -45,8 +45,8 @@ class SessionsFormationSeeder extends Seeder
             // === Finance Carbone et Projets Climatiques ===
             [
                 'formation_titre'    => 'Finance Carbone et Projets Climatiques',
-                'date_debut'         => '2026-03-10',
-                'date_fin'           => '2026-03-13',
+                'date_debut'         => '2026-11-10',
+                'date_fin'           => '2026-12-13',
                 'lieu'               => 'Ouagadougou - Salle de conférence',
                 'places_totales'     => 25,
                 'places_disponibles' => 25,
