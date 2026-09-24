@@ -167,6 +167,33 @@ class StatistiqueFonctionnaliteController extends Controller
 
         /*
         |--------------------------------------------------------------------------
+        | Top 5 des documents les plus téléchargés (téléchargements réels)
+        |--------------------------------------------------------------------------
+        */
+
+        $topTelechargements = $telechargements()
+            ->selectRaw('page, COUNT(*) AS total')
+            ->groupBy('page')
+            ->orderByDesc('total')
+            ->limit(5)
+            ->get()
+            ->map(fn ($v) => [
+                preg_match('#^bibliotheque/([^/]+)/telecharger$#', (string) $v->page, $m) ? $m[1] : null,
+                (int) $v->total,
+            ])
+            ->reject(fn ($i) => $i[0] === null)
+            ->values();
+
+        $topIds = $topTelechargements->pluck(0)->all();
+        $titresDocs = $topIds ? Document::whereIn('id', $topIds)->pluck('titre', 'id') : collect();
+
+        $topDocumentsTelecharges = $topTelechargements
+            ->map(fn ($i) => [$titresDocs[$i[0]] ?? 'Document supprimé', $i[1]])
+            ->values()
+            ->toArray();
+
+        /*
+        |--------------------------------------------------------------------------
         | Modules détaillés
         |--------------------------------------------------------------------------
         */
@@ -296,6 +323,11 @@ class StatistiqueFonctionnaliteController extends Controller
                         ->toArray(),
                     'vide' => 'Aucun document publié sur la période.',
                 ],
+                'top' => [
+                    'titre' => 'Top 5 des documents les plus téléchargés',
+                    'items' => $topDocumentsTelecharges,
+                    'vide'  => 'Aucun téléchargement sur la période.',
+                ],
             ],
             [
                 'titre'   => 'Médias & témoignages',
@@ -345,7 +377,6 @@ class StatistiqueFonctionnaliteController extends Controller
                 'routes'  => [['Gérer les utilisateurs', 'admin.user.index']],
                 'lignes'  => [
                     ['Comptes créés', $nbUtilisateurs],
-                    ['Personnes (fiches)', (int) $dansPeriode(Personne::query())->count()],
                     ['Sans rôle', $utilisateursSansRole],
                 ],
                 'repartition' => [
