@@ -82,7 +82,7 @@ return datatables()->of($users)
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'mode' => 'light',
+            'mode' => 'dark',
         ]);
 
         $user->assignRole([$request->role]);

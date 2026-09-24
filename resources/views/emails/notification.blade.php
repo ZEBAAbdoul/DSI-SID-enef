@@ -58,7 +58,15 @@
                                 </table>
                             @endif
 
-                            <p style="color:#333333; font-size:15px;">{{ $salutation ?? "Cordialement, l'équipe ENEF" }}
+                            @if (!empty($showFallbackLink) && isset($actionUrl))
+                                <p style="color:#666666; font-size:12px; line-height:1.5; word-break:break-all;">
+                                    Si le bouton ne fonctionne pas, copiez ce lien dans votre navigateur :<br>
+                                    <a href="{{ $actionUrl }}" style="color:#2e7d32;">{{ $actionUrl }}</a>
+                                </p>
+                            @endif
+
+                            <p style="color:#333333; font-size:15px;">
+                                {{ $salutation ?? "Cordialement, l'équipe ENEF" }}
                             </p>
                         </td>
                     </tr>

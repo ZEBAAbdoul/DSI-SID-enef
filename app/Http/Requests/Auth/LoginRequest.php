@@ -38,19 +38,29 @@ class LoginRequest extends FormRequest
      * @throws \Illuminate\Validation\ValidationException
      */
     public function authenticate(): void
-    {
-        $this->ensureIsNotRateLimited();
-
-        if (! Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {
-            RateLimiter::hit($this->throttleKey());
-
-            throw ValidationException::withMessages([
-                'email' => trans('auth.failed'),
-            ]);
-        }
-
-        RateLimiter::clear($this->throttleKey());
+{
+    $this->ensureIsNotRateLimited();
+ 
+    if (! Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {
+        RateLimiter::hit($this->throttleKey());
+ 
+        throw ValidationException::withMessages([
+            'email' => trans('auth.failed'),
+        ]);
     }
+ 
+    // Identifiants corrects, mais compte désactivé : on refuse la connexion.
+    // (Le message précis n'est donné qu'après un mot de passe correct : rien n'est révélé à un tiers.)
+    if (! Auth::user()->est_actif) {
+        Auth::logout();
+ 
+        throw ValidationException::withMessages([
+            'email' => "Votre compte a été désactivé. Veuillez contacter l'administration.",
+        ]);
+    }
+ 
+    RateLimiter::clear($this->throttleKey());
+}
 
     /**
      * Ensure the login request is not rate limited.

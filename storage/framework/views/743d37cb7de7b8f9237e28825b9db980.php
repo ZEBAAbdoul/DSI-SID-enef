@@ -60,7 +60,15 @@
                                 </table>
                             <?php endif; ?>
 
-                            <p style="color:#333333; font-size:15px;"><?php echo e($salutation ?? "Cordialement, l'équipe ENEF"); ?>
+                            <?php if(!empty($showFallbackLink) && isset($actionUrl)): ?>
+                                <p style="color:#666666; font-size:12px; line-height:1.5; word-break:break-all;">
+                                    Si le bouton ne fonctionne pas, copiez ce lien dans votre navigateur :<br>
+                                    <a href="<?php echo e($actionUrl); ?>" style="color:#2e7d32;"><?php echo e($actionUrl); ?></a>
+                                </p>
+                            <?php endif; ?>
+
+                            <p style="color:#333333; font-size:15px;">
+                                <?php echo e($salutation ?? "Cordialement, l'équipe ENEF"); ?>
 
                             </p>
                         </td>
@@ -78,4 +86,5 @@
     </table>
 </body>
 
-</html><?php /**PATH C:\wamp64\www\Les projets finis\ENEF\resources\views/emails/notification.blade.php ENDPATH**/ ?>
+</html>
+<?php /**PATH C:\wamp64\www\Les projets finis\ENEF\resources\views/emails/notification.blade.php ENDPATH**/ ?>

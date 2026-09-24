@@ -14,6 +14,15 @@
             </select>
         </div>
 
+        <div class="col-md-3">
+            <label class="fw-bold">Statut</label>
+            <select id="filterStatut" class="form-select">
+                <option value="">Tous</option>
+                <option value="actif">Actifs</option>
+                <option value="inactif">Désactivés</option>
+            </select>
+        </div>
+
         <div class="col-md-4"></div>
 
         <div class="col-md-2 text-end">
@@ -39,6 +48,7 @@
                         <th>Nom</th>
                         <th>Email</th>
                         <th>Rôle(s)</th>
+                        <th>Statut</th>
                         <th>Date création</th>
                         <th>Actions</th>
                     </tr>
@@ -73,6 +83,9 @@
         <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js"></script>
 
         <script>
+            // Identifiant de l'utilisateur connecté : il ne peut pas désactiver son propre compte
+            const currentUserId = @json((string) auth()->id());
+
             $(function() {
 
                 /* ===================== DATATABLE ===================== */
@@ -83,6 +96,7 @@
                         url: "{{ route('admin.user.index') }}",
                         data: function(d) {
                             d.role = $('#filterRole').val();
+                            d.statut = $('#filterStatut').val();
                         }
                     },
                     columns: [{
@@ -102,6 +116,31 @@
                             searchable: false
                         },
                         {
+                            // Statut : interrupteur + badge (nécessite `est_actif` dans le JSON du contrôleur)
+                            data: 'est_actif',
+                            name: 'est_actif',
+                            searchable: false,
+                            render: function(data, type, row) {
+                                if (type !== 'display') return data;
+
+                                const actif = (data === true || data === 1 || data === '1');
+                                const estMoi = String(row.id) === String(currentUserId);
+
+                                return `
+                                    <div class="d-flex align-items-center">
+                                        <div class="form-check form-switch mb-0 me-2 mr-2">
+                                            <input class="form-check-input toggleActifBtn" type="checkbox"
+                                                role="switch" data-id="${row.id}"
+                                                ${actif ? 'checked' : ''}
+                                                ${estMoi ? 'disabled title="Vous ne pouvez pas désactiver votre propre compte"' : ''}>
+                                        </div>
+                                        <span class="badge ${actif ? 'bg-success badge-success' : 'bg-danger badge-danger'}">
+                                            ${actif ? 'Actif' : 'Désactivé'}
+                                        </span>
+                                    </div>`;
+                            }
+                        },
+                        {
                             data: 'created_at'
                         },
                         {
@@ -113,6 +152,52 @@
                     dom: 'Blfrtip',
                     buttons: ['colvis', 'csv', 'excel', 'pdf', 'print'],
                     responsive: true
+                });
+
+                /* ===================== FILTRES ===================== */
+                $('#filterRole, #filterStatut').on('change', function() {
+                    table.ajax.reload();
+                });
+
+                /* ===================== ACTIVER / DÉSACTIVER ===================== */
+                $(document).on('change', '.toggleActifBtn', function() {
+                    const checkbox = this;
+                    const $cb = $(this);
+                    const id = $cb.data('id');
+                    const activer = checkbox.checked;
+
+                    const message = activer ?
+                        'Activer ce compte ?' :
+                        'Désactiver ce compte ? L\'utilisateur ne pourra plus se connecter.';
+
+                    if (!confirm(message)) {
+                        checkbox.checked = !activer; // annulation : on remet l'interrupteur
+                        return;
+                    }
+
+                    $cb.prop('disabled', true);
+
+                    $.ajax({
+                        url: "{{ url('/admin/users') }}/" + id + "/toggle-actif",
+                        type: "PATCH",
+                        dataType: "json",
+                        data: {
+                            _token: "{{ csrf_token() }}"
+                        },
+                        success: function(res) {
+                            showToast(res.message || "Statut mis à jour !", "success");
+                            table.ajax.reload(null, false); // garde la page courante
+                        },
+                        error: function(xhr) {
+                            checkbox.checked = !activer;
+                            $cb.prop('disabled', false);
+                            showToast(
+                                (xhr.responseJSON && xhr.responseJSON.message) ||
+                                "Erreur lors de la mise à jour du statut !",
+                                "error"
+                            );
+                        }
+                    });
                 });
 
                 /* ===================== ADD USER ===================== */
