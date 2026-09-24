@@ -31,6 +31,7 @@ use App\Http\Controllers\VideoPublicController;
 */
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/mentions_legale', [HomeController::class, 'mentionLegale'])->name('mentionLegale');
 
 Route::get('/enef', function () {
     return view('auth.login');
@@ -121,7 +122,7 @@ Route::get('/recherches-innovations/{recherches_innovation:slug}', function (Rec
 })->name('recherches-innovations.show');
 
 
-Route::get('/mot-du-directeur', [HomeController::class, 'motDuDirecteur']) ->name('mot-directeur');
+Route::get('/mot-du-directeur', [HomeController::class, 'motDuDirecteur'])->name('mot-directeur');
 
 // Page de contact publique (formulaire + hCaptcha)
 Route::get('/contact', [ContactController::class, 'index'])->name('contact.index');

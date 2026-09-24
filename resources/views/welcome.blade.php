@@ -115,18 +115,21 @@
                             <p style="color:var(--ink-soft);">Aucune actualité publiée pour le moment.</p>
                         @endforelse
 
-                    {{-- Duplication du flux pour l'effet de défilement continu (CSS) --}}
-                    @if ($actualites->count() > 2)
-                        @foreach ($actualites as $actualite)
-                            @include('partials.news-card', ['actualite' => $actualite, 'hidden' => true])
-                        @endforeach
-                    @endif
+                        {{-- Duplication du flux pour l'effet de défilement continu (CSS) --}}
+                        @if ($actualites->count() > 2)
+                            @foreach ($actualites as $actualite)
+                                @include('partials.news-card', [
+                                    'actualite' => $actualite,
+                                    'hidden' => true,
+                                ])
+                            @endforeach
+                        @endif
+                    </div>
                 </div>
-            </div>
 
-                    <button type="button" id="news-next" class="news-nav-btn news-arrow news-arrow--right"
-                        aria-label="Actualité suivante" title="Actualité suivante">&rarr;</button>
-                </div>
+                <button type="button" id="news-next" class="news-nav-btn news-arrow news-arrow--right"
+                    aria-label="Actualité suivante" title="Actualité suivante">&rarr;</button>
+            </div>
     </section>
 
     <!-- ===================== ADMISSIONS ===================== -->
@@ -344,7 +347,7 @@
                             <div class="agenda-cta">
                                 <span class="places-badge">{{ $session->places_disponibles }} /
                                     {{ $session->places_totales }} places</span>
-                                <a href="#register" class="btn btn-primary btn-sm">S'inscrire</a>
+                                <a href="{{ url('/enef') }}" class="btn btn-primary btn-sm">S'inscrire</a>
                             </div>
                         </div>
                     @endforeach
@@ -491,7 +494,7 @@
     </section>
 
     <!-- ===================== CHIFFRES CLÉS ===================== -->
-    <section class="stats-band">
+    {{-- <section class="stats-band">
         <div class="container stats-grid">
             <div><span class="num">{{ $param_site->annee_creation ?? '—' }}</span><span class="lbl">Année de
                     création</span></div>
@@ -504,7 +507,7 @@
             <div><span class="num">15+</span><span class="lbl">Partenaires techniques et financiers</span>
             </div>
         </div>
-    </section>
+    </section> --}}
 
     @include('partials.testimonial-dialog')
 
@@ -1227,39 +1230,39 @@
             });
         });
 
-    // Catalogue tabs + chips : filtrage réel des formations affichées
-    (function() {
-    var activeGroup = 'programmee';
-    var activeCat = null;
+        // Catalogue tabs + chips : filtrage réel des formations affichées
+        (function() {
+            var activeGroup = 'programmee';
+            var activeCat = null;
 
-    function applyFilters() {
-    document.querySelectorAll('.course-card').forEach(function(card) {
-    var matchesGroup = card.dataset.group === activeGroup;
-    var matchesCat = !activeCat || card.dataset.cat === activeCat;
-    card.style.display = (matchesGroup && matchesCat) ? '' : 'none';
-    });
-    }
+            function applyFilters() {
+                document.querySelectorAll('.course-card').forEach(function(card) {
+                    var matchesGroup = card.dataset.group === activeGroup;
+                    var matchesCat = !activeCat || card.dataset.cat === activeCat;
+                    card.style.display = (matchesGroup && matchesCat) ? '' : 'none';
+                });
+            }
 
-    document.querySelectorAll('.tab-btn[data-filter-group]').forEach(function(tab) {
-    tab.addEventListener('click', function() {
-    activeGroup = tab.dataset.filterGroup;
-    applyFilters();
-    });
-    });
+            document.querySelectorAll('.tab-btn[data-filter-group]').forEach(function(tab) {
+                tab.addEventListener('click', function() {
+                    activeGroup = tab.dataset.filterGroup;
+                    applyFilters();
+                });
+            });
 
-    document.querySelectorAll('.chip[data-filter-cat]').forEach(function(chip) {
-    chip.addEventListener('click', function() {
-    var wasActive = chip.classList.contains('chip-active');
-    document.querySelectorAll('.chip[data-filter-cat]').forEach(function(c) {
-    c.classList.remove('chip-active');
-    });
-    activeCat = wasActive ? null : chip.dataset.filterCat;
-    if (!wasActive) chip.classList.add('chip-active');
-    applyFilters();
-    });
-    });
+            document.querySelectorAll('.chip[data-filter-cat]').forEach(function(chip) {
+                chip.addEventListener('click', function() {
+                    var wasActive = chip.classList.contains('chip-active');
+                    document.querySelectorAll('.chip[data-filter-cat]').forEach(function(c) {
+                        c.classList.remove('chip-active');
+                    });
+                    activeCat = wasActive ? null : chip.dataset.filterCat;
+                    if (!wasActive) chip.classList.add('chip-active');
+                    applyFilters();
+                });
+            });
 
-    applyFilters(); // état initial : onglet "Programmées"
-    })();
+            applyFilters(); // état initial : onglet "Programmées"
+        })();
     </script>
 @endpush

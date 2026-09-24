@@ -147,8 +147,8 @@ return [
     |--------------------------------------------------------------------------
     */
     'custom' => [
-        'attribute-name' => [
-            'rule-name' => 'custom-message',
+        'password' => [
+            'min' => 'Le mot de passe doit contenir au moins :min caractères.',
         ],
     ],
 

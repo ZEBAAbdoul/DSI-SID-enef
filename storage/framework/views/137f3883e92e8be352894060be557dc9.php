@@ -1,38 +1,50 @@
-<x-admin>
-    @section('title', 'Gestion des Utilisateurs')
+<?php if (isset($component)) { $__componentOriginal2812d824e80b3a65bceda8e6a9bfa7a0 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal2812d824e80b3a65bceda8e6a9bfa7a0 = $attributes; } ?>
+<?php $component = App\View\Components\Admin::resolve([] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component->withName('admin'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(App\View\Components\Admin::class))->getConstructor()): ?>
+<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
+<?php endif; ?>
+<?php $component->withAttributes([]); ?>
+    <?php $__env->startSection('title', 'Gestion des Utilisateurs'); ?>
 
-    {{-- Messages flash (retour des pages create / edit) --}}
-    @if (session('success'))
+    
+    <?php if(session('success')): ?>
         <div class="alert alert-success alert-dismissible fade show" role="alert">
-            <i class="fas fa-check-circle me-1"></i> {{ session('success') }}
+            <i class="fas fa-check-circle me-1"></i> <?php echo e(session('success')); ?>
+
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fermer"></button>
         </div>
-    @endif
+    <?php endif; ?>
 
-    @if (session('warning'))
+    <?php if(session('warning')): ?>
         <div class="alert alert-warning alert-dismissible fade show" role="alert">
-            <i class="fas fa-exclamation-triangle me-1"></i> {{ session('warning') }}
+            <i class="fas fa-exclamation-triangle me-1"></i> <?php echo e(session('warning')); ?>
+
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fermer"></button>
         </div>
-    @endif
+    <?php endif; ?>
 
-    @if (session('error'))
+    <?php if(session('error')): ?>
         <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            <i class="fas fa-exclamation-circle me-1"></i> {{ session('error') }}
+            <i class="fas fa-exclamation-circle me-1"></i> <?php echo e(session('error')); ?>
+
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fermer"></button>
         </div>
-    @endif
+    <?php endif; ?>
 
-    {{-- ===================== FILTRES ===================== --}}
+    
     <div class="row mb-3 align-items-end">
 
         <div class="col-md-3">
             <label class="fw-bold">Rôle</label>
             <select id="filterRole" class="form-select">
                 <option value="">Tous</option>
-                @foreach ($roles as $role)
-                    <option value="{{ $role->name }}">{{ $role->name }}</option>
-                @endforeach
+                <?php $__currentLoopData = $roles; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $role): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                    <option value="<?php echo e($role->name); ?>"><?php echo e($role->name); ?></option>
+                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
             </select>
         </div>
 
@@ -48,13 +60,13 @@
         <div class="col-md-4"></div>
 
         <div class="col-md-2 text-end">
-            <a href="{{ route('admin.user.create') }}" class="btn btn-primary btn-sm fw-bold shadow">
+            <a href="<?php echo e(route('admin.user.create')); ?>" class="btn btn-primary btn-sm fw-bold shadow">
                 <i class="fas fa-plus-circle"></i> Ajouter
             </a>
         </div>
     </div>
 
-    {{-- ===================== TABLE ===================== --}}
+    
     <div class="card shadow-sm">
         <div class="card-header bg-primary text-white">
             <h3 class="card-title mb-0">
@@ -78,15 +90,15 @@
                 <tbody></tbody>
             </table>
 
-            {{-- Conteneur pour les toasts --}}
+            
             <div id="toastContainer" style="position: fixed; top: 20px; right: 20px; z-index: 9999;"></div>
         </div>
     </div>
 
-    {{-- ===================== MODALS ===================== --}}
-    @include('admin.user.partials.delete')
+    
+    <?php echo $__env->make('admin.user.partials.delete', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
 
-    {{-- Modal : réinitialiser le mot de passe (2 étapes : confirmation, puis affichage du mot de passe) --}}
+    
     <div class="modal fade" id="resetPasswordModal" tabindex="-1" aria-labelledby="resetPasswordTitle"
         aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
         <div class="modal-dialog modal-dialog-centered">
@@ -104,7 +116,7 @@
                 <div class="modal-body">
                     <div id="resetError" class="alert alert-danger d-none" role="alert"></div>
 
-                    {{-- Étape 1 : confirmation --}}
+                    
                     <div id="resetStepConfirm">
                         <p class="mb-2">Vous êtes sur le point de réinitialiser le mot de passe du compte suivant :
                         </p>
@@ -120,7 +132,7 @@
                         </p>
                     </div>
 
-                    {{-- Étape 2 : résultat (le mot de passe n'est jamais présent dans le HTML de la page) --}}
+                    
                     <div id="resetStepDone" class="d-none">
                         <div class="alert alert-success mb-3">
                             <i class="fas fa-check-circle me-1"></i> Le mot de passe a été réinitialisé.
@@ -160,7 +172,7 @@
         </div>
     </div>
 
-    {{-- Modal de confirmation : activer / désactiver un compte (contenu rempli en JS) --}}
+    
     <div class="modal fade" id="toggleActifModal" tabindex="-1" aria-labelledby="toggleActifTitle"
         aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
         <div class="modal-dialog modal-dialog-centered">
@@ -176,7 +188,7 @@
                 </div>
 
                 <div class="modal-body">
-                    {{-- Erreur renvoyée par le serveur (le modal reste ouvert) --}}
+                    
                     <div id="toggleActifError" class="alert alert-danger d-none" role="alert"></div>
 
                     <p class="mb-2" id="toggleActifText"></p>
@@ -203,15 +215,15 @@
         </div>
     </div>
 
-    {{-- ===================== CSS ===================== --}}
-    @section('css')
+    
+    <?php $__env->startSection('css'); ?>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
         <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
         <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css">
-    @endsection
+    <?php $__env->stopSection(); ?>
 
-    {{-- ===================== JS ===================== --}}
-    @section('js')
+    
+    <?php $__env->startSection('js'); ?>
         <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
         <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
@@ -221,7 +233,7 @@
 
         <script>
             // Identifiant de l'utilisateur connecté : il ne peut pas désactiver son propre compte
-            const currentUserId = @json((string) auth()->id());
+            const currentUserId = <?php echo json_encode((string) auth()->id(), 15, 512) ?>;
 
             $(function() {
 
@@ -230,7 +242,7 @@
                     processing: true,
                     serverSide: true,
                     ajax: {
-                        url: "{{ route('admin.user.index') }}",
+                        url: "<?php echo e(route('admin.user.index')); ?>",
                         data: function(d) {
                             d.role = $('#filterRole').val();
                             d.statut = $('#filterStatut').val();
@@ -387,11 +399,11 @@
                     $('#toggleActifError').addClass('d-none').text('');
 
                     $.ajax({
-                        url: "{{ url('/admin/users') }}/" + pendingToggle.id + "/toggle-actif",
+                        url: "<?php echo e(url('/admin/users')); ?>/" + pendingToggle.id + "/toggle-actif",
                         type: "PATCH",
                         dataType: "json",
                         data: {
-                            _token: "{{ csrf_token() }}"
+                            _token: "<?php echo e(csrf_token()); ?>"
                         },
                         success: function(res) {
                             $toggleModal.modal('hide');
@@ -465,11 +477,11 @@
                     $('#resetError').addClass('d-none').text('');
 
                     $.ajax({
-                        url: "{{ url('/admin/users') }}/" + pendingReset.id + "/reset-password",
+                        url: "<?php echo e(url('/admin/users')); ?>/" + pendingReset.id + "/reset-password",
                         type: "PATCH",
                         dataType: "json",
                         data: {
-                            _token: "{{ csrf_token() }}"
+                            _token: "<?php echo e(csrf_token()); ?>"
                         },
                         success: function(res) {
                             $('#resetPwdValue').text(res.password || '');
@@ -530,10 +542,10 @@
                     let id = $('#deleteUserId').val();
 
                     $.ajax({
-                        url: "{{ url('/admin/users') }}/" + id,
+                        url: "<?php echo e(url('/admin/users')); ?>/" + id,
                         type: "DELETE",
                         data: {
-                            _token: "{{ csrf_token() }}"
+                            _token: "<?php echo e(csrf_token()); ?>"
                         },
                         success: function() {
                             $('#deleteUserModal').modal('hide');
@@ -577,5 +589,15 @@
                 }, 3000); // Durée 3 secondes
             }
         </script>
-    @endsection
-</x-admin>
+    <?php $__env->stopSection(); ?>
+ <?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal2812d824e80b3a65bceda8e6a9bfa7a0)): ?>
+<?php $attributes = $__attributesOriginal2812d824e80b3a65bceda8e6a9bfa7a0; ?>
+<?php unset($__attributesOriginal2812d824e80b3a65bceda8e6a9bfa7a0); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal2812d824e80b3a65bceda8e6a9bfa7a0)): ?>
+<?php $component = $__componentOriginal2812d824e80b3a65bceda8e6a9bfa7a0; ?>
+<?php unset($__componentOriginal2812d824e80b3a65bceda8e6a9bfa7a0); ?>
+<?php endif; ?>
+<?php /**PATH C:\wamp64\www\Les projets finis\ENEF\resources\views/admin/user/index.blade.php ENDPATH**/ ?>

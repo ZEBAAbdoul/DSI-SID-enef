@@ -120,7 +120,7 @@ class UserSeeder extends Seeder
             'id'          => Str::uuid(),
             'personne_id' => $personne->id,
             'email'       => $email,
-            'password'    => bcrypt('123456789'),
+            'password'    => bcrypt('enef@enef2026'),
         ]);
 
         $user->assignRole($role);

@@ -21,9 +21,9 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password')->nullable();
             $table->string('mode')->default('dark');
+            $table->boolean('est_actif')->default(true);
             $table->rememberToken();
             $table->timestamps();
-            $table->boolean('est_actif')->default(true)->after('mode');
         });
     }
 

@@ -22,24 +22,24 @@ class SessionsFormationSeeder extends Seeder
         $formations = DB::table('formations')->pluck('id', 'titre')->toArray();
 
         $sessions = [
-            // === Master en Systèmes d'Information Géographique ===
+            // === Formations initiales : filière Gestion des ressources naturelles ===
             [
-                'formation_titre'    => 'Master en Systèmes d\'Information Géographique',
+                'formation_titre'    => 'Assistants des Eaux et Forêts',
                 'date_debut'         => '2026-10-01',
-                'date_fin'           => '2028-06-30',
-                'lieu'               => 'Ouagadougou - Campus principal',
+                'date_fin'           => '2028-03-31', // 18 mois
+                'lieu'               => 'Bobo-Dioulasso - ENEF',
                 'places_totales'     => 30,
                 'places_disponibles' => 30,
                 'statut'             => 'ouverte',
             ],
             [
-                'formation_titre'    => 'Master en Systèmes d\'Information Géographique',
-                'date_debut'         => '2025-10-01',
-                'date_fin'           => '2027-06-30',
-                'lieu'               => 'Ouagadougou - Campus principal',
+                'formation_titre'    => 'Contrôleurs des Eaux et Forêts',
+                'date_debut'         => '2026-10-01',
+                'date_fin'           => '2028-06-30', // 21 mois
+                'lieu'               => 'Bobo-Dioulasso - ENEF',
                 'places_totales'     => 30,
-                'places_disponibles' => 0,
-                'statut'             => 'complete',
+                'places_disponibles' => 30,
+                'statut'             => 'ouverte',
             ],
 
             // === Finance Carbone et Projets Climatiques ===
@@ -73,26 +73,6 @@ class SessionsFormationSeeder extends Seeder
                 'statut'             => 'ouverte',
             ],
 
-            // === Licence en Gestion des Ressources Naturelles ===
-            [
-                'formation_titre'    => 'Licence en Gestion des Ressources Naturelles',
-                'date_debut'         => '2026-12-01',
-                'date_fin'           => '2029-06-30',
-                'lieu'               => 'Ouagadougou - Campus principal',
-                'places_totales'     => 50,
-                'places_disponibles' => 50,
-                'statut'             => 'ouverte',
-            ],
-            [
-                'formation_titre'    => 'Licence en Gestion des Ressources Naturelles',
-                'date_debut'         => '2025-10-01',
-                'date_fin'           => '2028-06-30',
-                'lieu'               => 'Ouagadougou - Campus principal',
-                'places_totales'     => 50,
-                'places_disponibles' => 0,
-                'statut'             => 'cloturee',
-            ],
-
             // === Aménagement Forestier Durable ===
             [
                 'formation_titre'    => 'Aménagement Forestier Durable',
@@ -121,6 +101,17 @@ class SessionsFormationSeeder extends Seeder
             // Skip si la formation n'existe pas
             if (!$formationId) {
                 $this->command->warn("Formation introuvable : {$sessionData['formation_titre']}");
+                continue;
+            }
+
+            // Évite les doublons si le seeder est relancé
+            $existe = DB::table('sessions_formation')
+                ->where('formation_id', $formationId)
+                ->where('date_debut', $sessionData['date_debut'])
+                ->where('lieu', $sessionData['lieu'])
+                ->exists();
+
+            if ($existe) {
                 continue;
             }
 

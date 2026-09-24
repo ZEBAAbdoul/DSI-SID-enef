@@ -110,6 +110,11 @@ class HomeController extends Controller
 
     }
 
+    public function mentionLegale()
+    {
+        return view('mentions-legales');
+    }
+
     // Mot du Directeur
     public function motDuDirecteur()
     {

@@ -85,6 +85,136 @@
                                     @endif
                                 </div>
 
+                                {{-- Informations complementaires --}}
+                                <section id="infos-complementaires">
+                                        <div class="container">
+
+                                            <!-- ---------- Frais annexes ---------- -->
+                                            <div id="frais" class="infos-section">
+                                                <div class="section-head">
+                                                    <div>
+                                                        <span class="kicker kicker-clay">Informations complementaires</span>
+                                                        <h2>Frais annexes</h2>
+                                                        <p class="desc">Ces montants s'ajoutent aux frais de scolarité
+                                                            propres à chaque cycle ou
+                                                            module, consultables sur la fiche de chaque formation.</p>
+                                                    </div>
+                                                </div>
+
+                                                <div class="infos-block infos-block--accent-clay">
+                                                    <table class="infos-table">
+                                                        <tbody>
+                                                            @forelse ($frais as $ligne)
+                                                                <tr>
+                                                                    <td class="lbl-cell">{{ $ligne->libelle }}</td>
+                                                                    <td class="val-cell">{{ $ligne->valeur }}</td>
+                                                                </tr>
+                                                            @empty
+                                                                <tr>
+                                                                    <td colspan="2" class="empty-cell">Aucune information
+                                                                        disponible pour le moment.</td>
+                                                                </tr>
+                                                            @endforelse
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+
+                                            <!-- ---------- Modalités de paiement ---------- -->
+                                            <div id="paiement" class="infos-section">
+                                                <div class="section-head">
+                                                    <div>
+                                                        <span class="kicker kicker-water">Échéancier</span>
+                                                        <h2>Modalités de paiement</h2>
+                                                        <p class="desc">L'échéancier diffère selon qu'il s'agit d'une
+                                                            classe intermédiaire ou d'une
+                                                            classe terminale du cycle.</p>
+                                                    </div>
+                                                </div>
+
+                                                <div class="infos-cols">
+                                                    <div class="infos-block infos-block--accent-water">
+                                                        <div class="infos-block-label">Classes intermédiaires</div>
+                                                        <table class="infos-table">
+                                                            <tbody>
+                                                                @forelse ($paiementIntermediaire as $ligne)
+                                                                    <tr>
+                                                                        <td class="lbl-cell">{{ $ligne->libelle }}</td>
+                                                                        <td class="val-cell">{{ $ligne->valeur }}</td>
+                                                                    </tr>
+                                                                @empty
+                                                                    <tr>
+                                                                        <td colspan="2" class="empty-cell">Aucune
+                                                                            information disponible.</td>
+                                                                    </tr>
+                                                                @endforelse
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+
+                                                    <div class="infos-block infos-block--accent-water">
+                                                        <div class="infos-block-label">Classes terminales</div>
+                                                        <table class="infos-table">
+                                                            <tbody>
+                                                                @forelse ($paiementTerminale as $ligne)
+                                                                    <tr>
+                                                                        <td class="lbl-cell">{{ $ligne->libelle }}</td>
+                                                                        <td class="val-cell">{{ $ligne->valeur }}</td>
+                                                                    </tr>
+                                                                @empty
+                                                                    <tr>
+                                                                        <td colspan="2" class="empty-cell">Aucune
+                                                                            information disponible.</td>
+                                                                    </tr>
+                                                                @endforelse
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- ---------- Composition du dossier ---------- -->
+                                            <div id="dossier" class="infos-section">
+                                                <div class="section-head">
+                                                    <div>
+                                                        <span class="kicker kicker-forest">Pièces à fournir</span>
+                                                        <h2>Composition du dossier</h2>
+                                                        <p class="desc">L'ensemble des pièces suivantes doit être réuni au
+                                                            moment du dépôt de
+                                                            candidature.</p>
+                                                    </div>
+                                                </div>
+
+                                                <div class="infos-block infos-block--accent-forest">
+                                                    <ol class="infos-dossier-list">
+                                                        @forelse ($dossier as $piece)
+                                                            <li>
+                                                                <span class="dossier-num">{{ $loop->iteration }}</span>
+                                                                <span>{{ $piece->libelle }}</span>
+                                                            </li>
+                                                        @empty
+                                                            <li class="empty-cell">Aucune pièce référencée.</li>
+                                                        @endforelse
+                                                    </ol>
+                                                </div>
+                                            </div>
+
+                                            <!-- ---------- Bandeau contact ---------- -->
+                                            {{-- <div class="infos-cta">
+                                                <div>
+                                                    <h3>Une question sur votre dossier ?</h3>
+                                                    <p>L'équipe des admissions de l'ENEF vous répond par e-mail ou par
+                                                        téléphone.</p>
+                                                </div>
+                                                <div style="display:flex;gap:12px;flex-wrap:wrap;">
+                                                    <a href="mailto:infos@enef.gov.bf" class="btn btn-primary">Nous
+                                                        écrire</a>
+                                                    
+                                                </div>
+                                            </div> --}}
+                                        </div>
+                                    </section>
+
                                 <a href="{{ route('formations.show', $item->slug) }}" class="btn btn-outline btn-sm">Voir la fiche du cycle</a>
                                 {{-- <a href="{{ route('formations.informations', $item->slug) }}" class="btn btn-outline btn-sm">Voir les informations complementaires</a> --}}
                             </div>
@@ -222,6 +352,7 @@
                     @empty
                         <p style="color:var(--ink-soft);">Aucun module à la carte disponible pour le moment.</p>
                     @endforelse
+                    
                 </div>
             </div>
 
@@ -325,6 +456,215 @@
             }
 
             .module-infos > div span:last-child { font-size: 13.5px; }
+
+            /* ===================== INFOS COMPLÉMENTAIRES ===================== */
+            #infos-complementaires {
+                --clay: #b5654a;
+                --clay-soft: #f7e9e2;
+                --water-soft: #e6f0f2;
+                --forest-soft: #e9f1e9;
+                padding: 56px 0 24px;
+            }
+
+            #infos-complementaires .infos-section {
+                margin-bottom: 44px;
+            }
+
+            #infos-complementaires .section-head {
+                max-width: 640px;
+                margin-bottom: 20px;
+            }
+
+            #infos-complementaires .kicker {
+                display: inline-block;
+                font-family: "Fraunces", serif;
+                font-weight: 700;
+                font-size: 12px;
+                text-transform: uppercase;
+                letter-spacing: .06em;
+                padding: 4px 10px;
+                margin-bottom: 10px;
+                border-radius: 2px;
+            }
+
+            #infos-complementaires .kicker-clay {
+                background: var(--clay-soft);
+                color: var(--clay);
+            }
+
+            #infos-complementaires .kicker-water {
+                background: var(--water-soft);
+                color: var(--water);
+            }
+
+            #infos-complementaires .kicker-forest {
+                background: var(--forest-soft);
+                color: var(--forest-deep);
+            }
+
+            #infos-complementaires .section-head h2 {
+                font-family: "Fraunces", serif;
+                font-size: 24px;
+                margin: 0 0 8px;
+                color: var(--ink);
+            }
+
+            #infos-complementaires .section-head .desc {
+                font-size: 14px;
+                line-height: 1.6;
+                color: var(--ink-soft);
+                margin: 0;
+            }
+
+            /* --- Blocs (cartes) --- */
+            #infos-complementaires .infos-block {
+                background: var(--white);
+                border: 1px solid var(--line);
+                border-left: 4px solid var(--line);
+                padding: 4px;
+            }
+
+            #infos-complementaires .infos-block--accent-clay {
+                border-left-color: var(--clay);
+            }
+
+            #infos-complementaires .infos-block--accent-water {
+                border-left-color: var(--water);
+            }
+
+            #infos-complementaires .infos-block--accent-forest {
+                border-left-color: var(--forest-deep);
+            }
+
+            #infos-complementaires .infos-cols {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+                gap: 16px;
+            }
+
+            #infos-complementaires .infos-block-label {
+                font-family: "Fraunces", serif;
+                font-weight: 700;
+                font-size: 13px;
+                color: var(--ink);
+                padding: 12px 16px 6px;
+            }
+
+            /* --- Tableaux --- */
+            #infos-complementaires .infos-table {
+                width: 100%;
+                border-collapse: collapse;
+            }
+
+            #infos-complementaires .infos-table tr:not(:last-child) td {
+                border-bottom: 1px solid var(--line);
+            }
+
+            #infos-complementaires .infos-table td {
+                padding: 12px 16px;
+                font-size: 14px;
+                vertical-align: top;
+            }
+
+            #infos-complementaires .infos-table .lbl-cell {
+                color: var(--ink-soft);
+                font-weight: 600;
+                width: 55%;
+            }
+
+            #infos-complementaires .infos-table .val-cell {
+                color: var(--ink);
+                text-align: right;
+                font-weight: 600;
+            }
+
+            #infos-complementaires .infos-table .empty-cell {
+                text-align: center;
+                color: var(--ink-soft);
+                font-style: italic;
+                padding: 20px;
+            }
+
+            /* --- Liste "composition du dossier" --- */
+            #infos-complementaires .infos-dossier-list {
+                list-style: none;
+                margin: 0;
+                padding: 6px;
+            }
+
+            #infos-complementaires .infos-dossier-list li {
+                display: flex;
+                align-items: flex-start;
+                gap: 14px;
+                padding: 12px 16px;
+                font-size: 14px;
+                color: var(--ink);
+            }
+
+            #infos-complementaires .infos-dossier-list li:not(:last-child) {
+                border-bottom: 1px solid var(--line);
+            }
+
+            #infos-complementaires .dossier-num {
+                flex-shrink: 0;
+                width: 24px;
+                height: 24px;
+                border-radius: 50%;
+                background: var(--forest-soft);
+                color: var(--forest-deep);
+                font-family: "Fraunces", serif;
+                font-weight: 700;
+                font-size: 12px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            /* --- Bandeau de contact --- */
+            #infos-complementaires .infos-cta {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 20px;
+                flex-wrap: wrap;
+                background: var(--forest-deep);
+                color: #fff;
+                padding: 28px 32px;
+                margin-top: 32px;
+            }
+
+            #infos-complementaires .infos-cta h3 {
+                font-family: "Fraunces", serif;
+                font-size: 18px;
+                margin: 0 0 4px;
+            }
+
+            #infos-complementaires .infos-cta p {
+                margin: 0;
+                font-size: 14px;
+                opacity: .85;
+            }
+
+            #infos-complementaires .infos-cta .btn-primary {
+                background: #fff;
+                color: var(--forest-deep);
+                border: none;
+            }
+
+            #infos-complementaires .infos-cta .btn-primary:hover {
+                background: var(--paper-alt);
+            }
+
+            @media (max-width: 640px) {
+                #infos-complementaires .infos-table .val-cell {
+                    text-align: left;
+                }
+
+                #infos-complementaires .infos-cta {
+                    flex-direction: column;
+                    align-items: flex-start;
+                }
+            }
         </style>
     @endpush
 
