@@ -1859,6 +1859,7 @@
                         </svg></button>
                     <ul class="dropdown">
                         <li><a href="{{ url('/') }}#dg">Mot du Directeur Général</a></li>
+                                                <li><a href="{{ url('/') }}#actualites">Actualités</a></li>
                         {{-- <li><a href="{{ url('/formations/informations-complementaires') }}">Conditions d'entrée à l'ENEF</a></li> --}}
                         {{-- <li><a href="{{ url('/') }}#presentation">Présentation &amp; historique</a></li> --}}
                         <li><a href="{{ route('unites-pedagogiques') }}">Unités pédagogiques</a></li>
@@ -1893,7 +1894,7 @@
                     </ul>
                 </li>
 
-                <li><a href="{{ url('/') }}#actualites">Actualités</a></li>
+                <li><a href="{{ route('actualites.index') }}#actualites">Actualités</a></li>
                 <li><a href="{{ route('contact.index') }}">Contact</a></li>
 
             </ul>
@@ -1974,6 +1975,7 @@
                     <h5>L'ENEF</h5>
                     <ul>
                         <li><a href="{{ url('/') }}#dg">Mot du Directeur Général</a></li>
+                        {{-- <li><a href="{{ url('/') }}#actualites">Actualités</a></li> --}}
                         <li><a href="{{ url('/') }}#presentation">Présentation &amp; historique</a></li>
                         <li><a href="{{ url('/') }}#partenaires">Nos partenaires</a></li>
                         <li><a href="{{ route('recherches-innovations.index') }}">Recherche &amp; innovation</a></li>
