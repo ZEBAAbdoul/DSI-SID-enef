@@ -1,4 +1,16 @@
-<x-admin title="Mes notes déposées">
+{{-- resources/views/admin/enseignants/notes/index.blade.php --}}
+
+{{-- Cette vue est partagée entre l'enseignant (NoteController) et l'administration (NoteAdminController).
+     Les routes doivent donc dépendre du rôle : la route "enseignant" refuse (403) les notes
+     qui n'appartiennent pas à l'enseignant connecté. --}}
+@php
+    $estEnseignant = auth()->user()->hasRole('enseignant'); // même condition que dans le contrôleur
+
+    $routeIndex = $estEnseignant ? 'admin.enseignant.notes.index' : 'admin.notes.index';
+    $routeTelecharger = $estEnseignant ? 'admin.enseignant.notes.telecharger' : 'admin.notes.telecharger';
+@endphp
+
+<x-admin title="{{ $estEnseignant ? 'Mes notes déposées' : 'Notes déposées' }}">
 
     <div class="container-fluid py-4">
 
@@ -7,11 +19,11 @@
             <div>
                 <h1 class="h4 mb-1">Les notes déposées</h1>
                 <p class="text-muted mb-0">
-                    Liste des fichiers de notes que vous avez déposés.
+                    {{ $estEnseignant ? 'Liste des fichiers de notes que vous avez déposés.' : 'Liste des fichiers de notes déposés par les enseignants.' }}
                 </p>
             </div>
 
-            @if (auth()->user()->hasRole('enseignant'))
+            @if ($estEnseignant)
                 <a href="{{ route('admin.enseignant.notes.create') }}" class="btn btn-success">
                     <i class="fas fa-upload me-1"></i>
                     Déposer des notes
@@ -24,7 +36,7 @@
             <div class="alert alert-success alert-dismissible fade show" role="alert">
                 <i class="fas fa-check-circle me-1"></i>
                 {{ session('success') }}
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fermer"></button>
             </div>
         @endif
 
@@ -40,8 +52,7 @@
         {{-- Barre de filtres --}}
         <div class="card shadow-sm border-0 mb-3">
             <div class="card-body py-3">
-                <form method="GET" action="{{ route('admin.enseignant.notes.index') }}"
-                    class="row g-2 align-items-end">
+                <form method="GET" action="{{ route($routeIndex) }}" class="row g-2 align-items-end">
 
                     <div class="col-md-3">
                         <label class="form-label small text-muted mb-1">Matière</label>
@@ -78,8 +89,7 @@
                             <i class="fas fa-filter me-1"></i>Filtrer
                         </button>
                         @if (request()->hasAny(['matiere_id', 'type_evaluation', 'date_evaluation']))
-                            <a href="{{ route('admin.enseignant.notes.index') }}"
-                                class="btn btn-sm btn-outline-secondary">
+                            <a href="{{ route($routeIndex) }}" class="btn btn-sm btn-outline-secondary">
                                 Réinitialiser
                             </a>
                         @endif
@@ -95,7 +105,7 @@
             <div class="card-header bg-white border-0 py-3">
                 <div class="d-flex align-items-center">
                     <i class="fas fa-file-alt text-success me-2"></i>
-                    <strong>Mes notes</strong>
+                    <strong>{{ $estEnseignant ? 'Mes notes' : 'Toutes les notes' }}</strong>
 
                     @if (
                         $notes instanceof \Illuminate\Contracts\Pagination\Paginator ||
@@ -177,6 +187,7 @@
                                             <span class="text-muted">—</span>
                                         @endif
                                     </td>
+
                                     <td>{{ $note->matiere->nom ?? '—' }}</td>
 
                                     <td>
@@ -209,16 +220,20 @@
                                     </td>
 
                                     <td class="text-end">
-                                        <a href="{{ route('admin.enseignant.notes.telecharger', $note) }}"
+                                        {{-- Route adaptée au rôle (enseignant ≠ administration) --}}
+                                        <a href="{{ route($routeTelecharger, $note) }}"
                                             class="btn btn-sm btn-outline-primary" title="Télécharger">
                                             <i class="fas fa-download"></i>
                                         </a>
 
-                                        <button type="button" class="btn btn-sm btn-outline-danger"
-                                            data-bs-toggle="modal"
-                                            data-bs-target="#modalSuppression{{ $note->id }}" title="Supprimer">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
+                                        {{-- Suppression : uniquement côté enseignant (pas de route destroy côté admin) --}}
+                                        {{-- @if ($estEnseignant)
+                                            <button type="button" class="btn btn-sm btn-outline-danger"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#modalSuppression{{ $note->id }}" title="Supprimer">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        @endif --}}
                                     </td>
 
                                 </tr>
@@ -226,16 +241,13 @@
                             @empty
 
                                 <tr>
-                                    <td colspan="8" class="text-center py-5">
+                                    <td colspan="9" class="text-center py-5">
                                         <div class="text-muted">
                                             <i class="fas fa-folder-open fa-3x mb-3 opacity-50"></i>
                                             <h5>Aucun fichier déposé</h5>
-                                            <p class="mb-3">Vous n'avez encore déposé aucune note.</p>
-                                            {{-- <a href="{{ route('admin.enseignant.notes.create') }}"
-                                                class="btn btn-success">
-                                                <i class="fas fa-upload me-1"></i>
-                                                Déposer une note
-                                            </a> --}}
+                                            <p class="mb-0">
+                                                {{ $estEnseignant ? "Vous n'avez encore déposé aucune note." : "Aucune note n'a encore été déposée." }}
+                                            </p>
                                         </div>
                                     </td>
                                 </tr>
@@ -274,61 +286,63 @@
     </div>
 
 
-    {{-- MODALES DE SUPPRESSION --}}
-    @foreach ($notes as $note)
-        <div class="modal fade" id="modalSuppression{{ $note->id }}" tabindex="-1"
-            aria-labelledby="modalSuppressionLabel{{ $note->id }}" aria-hidden="true">
+    {{-- MODALES DE SUPPRESSION (enseignant uniquement) --}}
+    @if ($estEnseignant)
+        @foreach ($notes as $note)
+            <div class="modal fade" id="modalSuppression{{ $note->id }}" tabindex="-1"
+                aria-labelledby="modalSuppressionLabel{{ $note->id }}" aria-hidden="true">
 
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
 
-                    <div class="modal-header">
-                        <h2 class="modal-title h5 mb-0" id="modalSuppressionLabel{{ $note->id }}">
-                            <i class="fas fa-trash text-danger me-2"></i>
-                            Supprimer ce fichier ?
-                        </h2>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal"
-                            aria-label="Fermer"></button>
-                    </div>
-
-                    <div class="modal-body">
-                        <p>Vous êtes sur le point de supprimer le fichier :</p>
-
-                        <div class="alert alert-light border">
-                            <strong>{{ $note->nom_original }}</strong>
-                            <br>
-                            <small class="text-muted">
-                                {{ $note->matiere->nom ?? 'Matière inconnue' }}
-                                @if ($note->type_evaluation)
-                                    — {{ $note->type_evaluation }}
-                                @endif
-                            </small>
+                        <div class="modal-header">
+                            <h2 class="modal-title h5 mb-0" id="modalSuppressionLabel{{ $note->id }}">
+                                <i class="fas fa-trash text-danger me-2"></i>
+                                Supprimer ce fichier ?
+                            </h2>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                aria-label="Fermer"></button>
                         </div>
 
-                        <p class="text-danger mb-0">
-                            <i class="fas fa-exclamation-triangle me-1"></i>
-                            Cette action est irréversible.
-                        </p>
-                    </div>
+                        <div class="modal-body">
+                            <p>Vous êtes sur le point de supprimer le fichier :</p>
 
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
-                            Annuler
-                        </button>
+                            <div class="alert alert-light border">
+                                <strong>{{ $note->nom_original }}</strong>
+                                <br>
+                                <small class="text-muted">
+                                    {{ $note->matiere->nom ?? 'Matière inconnue' }}
+                                    @if ($note->type_evaluation)
+                                        — {{ $note->type_evaluation }}
+                                    @endif
+                                </small>
+                            </div>
 
-                        <form method="POST" action="{{ route('admin.enseignant.notes.destroy', $note) }}">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-danger">
-                                <i class="fas fa-trash me-1"></i>
-                                Supprimer
+                            <p class="text-danger mb-0">
+                                <i class="fas fa-exclamation-triangle me-1"></i>
+                                Cette action est irréversible.
+                            </p>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                                Annuler
                             </button>
-                        </form>
-                    </div>
 
+                            <form method="POST" action="{{ route('admin.enseignant.notes.destroy', $note) }}">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-danger">
+                                    <i class="fas fa-trash me-1"></i>
+                                    Supprimer
+                                </button>
+                            </form>
+                        </div>
+
+                    </div>
                 </div>
             </div>
-        </div>
-    @endforeach
+        @endforeach
+    @endif
 
 </x-admin>

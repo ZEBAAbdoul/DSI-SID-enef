@@ -1,8 +1,18 @@
-{{-- resources/views/auth/login.blade.php --}}
-<x-guest-layout>
-    @section('title')
-        {{ 'Connexion' }}
-    @endsection
+
+<?php if (isset($component)) { $__componentOriginal69dc84650370d1d4dc1b42d016d7226b = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal69dc84650370d1d4dc1b42d016d7226b = $attributes; } ?>
+<?php $component = App\View\Components\GuestLayout::resolve([] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component->withName('guest-layout'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(App\View\Components\GuestLayout::class))->getConstructor()): ?>
+<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
+<?php endif; ?>
+<?php $component->withAttributes([]); ?>
+    <?php $__env->startSection('title'); ?>
+        <?php echo e('Connexion'); ?>
+
+    <?php $__env->stopSection(); ?>
 
     <br>
     <br>
@@ -10,9 +20,9 @@
     <div class="enef-auth">
         <div class="enef-card">
 
-            @include('auth.partials.enef-aside')
+            <?php echo $__env->make('auth.partials.enef-aside', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
 
-            {{-- ===================== FORMULAIRE ===================== --}}
+            
             <main class="enef-main">
 
                 <header class="enef-heading">
@@ -20,58 +30,86 @@
                     <p>Accédez à votre espace personnel</p>
                 </header>
 
-                {{-- Succès (ex. compte créé) --}}
-                @if (session('success'))
+                
+                <?php if(session('success')): ?>
                     <div class="enef-alert enef-alert--success" role="status">
                         <i class="fas fa-check-circle" aria-hidden="true"></i>
-                        <div>{{ session('success') }}</div>
+                        <div><?php echo e(session('success')); ?></div>
                     </div>
-                @endif
+                <?php endif; ?>
 
-                {{-- Statut (ex. lien de réinitialisation envoyé) --}}
-                @if (session('status'))
+                
+                <?php if(session('status')): ?>
                     <div class="enef-alert enef-alert--info" role="status">
                         <i class="fas fa-info-circle" aria-hidden="true"></i>
-                        <div>{{ session('status') }}</div>
+                        <div><?php echo e(session('status')); ?></div>
                     </div>
-                @endif
+                <?php endif; ?>
 
-                {{-- Erreurs : identifiants incorrects, compte désactivé, trop de tentatives… --}}
-                @if ($errors->any())
+                
+                <?php if($errors->any()): ?>
                     <div class="enef-alert enef-alert--danger" role="alert">
                         <i class="fas fa-exclamation-circle" aria-hidden="true"></i>
                         <div>
-                            @foreach ($errors->all() as $error)
-                                <div>{{ $error }}</div>
-                            @endforeach
+                            <?php $__currentLoopData = $errors->all(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $error): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                <div><?php echo e($error); ?></div>
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                         </div>
                     </div>
-                @endif
+                <?php endif; ?>
 
-                <form action="{{ route('login') }}" method="POST" id="enefLoginForm">
-                    @csrf
+                <form action="<?php echo e(route('login')); ?>" method="POST" id="enefLoginForm">
+                    <?php echo csrf_field(); ?>
 
-                    {{-- EMAIL --}}
+                    
                     <div class="enef-group">
                         <label for="email" class="enef-label">Adresse e-mail</label>
                         <div class="enef-field">
                             <i class="fas fa-envelope enef-icon" aria-hidden="true"></i>
                             <input id="email" name="email" type="email"
-                                class="enef-input @error('email') is-invalid @enderror"
-                                value="{{ old('email') }}" placeholder="exemple@domaine.bf" required autofocus
-                                autocomplete="username" @error('email') aria-invalid="true" @enderror>
+                                class="enef-input <?php $__errorArgs = ['email'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>"
+                                value="<?php echo e(old('email')); ?>" placeholder="exemple@domaine.bf" required autofocus
+                                autocomplete="username" <?php $__errorArgs = ['email'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> aria-invalid="true" <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>>
                         </div>
                     </div>
 
-                    {{-- MOT DE PASSE --}}
+                    
                     <div class="enef-group">
                         <label for="password" class="enef-label">Mot de passe</label>
                         <div class="enef-field">
                             <i class="fas fa-lock enef-icon" aria-hidden="true"></i>
                             <input id="password" name="password" type="password"
-                                class="enef-input @error('password') is-invalid @enderror"
+                                class="enef-input <?php $__errorArgs = ['password'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>"
                                 placeholder="••••••••" required autocomplete="current-password"
-                                @error('password') aria-invalid="true" @enderror>
+                                <?php $__errorArgs = ['password'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> aria-invalid="true" <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>>
                             <button type="button" class="enef-toggle" id="enefTogglePassword"
                                 aria-label="Afficher le mot de passe" aria-pressed="false">
                                 <i class="fas fa-eye" aria-hidden="true"></i>
@@ -79,19 +117,19 @@
                         </div>
                     </div>
 
-                    {{-- OPTIONS --}}
+                    
                     <div class="enef-options">
                         <label class="enef-check" for="remember">
                             <input type="checkbox" name="remember" id="remember"
-                                {{ old('remember') ? 'checked' : '' }}>
+                                <?php echo e(old('remember') ? 'checked' : ''); ?>>
                             <span>Se souvenir de moi</span>
                         </label>
 
-                        @if (Route::has('password.request'))
-                            <a href="{{ route('password.request') }}" class="enef-forgot">
+                        <?php if(Route::has('password.request')): ?>
+                            <a href="<?php echo e(route('password.request')); ?>" class="enef-forgot">
                                 Mot de passe oublié ?
                             </a>
-                        @endif
+                        <?php endif; ?>
                     </div>
 
                     <button type="submit" class="enef-btn" id="enefSubmit">
@@ -103,10 +141,10 @@
                 <div class="enef-divider"><span>Pas encore de compte ?</span></div>
 
                 <div class="enef-links">
-                    <a href="{{ route('inscription') }}" class="enef-link enef-link--primary">
+                    <a href="<?php echo e(route('inscription')); ?>" class="enef-link enef-link--primary">
                         <i class="fas fa-user-plus" aria-hidden="true"></i> Créer un compte
                     </a>
-                    <a href="{{ url('/') }}" class="enef-link">
+                    <a href="<?php echo e(url('/')); ?>" class="enef-link">
                         <i class="fas fa-home" aria-hidden="true"></i> Retour à l'accueil
                     </a>
                 </div>
@@ -119,7 +157,7 @@
         </div>
     </div>
 
-    @include('auth.partials.enef-styles')
+    <?php echo $__env->make('auth.partials.enef-styles', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
 
     <script>
         (function() {
@@ -164,4 +202,13 @@
             }
         })();
     </script>
-</x-guest-layout>
+ <?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal69dc84650370d1d4dc1b42d016d7226b)): ?>
+<?php $attributes = $__attributesOriginal69dc84650370d1d4dc1b42d016d7226b; ?>
+<?php unset($__attributesOriginal69dc84650370d1d4dc1b42d016d7226b); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal69dc84650370d1d4dc1b42d016d7226b)): ?>
+<?php $component = $__componentOriginal69dc84650370d1d4dc1b42d016d7226b; ?>
+<?php unset($__componentOriginal69dc84650370d1d4dc1b42d016d7226b); ?>
+<?php endif; ?><?php /**PATH C:\wamp64\www\Les projets finis\ENEF\resources\views/auth/login.blade.php ENDPATH**/ ?>

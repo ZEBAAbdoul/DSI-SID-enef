@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StorePieceInscriptionRequest;
 use App\Models\Inscription;
+use App\Models\ParametresSite;
 use App\Models\PieceInscription;
 use App\Models\SessionFormation;
 use App\Models\TypePiece;
@@ -47,9 +48,15 @@ class InscriptionController extends Controller
 
         $typesPieces = TypePiece::actifs()->get();
 
+        // Liste des sessions pour le menu déroulant
+        $sessions = SessionFormation::with('formation:id,titre')
+            ->orderByDesc('date_debut')
+            ->get();
+
+        $parametresSite = ParametresSite::first();
         return view(
             'candidat.inscription',
-            compact('inscription', 'typesPieces')
+            compact('inscription', 'typesPieces', 'sessions', 'parametresSite')
         );
     }
 

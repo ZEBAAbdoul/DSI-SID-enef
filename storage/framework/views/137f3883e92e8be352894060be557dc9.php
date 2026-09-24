@@ -1,16 +1,25 @@
-<x-admin>
-    @section('title', 'Gestion des Utilisateurs')
+<?php if (isset($component)) { $__componentOriginal2812d824e80b3a65bceda8e6a9bfa7a0 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal2812d824e80b3a65bceda8e6a9bfa7a0 = $attributes; } ?>
+<?php $component = App\View\Components\Admin::resolve([] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component->withName('admin'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(App\View\Components\Admin::class))->getConstructor()): ?>
+<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
+<?php endif; ?>
+<?php $component->withAttributes([]); ?>
+    <?php $__env->startSection('title', 'Gestion des Utilisateurs'); ?>
 
-    {{-- ===================== FILTRES ===================== --}}
+    
     <div class="row mb-3 align-items-end">
 
         <div class="col-md-3">
             <label class="fw-bold">Rôle</label>
             <select id="filterRole" class="form-select">
                 <option value="">Tous</option>
-                @foreach ($roles as $role)
-                    <option value="{{ $role->name }}">{{ $role->name }}</option>
-                @endforeach
+                <?php $__currentLoopData = $roles; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $role): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                    <option value="<?php echo e($role->name); ?>"><?php echo e($role->name); ?></option>
+                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
             </select>
         </div>
 
@@ -32,7 +41,7 @@
         </div>
     </div>
 
-    {{-- ===================== TABLE ===================== --}}
+    
     <div class="card shadow-sm">
         <div class="card-header bg-primary text-white">
             <h3 class="card-title mb-0">
@@ -56,25 +65,25 @@
                 <tbody></tbody>
             </table>
 
-            {{-- Conteneur pour les toasts --}}
+            
             <div id="toastContainer" style="position: fixed; top: 20px; right: 20px; z-index: 9999;"></div>
         </div>
     </div>
 
-    {{-- ===================== MODALS ===================== --}}
-    @include('admin.user.partials.add')
-    @include('admin.user.partials.edit')
-    @include('admin.user.partials.delete')
+    
+    <?php echo $__env->make('admin.user.partials.add', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
+    <?php echo $__env->make('admin.user.partials.edit', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
+    <?php echo $__env->make('admin.user.partials.delete', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
 
-    {{-- ===================== CSS ===================== --}}
-    @section('css')
+    
+    <?php $__env->startSection('css'); ?>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
         <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
         <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css">
-    @endsection
+    <?php $__env->stopSection(); ?>
 
-    {{-- ===================== JS ===================== --}}
-    @section('js')
+    
+    <?php $__env->startSection('js'); ?>
         <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
         <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
@@ -84,7 +93,7 @@
 
         <script>
             // Identifiant de l'utilisateur connecté : il ne peut pas désactiver son propre compte
-            const currentUserId = @json((string) auth()->id());
+            const currentUserId = <?php echo json_encode((string) auth()->id(), 15, 512) ?>;
 
             $(function() {
 
@@ -93,7 +102,7 @@
                     processing: true,
                     serverSide: true,
                     ajax: {
-                        url: "{{ route('admin.user.index') }}",
+                        url: "<?php echo e(route('admin.user.index')); ?>",
                         data: function(d) {
                             d.role = $('#filterRole').val();
                             d.statut = $('#filterStatut').val();
@@ -178,11 +187,11 @@
                     $cb.prop('disabled', true);
 
                     $.ajax({
-                        url: "{{ url('/admin/users') }}/" + id + "/toggle-actif",
+                        url: "<?php echo e(url('/admin/users')); ?>/" + id + "/toggle-actif",
                         type: "PATCH",
                         dataType: "json",
                         data: {
-                            _token: "{{ csrf_token() }}"
+                            _token: "<?php echo e(csrf_token()); ?>"
                         },
                         success: function(res) {
                             showToast(res.message || "Statut mis à jour !", "success");
@@ -203,7 +212,7 @@
                 /* ===================== ADD USER ===================== */
                 $('#addUserForm').submit(function(e) {
                     e.preventDefault();
-                    $.post("{{ route('admin.user.store') }}", $(this).serialize(), function() {
+                    $.post("<?php echo e(route('admin.user.store')); ?>", $(this).serialize(), function() {
                         $('#addUserModal').modal('hide');
                         $('#usersTable').DataTable().ajax.reload();
                         showToast("Utilisateur ajouté avec succès !", "success");
@@ -245,10 +254,10 @@
                     let id = $('#deleteUserId').val();
 
                     $.ajax({
-                        url: "{{ url('/admin/users') }}/" + id,
+                        url: "<?php echo e(url('/admin/users')); ?>/" + id,
                         type: "DELETE",
                         data: {
-                            _token: "{{ csrf_token() }}"
+                            _token: "<?php echo e(csrf_token()); ?>"
                         },
                         success: function() {
                             $('#deleteUserModal').modal('hide');
@@ -288,5 +297,14 @@
                 }, 3000); // Durée 3 secondes
             }
         </script>
-    @endsection
-</x-admin>
+    <?php $__env->stopSection(); ?>
+ <?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal2812d824e80b3a65bceda8e6a9bfa7a0)): ?>
+<?php $attributes = $__attributesOriginal2812d824e80b3a65bceda8e6a9bfa7a0; ?>
+<?php unset($__attributesOriginal2812d824e80b3a65bceda8e6a9bfa7a0); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal2812d824e80b3a65bceda8e6a9bfa7a0)): ?>
+<?php $component = $__componentOriginal2812d824e80b3a65bceda8e6a9bfa7a0; ?>
+<?php unset($__componentOriginal2812d824e80b3a65bceda8e6a9bfa7a0); ?>
+<?php endif; ?><?php /**PATH C:\wamp64\www\Les projets finis\ENEF\resources\views/admin/user/index.blade.php ENDPATH**/ ?>

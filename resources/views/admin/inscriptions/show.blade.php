@@ -14,7 +14,7 @@
 
     {{-- Message de succès --}}
     @if (session('status'))
-        <div class="alert alert-info alert-dismissible fade show">
+        <div class="alert alert-success alert-dismissible fade show">
             <i class="fas fa-info-circle mr-2"></i>
             {{ session('status') }}
 
@@ -243,18 +243,18 @@
                 <div class="card-header">
 
                     <h3 class="card-title">
-    <i class="fas fa-paperclip mr-2"></i>
-    Pièces jointes
-    ({{ $inscription->pieces->count() }})
+                        <i class="fas fa-paperclip mr-2"></i>
+                        Pièces jointes
+                        ({{ $inscription->pieces->count() }})
 
-    @php $nbResoumises = $inscription->pieces->where('resoumis', true)->count(); @endphp
-    @if ($nbResoumises > 0)
-        <span class="badge badge-info ml-2">
-            <i class="fas fa-sync-alt mr-1"></i>
-            {{ $nbResoumises }} {{ Str::plural('fichier', $nbResoumises) }} resoumis
-        </span>
-    @endif
-</h3>
+                        @php $nbResoumises = $inscription->pieces->where('resoumis', true)->count(); @endphp
+                        @if ($nbResoumises > 0)
+                            <span class="badge badge-info ml-2">
+                                <i class="fas fa-sync-alt mr-1"></i>
+                                {{ $nbResoumises }} {{ Str::plural('fichier', $nbResoumises) }} resoumis
+                            </span>
+                        @endif
+                    </h3>
 
                 </div>
 
@@ -320,40 +320,40 @@
 
                                         {{-- Vérification --}}
                                         {{-- Vérification --}}
-<td>
+                                        <td>
 
-    <span class="badge verif-badge-{{ $piece->statut_verification }}">
-        @switch($piece->statut_verification)
-            @case('conforme')
-                <i class="fas fa-check mr-1"></i>
-                Conforme
-            @break
+                                            <span class="badge verif-badge-{{ $piece->statut_verification }}">
+                                                @switch($piece->statut_verification)
+                                                    @case('conforme')
+                                                        <i class="fas fa-check mr-1"></i>
+                                                        Conforme
+                                                    @break
 
-            @case('non_conforme')
-                <i class="fas fa-times mr-1"></i>
-                Non conforme
-            @break
+                                                    @case('non_conforme')
+                                                        <i class="fas fa-times mr-1"></i>
+                                                        Non conforme
+                                                    @break
 
-            @default
-                <i class="fas fa-clock mr-1"></i>
-                En attente
-        @endswitch
-    </span>
+                                                    @default
+                                                        <i class="fas fa-clock mr-1"></i>
+                                                        En attente
+                                                @endswitch
+                                            </span>
 
-    @if ($piece->resoumis)
-        <span class="badge badge-info mt-1 d-block" style="width:fit-content;">
-            <i class="fas fa-sync-alt mr-1"></i>
-            Nouveau fichier déposé
-        </span>
-    @endif
+                                            @if ($piece->resoumis)
+                                                <span class="badge badge-info mt-1 d-block" style="width:fit-content;">
+                                                    <i class="fas fa-sync-alt mr-1"></i>
+                                                    Nouveau fichier déposé
+                                                </span>
+                                            @endif
 
-    @if ($piece->commentaire)
-        <small class="text-muted d-block mt-1">
-            {{ $piece->commentaire }}
-        </small>
-    @endif
+                                            @if ($piece->commentaire)
+                                                <small class="text-muted d-block mt-1">
+                                                    {{ $piece->commentaire }}
+                                                </small>
+                                            @endif
 
-</td>
+                                        </td>
 
 
                                         {{-- Actions --}}

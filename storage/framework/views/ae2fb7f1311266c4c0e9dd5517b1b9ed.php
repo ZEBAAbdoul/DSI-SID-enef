@@ -1,4 +1,4 @@
-@php
+<?php
 $isUser = auth()->check() && auth()->user()->hasRole('user');
 $isEnseignant = auth()->check() && auth()->user()->hasRole('enseignant');
 
@@ -61,7 +61,7 @@ Route::is('admin.partenaires.*');
 |--------------------------------------------------------------------------
 */
 $filieresActive = Route::is('admin.filieres.*');
-@endphp
+?>
 
 
 <nav class="mt-2">
@@ -69,16 +69,16 @@ $filieresActive = Route::is('admin.filieres.*');
     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
 
 
-        {{-- ========================================================= --}}
-        {{-- ACCUEIL --}}
-        {{-- INVISIBLE POUR LES RÔLES USER ET ENSEIGNANT --}}
-        {{-- ========================================================= --}}
+        
+        
+        
+        
 
-        @if (!$isUser && !$isEnseignant)
+        <?php if(!$isUser && !$isEnseignant): ?>
         <li class="nav-item">
 
-            <a href="{{ route('admin.dashboard') }}"
-                class="nav-link {{ Route::is('admin.dashboard') ? 'active' : '' }}">
+            <a href="<?php echo e(route('admin.dashboard')); ?>"
+                class="nav-link <?php echo e(Route::is('admin.dashboard') ? 'active' : ''); ?>">
 
                 <i class="nav-icon fas fa-tachometer-alt"></i>
 
@@ -89,20 +89,20 @@ $filieresActive = Route::is('admin.filieres.*');
             </a>
 
         </li>
-        @endif
+        <?php endif; ?>
 
 
 
-        {{-- ========================================================= --}}
-        {{-- FORMATIONS --}}
-        {{-- Accessible également au rôle USER --}}
-        {{-- INVISIBLE POUR LE RÔLE ENSEIGNANT --}}
-        {{-- ========================================================= --}}
+        
+        
+        
+        
+        
 
-        @if (!$isEnseignant)
-        <li class="nav-item {{ $formationsActive ? 'menu-open' : '' }}">
+        <?php if(!$isEnseignant): ?>
+        <li class="nav-item <?php echo e($formationsActive ? 'menu-open' : ''); ?>">
 
-            <a href="#" class="nav-link {{ $formationsActive ? 'active' : '' }}">
+            <a href="#" class="nav-link <?php echo e($formationsActive ? 'active' : ''); ?>">
 
                 <i class="nav-icon fas fa-book-open"></i>
 
@@ -117,11 +117,11 @@ $filieresActive = Route::is('admin.filieres.*');
             <ul class="nav nav-treeview">
 
 
-                {{-- Sessions --}}
+                
                 <li class="nav-item">
 
-                    <a href="{{ route('admin.sessions-formation.index') }}"
-                        class="nav-link {{ Route::is('admin.sessions-formation.*') ? 'active' : '' }}">
+                    <a href="<?php echo e(route('admin.sessions-formation.index')); ?>"
+                        class="nav-link <?php echo e(Route::is('admin.sessions-formation.*') ? 'active' : ''); ?>">
 
                         <i class="fas fa-calendar-alt nav-icon"></i>
 
@@ -134,11 +134,11 @@ $filieresActive = Route::is('admin.filieres.*');
                 </li>
 
 
-                {{-- Liste des formations --}}
+                
                 <li class="nav-item">
 
-                    <a href="{{ route('admin.formations.index') }}"
-                        class="nav-link {{ Route::is('admin.formations.*') ? 'active' : '' }}">
+                    <a href="<?php echo e(route('admin.formations.index')); ?>"
+                        class="nav-link <?php echo e(Route::is('admin.formations.*') ? 'active' : ''); ?>">
 
                         <i class="fas fa-list nav-icon"></i>
 
@@ -151,13 +151,13 @@ $filieresActive = Route::is('admin.filieres.*');
                 </li>
 
 
-                {{-- Inscriptions --}}
-                {{-- Visible uniquement pour le rôle USER --}}
-                @if ($isUser)
+                
+                
+                <?php if($isUser): ?>
                 <li class="nav-item">
 
-                    <a href="{{ route('admin.inscription.create') }}"
-                        class="nav-link {{ Route::is('admin.inscription.*') ? 'active' : '' }}">
+                    <a href="<?php echo e(route('admin.inscription.create')); ?>"
+                        class="nav-link <?php echo e(Route::is('admin.inscription.*') ? 'active' : ''); ?>">
 
                         <i class="fas fa-user-plus nav-icon"></i>
 
@@ -168,19 +168,19 @@ $filieresActive = Route::is('admin.filieres.*');
                     </a>
 
                 </li>
-                @endif
+                <?php endif; ?>
 
             </ul>
 
         </li>
-        @endif
+        <?php endif; ?>
 
-        {{-- ========================================================= --}}
-        {{-- MES TÉMOIGNAGES — visible uniquement pour le rôle USER --}}
-        {{-- ========================================================= --}}
-        @if ($isUser)
-        <li class="nav-item {{ $mesTemoignagesActive ? 'menu-open' : '' }}">
-            <a href="#" class="nav-link {{ $mesTemoignagesActive ? 'active' : '' }}">
+        
+        
+        
+        <?php if($isUser): ?>
+        <li class="nav-item <?php echo e($mesTemoignagesActive ? 'menu-open' : ''); ?>">
+            <a href="#" class="nav-link <?php echo e($mesTemoignagesActive ? 'active' : ''); ?>">
                 <i class="nav-icon fas fa-comment-dots"></i>
                 <p>
                     Témoignages
@@ -190,16 +190,16 @@ $filieresActive = Route::is('admin.filieres.*');
 
             <ul class="nav nav-treeview">
                 <li class="nav-item">
-                    <a href="{{ route('admin.mes-temoignages.index') }}"
-                        class="nav-link {{ Route::is('admin.mes-temoignages.index') || Route::is('admin.mes-temoignages.edit') ? 'active' : '' }}">
+                    <a href="<?php echo e(route('admin.mes-temoignages.index')); ?>"
+                        class="nav-link <?php echo e(Route::is('admin.mes-temoignages.index') || Route::is('admin.mes-temoignages.edit') ? 'active' : ''); ?>">
                         <i class="fas fa-list nav-icon"></i>
                         <p>Mes témoignages</p>
                     </a>
                 </li>
 
-                <li class="nav-item {{ $filieresActive ? 'menu-open' : '' }}">
+                <li class="nav-item <?php echo e($filieresActive ? 'menu-open' : ''); ?>">
 
-                    <a href="#" class="nav-link {{ $filieresActive ? 'active' : '' }}">
+                    <a href="#" class="nav-link <?php echo e($filieresActive ? 'active' : ''); ?>">
 
                         <i class="nav-icon fas fa-sitemap"></i>
 
@@ -215,8 +215,8 @@ $filieresActive = Route::is('admin.filieres.*');
 
                         <li class="nav-item">
 
-                            <a href="{{ route('admin.filieres.create') }}"
-                                class="nav-link {{ Route::is('admin.filieres.create') ? 'active' : '' }}">
+                            <a href="<?php echo e(route('admin.filieres.create')); ?>"
+                                class="nav-link <?php echo e(Route::is('admin.filieres.create') ? 'active' : ''); ?>">
 
                                 <i class="fas fa-plus-circle nav-icon"></i>
 
@@ -231,8 +231,8 @@ $filieresActive = Route::is('admin.filieres.*');
 
                         <li class="nav-item">
 
-                            <a href="{{ route('admin.filieres.index') }}"
-                                class="nav-link {{ Route::is('admin.filieres.index') || Route::is('admin.filieres.edit') ? 'active' : '' }}">
+                            <a href="<?php echo e(route('admin.filieres.index')); ?>"
+                                class="nav-link <?php echo e(Route::is('admin.filieres.index') || Route::is('admin.filieres.edit') ? 'active' : ''); ?>">
 
                                 <i class="fas fa-list nav-icon"></i>
 
@@ -249,27 +249,27 @@ $filieresActive = Route::is('admin.filieres.*');
                 </li>
             </ul>
         </li>
-        @endif
+        <?php endif; ?>
 
 
 
-        {{-- ========================================================= --}}
-        {{-- ENSEIGNANTS & NOTES --}}
-        {{-- Visible pour l'enseignant (lui seul voit ce bloc) et --}}
-        {{-- pour l'admin/gérant. Invisible pour le rôle USER. --}}
-        {{-- ========================================================= --}}
+        
+        
+        
+        
+        
 
-        @if (!$isUser)
-        @php
+        <?php if(!$isUser): ?>
+        <?php
         $enseignantsActive =
         request()->routeIs('admin.enseignants.*') ||
         request()->routeIs('admin.notes.*') ||
         request()->routeIs('admin.enseignant.notes.*');
-        @endphp
+        ?>
 
-        <li class="nav-item {{ $enseignantsActive ? 'menu-open' : '' }}">
+        <li class="nav-item <?php echo e($enseignantsActive ? 'menu-open' : ''); ?>">
 
-            <a href="#" class="nav-link {{ $enseignantsActive ? 'active' : '' }}">
+            <a href="#" class="nav-link <?php echo e($enseignantsActive ? 'active' : ''); ?>">
 
                 <i class="nav-icon fas fa-chalkboard-teacher"></i>
 
@@ -283,128 +283,128 @@ $filieresActive = Route::is('admin.filieres.*');
 
             <ul class="nav nav-treeview">
 
-                {{-- Visible pour l'admin/gérant uniquement --}}
-                @if (!$isEnseignant)
+                
+                <?php if(!$isEnseignant): ?>
                 <li class="nav-item">
-                    <a href="{{ route('admin.enseignants.index') }}"
-                        class="nav-link {{ request()->routeIs('admin.enseignants.index') ? 'active' : '' }}">
+                    <a href="<?php echo e(route('admin.enseignants.index')); ?>"
+                        class="nav-link <?php echo e(request()->routeIs('admin.enseignants.index') ? 'active' : ''); ?>">
                         <i class="fas fa-list nav-icon"></i>
                         <p>Liste des enseignants</p>
                     </a>
                 </li>
-                @endif
+                <?php endif; ?>
 
-                {{-- Visible pour l'enseignant : dépôt de ses fichiers --}}
-                @if ($isEnseignant)
+                
+                <?php if($isEnseignant): ?>
                 <li class="nav-item">
-                    <a href="{{ route('admin.enseignant.notes.index') }}"
-                        class="nav-link {{ request()->routeIs('admin.enseignant.notes.index') ? 'active' : '' }}">
+                    <a href="<?php echo e(route('admin.enseignant.notes.index')); ?>"
+                        class="nav-link <?php echo e(request()->routeIs('admin.enseignant.notes.index') ? 'active' : ''); ?>">
                         <i class="fas fa-folder-open nav-icon"></i>
                         <p>Mes notes</p>
                     </a>
                 </li>
 
                 <li class="nav-item">
-                    <a href="{{ route('admin.enseignant.notes.create') }}"
-                        class="nav-link {{ request()->routeIs('admin.enseignant.notes.create') ? 'active' : '' }}">
+                    <a href="<?php echo e(route('admin.enseignant.notes.create')); ?>"
+                        class="nav-link <?php echo e(request()->routeIs('admin.enseignant.notes.create') ? 'active' : ''); ?>">
                         <i class="fas fa-upload nav-icon"></i>
                         <p>Déposer une note</p>
                     </a>
                 </li>
-                @endif
+                <?php endif; ?>
 
-                {{-- Visible pour l'admin/gérant : consultation --}}
-                @if (!$isEnseignant)
+                
+                <?php if(!$isEnseignant): ?>
                 <li class="nav-item">
-                    <a href="{{ route('admin.notes.index') }}"
-                        class="nav-link {{ request()->routeIs('admin.notes.index') ? 'active' : '' }}">
+                    <a href="<?php echo e(route('admin.notes.index')); ?>"
+                        class="nav-link <?php echo e(request()->routeIs('admin.notes.index') ? 'active' : ''); ?>">
                         <i class="fas fa-file-download nav-icon"></i>
                         <p>Consultation des notes</p>
                     </a>
                 </li>
-                @endif
+                <?php endif; ?>
 
             </ul>
 
         </li>
-        @endif
+        <?php endif; ?>
 
-        {{-- ========================================================= --}}
-        {{-- BOÎTE À IDÉES --}}
-        {{-- Personnel (sauf DG et élèves) : ses idées --}}
-        {{-- DG / SG : toutes les idées --}}
-        {{-- ========================================================= --}}
-        @if ($peutSoumettreIdee || $peutVoirIdees)
-        @php
+        
+        
+        
+        
+        
+        <?php if($peutSoumettreIdee || $peutVoirIdees): ?>
+        <?php
         $ideesEnAttente = $peutVoirIdees
         ? \App\Models\Idee::where('statut', 'soumise')->count()
         : 0;
-        @endphp
+        ?>
 
-        <li class="nav-item {{ $ideesActive ? 'menu-open' : '' }}">
-            <a href="#" class="nav-link {{ $ideesActive ? 'active' : '' }}">
+        <li class="nav-item <?php echo e($ideesActive ? 'menu-open' : ''); ?>">
+            <a href="#" class="nav-link <?php echo e($ideesActive ? 'active' : ''); ?>">
                 <i class="nav-icon fas fa-lightbulb"></i>
                 <p>
                     Boîte à idées
-                    @if ($ideesEnAttente > 0)
-                    <span class="badge badge-warning right">{{ $ideesEnAttente }}</span>
-                    @else
+                    <?php if($ideesEnAttente > 0): ?>
+                    <span class="badge badge-warning right"><?php echo e($ideesEnAttente); ?></span>
+                    <?php else: ?>
                     <i class="fas fa-angle-left right"></i>
-                    @endif
+                    <?php endif; ?>
                 </p>
             </a>
 
             <ul class="nav nav-treeview">
-                @if ($peutSoumettreIdee)
+                <?php if($peutSoumettreIdee): ?>
                 <li class="nav-item">
-                    <a href="{{ route('admin.idees.create') }}"
-                        class="nav-link {{ Route::is('admin.idees.create') ? 'active' : '' }}">
+                    <a href="<?php echo e(route('admin.idees.create')); ?>"
+                        class="nav-link <?php echo e(Route::is('admin.idees.create') ? 'active' : ''); ?>">
                         <i class="fas fa-pen nav-icon"></i>
                         <p>Proposer une idée</p>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="{{ route('admin.idees.index') }}"
-                        class="nav-link {{ Route::is('admin.idees.index') || Route::is('admin.idees.edit') ? 'active' : '' }}">
+                    <a href="<?php echo e(route('admin.idees.index')); ?>"
+                        class="nav-link <?php echo e(Route::is('admin.idees.index') || Route::is('admin.idees.edit') ? 'active' : ''); ?>">
                         <i class="fas fa-list nav-icon"></i>
                         <p>Mes idées</p>
                     </a>
                 </li>
-                @endif
+                <?php endif; ?>
 
-                @if ($peutVoirIdees)
+                <?php if($peutVoirIdees): ?>
                 <li class="nav-item">
-                    <a href="{{ route('admin.idees-direction.index') }}"
-                        class="nav-link {{ Route::is('admin.idees-direction.*') ? 'active' : '' }}">
+                    <a href="<?php echo e(route('admin.idees-direction.index')); ?>"
+                        class="nav-link <?php echo e(Route::is('admin.idees-direction.*') ? 'active' : ''); ?>">
                         <i class="fas fa-inbox nav-icon"></i>
                         <p>
                             Toutes les idées
-                            @if ($ideesEnAttente > 0)
-                            <span class="badge badge-warning right">{{ $ideesEnAttente }}</span>
-                            @endif
+                            <?php if($ideesEnAttente > 0): ?>
+                            <span class="badge badge-warning right"><?php echo e($ideesEnAttente); ?></span>
+                            <?php endif; ?>
                         </p>
                     </a>
                 </li>
-                @endif
+                <?php endif; ?>
             </ul>
         </li>
-        @endif
+        <?php endif; ?>
 
 
 
-        {{-- ========================================================= --}}
-        {{-- TOUT LE RESTE DU MENU --}}
-        {{-- INVISIBLE POUR LES RÔLES USER ET ENSEIGNANT --}}
-        {{-- ========================================================= --}}
+        
+        
+        
+        
 
-        @if (!$isUser && !$isEnseignant)
-        {{-- ===================================================== --}}
-        {{-- ACTUALITÉS --}}
-        {{-- ===================================================== --}}
+        <?php if(!$isUser && !$isEnseignant): ?>
+        
+        
+        
 
-        <li class="nav-item {{ request()->routeIs('admin.actualites.*') ? 'menu-open' : '' }}">
+        <li class="nav-item <?php echo e(request()->routeIs('admin.actualites.*') ? 'menu-open' : ''); ?>">
 
-            <a href="#" class="nav-link {{ request()->routeIs('admin.actualites.*') ? 'active' : '' }}">
+            <a href="#" class="nav-link <?php echo e(request()->routeIs('admin.actualites.*') ? 'active' : ''); ?>">
 
                 <i class="nav-icon fas fa-newspaper"></i>
 
@@ -417,10 +417,10 @@ $filieresActive = Route::is('admin.filieres.*');
 
             <ul class="nav nav-treeview">
 
-                {{-- Liste des actualités --}}
+                
                 <li class="nav-item">
-                    <a href="{{ route('admin.actualites.index') }}"
-                        class="nav-link {{ request()->routeIs('admin.actualites.index') ? 'active' : '' }}">
+                    <a href="<?php echo e(route('admin.actualites.index')); ?>"
+                        class="nav-link <?php echo e(request()->routeIs('admin.actualites.index') ? 'active' : ''); ?>">
 
                         <i class="far fa-circle nav-icon"></i>
 
@@ -435,14 +435,14 @@ $filieresActive = Route::is('admin.filieres.*');
 
         </li>
 
-        {{-- ===================================================== --}}
-        {{-- RECHERCHE & INNOVATION --}}
-        {{-- ===================================================== --}}
+        
+        
+        
 
-        <li class="nav-item {{ request()->routeIs('admin.recherches-innovations.*') ? 'active' : '' }}">
+        <li class="nav-item <?php echo e(request()->routeIs('admin.recherches-innovations.*') ? 'active' : ''); ?>">
 
-            <a href="{{ route('admin.recherches-innovations.index') }}"
-                class="nav-link {{ request()->routeIs('admin.recherches-innovations.*') ? 'active' : '' }}">
+            <a href="<?php echo e(route('admin.recherches-innovations.index')); ?>"
+                class="nav-link <?php echo e(request()->routeIs('admin.recherches-innovations.*') ? 'active' : ''); ?>">
 
                 <i class="nav-icon fas fa-flask"></i>
 
@@ -454,32 +454,32 @@ $filieresActive = Route::is('admin.filieres.*');
 
         </li>
 
-        {{-- ===================================================== --}}
-        {{-- TÉMOIGNAGES (modération) --}}
-        {{-- ===================================================== --}}
-        @php $temoignagesEnAttente = \App\Models\Temoignage::where('est_publie', false)->count(); @endphp
+        
+        
+        
+        <?php $temoignagesEnAttente = \App\Models\Temoignage::where('est_publie', false)->count(); ?>
 
         <li class="nav-item">
-            <a href="{{ route('admin.temoignages.index') }}" class="nav-link {{ $temoignagesActive ? 'active' : '' }}">
+            <a href="<?php echo e(route('admin.temoignages.index')); ?>" class="nav-link <?php echo e($temoignagesActive ? 'active' : ''); ?>">
                 <i class="nav-icon fas fa-comments"></i>
                 <p>
                     Témoignages
-                    @if ($temoignagesEnAttente > 0)
-                    <span class="badge badge-warning right">{{ $temoignagesEnAttente }}</span>
-                    @endif
+                    <?php if($temoignagesEnAttente > 0): ?>
+                    <span class="badge badge-warning right"><?php echo e($temoignagesEnAttente); ?></span>
+                    <?php endif; ?>
                 </p>
             </a>
         </li>
 
 
 
-        {{-- ===================================================== --}}
-        {{-- FILIÈRES --}}
-        {{-- ===================================================== --}}
+        
+        
+        
 
-        <li class="nav-item {{ $filieresActive ? 'menu-open' : '' }}">
+        <li class="nav-item <?php echo e($filieresActive ? 'menu-open' : ''); ?>">
 
-            <a href="#" class="nav-link {{ $filieresActive ? 'active' : '' }}">
+            <a href="#" class="nav-link <?php echo e($filieresActive ? 'active' : ''); ?>">
 
                 <i class="nav-icon fas fa-sitemap"></i>
 
@@ -495,8 +495,8 @@ $filieresActive = Route::is('admin.filieres.*');
 
                 <li class="nav-item">
 
-                    <a href="{{ route('admin.filieres.create') }}"
-                        class="nav-link {{ Route::is('admin.filieres.create') ? 'active' : '' }}">
+                    <a href="<?php echo e(route('admin.filieres.create')); ?>"
+                        class="nav-link <?php echo e(Route::is('admin.filieres.create') ? 'active' : ''); ?>">
 
                         <i class="fas fa-plus-circle nav-icon"></i>
 
@@ -511,8 +511,8 @@ $filieresActive = Route::is('admin.filieres.*');
 
                 <li class="nav-item">
 
-                    <a href="{{ route('admin.filieres.index') }}"
-                        class="nav-link {{ Route::is('admin.filieres.index') || Route::is('admin.filieres.edit') ? 'active' : '' }}">
+                    <a href="<?php echo e(route('admin.filieres.index')); ?>"
+                        class="nav-link <?php echo e(Route::is('admin.filieres.index') || Route::is('admin.filieres.edit') ? 'active' : ''); ?>">
 
                         <i class="fas fa-list nav-icon"></i>
 
@@ -530,13 +530,13 @@ $filieresActive = Route::is('admin.filieres.*');
 
 
 
-        {{-- ===================================================== --}}
-        {{-- CANDIDATURES --}}
-        {{-- ===================================================== --}}
+        
+        
+        
 
-        <li class="nav-item {{ $candidaturesActive ? 'menu-open' : '' }}">
+        <li class="nav-item <?php echo e($candidaturesActive ? 'menu-open' : ''); ?>">
 
-            <a href="#" class="nav-link {{ $candidaturesActive ? 'active' : '' }}">
+            <a href="#" class="nav-link <?php echo e($candidaturesActive ? 'active' : ''); ?>">
 
                 <i class="nav-icon fas fa-user-graduate"></i>
 
@@ -551,11 +551,11 @@ $filieresActive = Route::is('admin.filieres.*');
             <ul class="nav nav-treeview">
 
 
-                {{-- Liste des candidats --}}
+                
                 <li class="nav-item">
 
-                    <a href="{{ route('admin.inscriptions.index') }}"
-                        class="nav-link {{ Route::is('admin.inscriptions.index') && !request('statut') ? 'active' : '' }}">
+                    <a href="<?php echo e(route('admin.inscriptions.index')); ?>"
+                        class="nav-link <?php echo e(Route::is('admin.inscriptions.index') && !request('statut') ? 'active' : ''); ?>">
 
                         <i class="fas fa-list nav-icon"></i>
 
@@ -568,11 +568,11 @@ $filieresActive = Route::is('admin.filieres.*');
                 </li>
 
 
-                {{-- Candidats admis --}}
+                
                 <li class="nav-item">
 
-                    <a href="{{ route('admin.inscriptions.index', ['statut' => 'valide']) }}"
-                        class="nav-link {{ request('statut') === 'valide' ? 'active' : '' }}">
+                    <a href="<?php echo e(route('admin.inscriptions.index', ['statut' => 'valide'])); ?>"
+                        class="nav-link <?php echo e(request('statut') === 'valide' ? 'active' : ''); ?>">
 
                         <i class="fas fa-check-circle nav-icon"></i>
 
@@ -590,13 +590,13 @@ $filieresActive = Route::is('admin.filieres.*');
 
 
 
-        {{-- ===================================================== --}}
-        {{-- BIBLIOTHÈQUE --}}
-        {{-- ===================================================== --}}
+        
+        
+        
 
-        <li class="nav-item {{ $bibliothequeActive ? 'menu-open' : '' }}">
+        <li class="nav-item <?php echo e($bibliothequeActive ? 'menu-open' : ''); ?>">
 
-            <a href="#" class="nav-link {{ $bibliothequeActive ? 'active' : '' }}">
+            <a href="#" class="nav-link <?php echo e($bibliothequeActive ? 'active' : ''); ?>">
 
                 <i class="nav-icon fas fa-book"></i>
 
@@ -611,11 +611,11 @@ $filieresActive = Route::is('admin.filieres.*');
             <ul class="nav nav-treeview">
 
 
-                {{-- Documents --}}
+                
                 <li class="nav-item">
 
-                    <a href="{{ route('admin.documents.index') }}"
-                        class="nav-link {{ Route::is('admin.documents.*') ? 'active' : '' }}">
+                    <a href="<?php echo e(route('admin.documents.index')); ?>"
+                        class="nav-link <?php echo e(Route::is('admin.documents.*') ? 'active' : ''); ?>">
 
                         <i class="fas fa-list nav-icon"></i>
 
@@ -633,13 +633,13 @@ $filieresActive = Route::is('admin.filieres.*');
 
 
 
-        {{-- ===================================================== --}}
-        {{-- GALERIES --}}
-        {{-- ===================================================== --}}
+        
+        
+        
 
-        <li class="nav-item {{ $galerieActive ? 'menu-open' : '' }}">
+        <li class="nav-item <?php echo e($galerieActive ? 'menu-open' : ''); ?>">
 
-            <a href="#" class="nav-link {{ $galerieActive ? 'active' : '' }}">
+            <a href="#" class="nav-link <?php echo e($galerieActive ? 'active' : ''); ?>">
 
                 <i class="nav-icon fas fa-images"></i>
 
@@ -652,11 +652,11 @@ $filieresActive = Route::is('admin.filieres.*');
 
             <ul class="nav nav-treeview">
 
-                {{-- Photos --}}
+                
                 <li class="nav-item">
 
-                    <a href="{{ route('admin.photos.index') }}"
-                        class="nav-link {{ Route::is('admin.photos.*') ? 'active' : '' }}">
+                    <a href="<?php echo e(route('admin.photos.index')); ?>"
+                        class="nav-link <?php echo e(Route::is('admin.photos.*') ? 'active' : ''); ?>">
 
                         <i class="fas fa-camera nav-icon"></i>
 
@@ -668,11 +668,11 @@ $filieresActive = Route::is('admin.filieres.*');
 
                 </li>
 
-                {{-- Vidéos --}}
+                
                 <li class="nav-item">
 
-                    <a href="{{ route('admin.videos.index') }}"
-                        class="nav-link {{ Route::is('admin.videos.*') ? 'active' : '' }}">
+                    <a href="<?php echo e(route('admin.videos.index')); ?>"
+                        class="nav-link <?php echo e(Route::is('admin.videos.*') ? 'active' : ''); ?>">
 
                         <i class="fas fa-video nav-icon"></i>
 
@@ -690,9 +690,9 @@ $filieresActive = Route::is('admin.filieres.*');
 
 
 
-        {{-- ===================================================== --}}
-        {{-- STATISTIQUES --}}
-        {{-- ===================================================== --}}
+        
+        
+        
 
         <li class="nav-item">
 
@@ -710,9 +710,9 @@ $filieresActive = Route::is('admin.filieres.*');
 
 
 
-        {{-- ===================================================== --}}
-        {{-- DIVERS --}}
-        {{-- ===================================================== --}}
+        
+        
+        
 
         <li class="nav-header">
             Divers
@@ -720,13 +720,13 @@ $filieresActive = Route::is('admin.filieres.*');
 
 
 
-        {{-- ===================================================== --}}
-        {{-- PARAMÈTRES --}}
-        {{-- ===================================================== --}}
+        
+        
+        
 
-        <li class="nav-item {{ $parametresActive ? 'menu-open' : '' }}">
+        <li class="nav-item <?php echo e($parametresActive ? 'menu-open' : ''); ?>">
 
-            <a href="#" class="nav-link {{ $parametresActive ? 'active' : '' }}">
+            <a href="#" class="nav-link <?php echo e($parametresActive ? 'active' : ''); ?>">
 
                 <i class="nav-icon fas fa-cogs"></i>
 
@@ -741,11 +741,11 @@ $filieresActive = Route::is('admin.filieres.*');
             <ul class="nav nav-treeview">
 
 
-                {{-- Utilisateurs --}}
+                
                 <li class="nav-item">
 
-                    <a href="{{ route('admin.user.index') }}"
-                        class="nav-link {{ Route::is('admin.user.*') ? 'active' : '' }}">
+                    <a href="<?php echo e(route('admin.user.index')); ?>"
+                        class="nav-link <?php echo e(Route::is('admin.user.*') ? 'active' : ''); ?>">
 
                         <i class="fas fa-users nav-icon"></i>
 
@@ -758,11 +758,11 @@ $filieresActive = Route::is('admin.filieres.*');
                 </li>
 
 
-                {{-- Paramètres du site --}}
+                
                 <li class="nav-item">
 
-                    <a href="{{ route('admin.parametres.index') }}"
-                        class="nav-link {{ Route::is('admin.parametres.*') ? 'active' : '' }}">
+                    <a href="<?php echo e(route('admin.parametres.index')); ?>"
+                        class="nav-link <?php echo e(Route::is('admin.parametres.*') ? 'active' : ''); ?>">
 
                         <i class="fas fa-sliders-h nav-icon"></i>
 
@@ -775,11 +775,11 @@ $filieresActive = Route::is('admin.filieres.*');
                 </li>
 
 
-                {{-- Catégories de formation --}}
+                
                 <li class="nav-item">
 
-                    <a href="{{ route('admin.categories-formation.index') }}"
-                        class="nav-link {{ Route::is('admin.categories-formation.*') ? 'active' : '' }}">
+                    <a href="<?php echo e(route('admin.categories-formation.index')); ?>"
+                        class="nav-link <?php echo e(Route::is('admin.categories-formation.*') ? 'active' : ''); ?>">
 
                         <i class="fas fa-tags nav-icon"></i>
 
@@ -792,11 +792,11 @@ $filieresActive = Route::is('admin.filieres.*');
                 </li>
 
 
-                {{-- Informations formations --}}
+                
                 <li class="nav-item">
 
-                    <a href="{{ route('admin.formation-informations.index') }}"
-                        class="nav-link {{ Route::is('admin.formation-informations.*') ? 'active' : '' }}">
+                    <a href="<?php echo e(route('admin.formation-informations.index')); ?>"
+                        class="nav-link <?php echo e(Route::is('admin.formation-informations.*') ? 'active' : ''); ?>">
 
                         <i class="fas fa-info-circle nav-icon"></i>
 
@@ -809,11 +809,11 @@ $filieresActive = Route::is('admin.filieres.*');
                 </li>
 
 
-                {{-- Catégories documents --}}
+                
                 <li class="nav-item">
 
-                    <a href="{{ route('admin.categories-documents.index') }}"
-                        class="nav-link {{ Route::is('admin.categories-documents.*') ? 'active' : '' }}">
+                    <a href="<?php echo e(route('admin.categories-documents.index')); ?>"
+                        class="nav-link <?php echo e(Route::is('admin.categories-documents.*') ? 'active' : ''); ?>">
 
                         <i class="fas fa-tags nav-icon"></i>
 
@@ -826,11 +826,11 @@ $filieresActive = Route::is('admin.filieres.*');
                 </li>
 
 
-                {{-- Types de pièces --}}
+                
                 <li class="nav-item">
 
-                    <a href="{{ route('admin.types-pieces.index') }}"
-                        class="nav-link {{ Route::is('admin.types-pieces.*') ? 'active' : '' }}">
+                    <a href="<?php echo e(route('admin.types-pieces.index')); ?>"
+                        class="nav-link <?php echo e(Route::is('admin.types-pieces.*') ? 'active' : ''); ?>">
 
                         <i class="fas fa-id-card nav-icon"></i>
 
@@ -843,11 +843,11 @@ $filieresActive = Route::is('admin.filieres.*');
                 </li>
 
 
-                {{-- Matières --}}
+                
                 <li class="nav-item">
 
-                    <a href="{{ route('admin.matieres.index') }}"
-                        class="nav-link {{ Route::is('admin.matieres.*') ? 'active' : '' }}">
+                    <a href="<?php echo e(route('admin.matieres.index')); ?>"
+                        class="nav-link <?php echo e(Route::is('admin.matieres.*') ? 'active' : ''); ?>">
 
                         <i class="fas fa-book nav-icon"></i>
 
@@ -860,11 +860,11 @@ $filieresActive = Route::is('admin.filieres.*');
                 </li>
 
 
-                {{-- Partenaires --}}
+                
                 <li class="nav-item">
 
-                    <a href="{{ route('admin.partenaires.index') }}"
-                        class="nav-link {{ Route::is('admin.partenaires.*') ? 'active' : '' }}">
+                    <a href="<?php echo e(route('admin.partenaires.index')); ?>"
+                        class="nav-link <?php echo e(Route::is('admin.partenaires.*') ? 'active' : ''); ?>">
 
                         <i class="fas fa-handshake nav-icon"></i>
 
@@ -882,13 +882,13 @@ $filieresActive = Route::is('admin.filieres.*');
 
 
 
-        {{-- ===================================================== --}}
-        {{-- DOCUMENTATION. --}}
-        {{-- ===================================================== --}}
+        
+        
+        
 
         <li class="nav-item">
 
-            <a href="{{ route('manual.index') }}" class="nav-link {{ Route::is('manual.index') ? 'active' : '' }}">
+            <a href="<?php echo e(route('manual.index')); ?>" class="nav-link <?php echo e(Route::is('manual.index') ? 'active' : ''); ?>">
 
                 <i class="nav-icon fas fa-book-journal-whills"></i>
 
@@ -899,8 +899,8 @@ $filieresActive = Route::is('admin.filieres.*');
             </a>
 
         </li>
-        @endif
+        <?php endif; ?>
 
     </ul>
 
-</nav>
+</nav><?php /**PATH C:\wamp64\www\Les projets finis\ENEF\resources\views/components/sidebar.blade.php ENDPATH**/ ?>

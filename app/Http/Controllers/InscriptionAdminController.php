@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Inscription;
 use App\Models\PieceInscription;
+use App\Models\SessionFormation;
 use App\Notifications\InscriptionIncompleteNotification;
 use App\Notifications\InscriptionRejeteeNotification;
 use App\Notifications\InscriptionValideeNotification;
@@ -22,7 +23,12 @@ class InscriptionAdminController extends Controller
             ->paginate(20)
             ->withQueryString();
 
-        return view('admin.inscriptions.index', compact('inscriptions'));
+        // Liste des sessions pour le menu déroulant
+    $sessions = SessionFormation::with('formation:id,titre')
+        ->orderByDesc('date_debut')
+        ->get();
+
+        return view('admin.inscriptions.index', compact('inscriptions', 'sessions'));
     }
 
     public function show(Inscription $inscription): View

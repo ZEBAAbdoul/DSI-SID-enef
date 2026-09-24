@@ -47,6 +47,8 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'created_at'        => 'datetime:d/m/Y H:i',
         'updated_at'        => 'datetime:d/m/Y H:i',
+        'est_actif' => 'boolean',
+
     ];
 
     /**
@@ -146,5 +148,4 @@ class User extends Authenticatable
     {
         return $this->hasOne(Enseignant::class);
     }
-    
 }

@@ -23,6 +23,7 @@ return new class extends Migration
             $table->string('mode')->default('dark');
             $table->rememberToken();
             $table->timestamps();
+            $table->boolean('est_actif')->default(true)->after('mode');
         });
     }
 
