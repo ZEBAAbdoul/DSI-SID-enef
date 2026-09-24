@@ -1,5 +1,5 @@
 <x-admin>
-    @section('title', 'Statistiques des fonctionnalités')
+    @section('title', 'Statistiques globales')
 
     @if(session('success'))
         <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -108,8 +108,8 @@
     {{-- Détails par fonctionnalité --}}
     <div class="row">
         @foreach($modules as $module)
-            <div class="col-md-6">
-                <div class="card card-outline card-{{ $module['couleur'] }} mb-4">
+            <div class="col-md-6 d-flex mb-4">
+                <div class="card card-outline card-{{ $module['couleur'] }} w-100 d-flex flex-column">
                     <div class="card-header">
                         <h3 class="card-title">
                             <i class="fas {{ $module['icone'] }} mr-2"></i>{{ $module['titre'] }}
@@ -153,6 +153,33 @@
                             </p>
                         @endif
 
+                        @if(!empty($module['top']['items']))
+                            <div class="px-3 py-2 border-top">
+                                <small class="text-muted d-block mb-1">
+                                    <i class="fas fa-trophy mr-1"></i>{{ $module['top']['titre'] }}
+                                </small>
+                                <table class="table table-sm table-borderless mb-0">
+                                    <tbody>
+                                        @foreach($module['top']['items'] as $rang => $item)
+                                            <tr>
+                                                <td class="pl-0">
+                                                    <span class="badge badge-{{ $module['couleur'] }} mr-1">{{ $rang + 1 }}</span>
+                                                    <span class="text-truncate d-inline-block align-bottom" style="max-width: 330px;" title="{{ $item[0] }}">{{ $item[0] }}</span>
+                                                </td>
+                                                <td class="text-right">
+                                                    <span class="badge badge-light border">{{ number_format($item[1], 0, ',', ' ') }}</span>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        @elseif(isset($module['top']['vide']))
+                            <p class="text-muted small px-3 py-2 border-top mb-0">
+                                {{ $module['top']['vide'] }}
+                            </p>
+                        @endif
+
                         @if(!empty($module['referentiels_globaux']))
                             <div class="px-3 py-2 border-top">
                                 <small class="text-muted d-block mb-1">
@@ -175,7 +202,7 @@
                     </div>
 
                     @if(!empty($module['routes']))
-                        <div class="card-footer py-2">
+                        <div class="card-footer py-2 mt-auto">
                             @foreach($module['routes'] as $lien)
                                 @if(Route::has($lien[1]))
                                     <a href="{{ route($lien[1]) }}" class="small mr-3 text-muted">
