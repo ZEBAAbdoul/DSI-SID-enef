@@ -108,8 +108,8 @@
     {{-- Détails par fonctionnalité --}}
     <div class="row">
         @foreach($modules as $module)
-            <div class="col-md-6">
-                <div class="card card-outline card-{{ $module['couleur'] }} mb-4">
+            <div class="col-md-6 d-flex mb-4">
+                <div class="card card-outline card-{{ $module['couleur'] }} w-100 d-flex flex-column">
                     <div class="card-header">
                         <h3 class="card-title">
                             <i class="fas {{ $module['icone'] }} mr-2"></i>{{ $module['titre'] }}
@@ -202,7 +202,7 @@
                     </div>
 
                     @if(!empty($module['routes']))
-                        <div class="card-footer py-2">
+                        <div class="card-footer py-2 mt-auto">
                             @foreach($module['routes'] as $lien)
                                 @if(Route::has($lien[1]))
                                     <a href="{{ route($lien[1]) }}" class="small mr-3 text-muted">
