@@ -67,14 +67,14 @@
                         <div class="row">
 
                             <div class="col-md-6">
-                                <p>
+                                {{-- <p>
                                     <strong>
                                         <i class="fas fa-layer-group mr-1"></i>
                                         Type :
                                     </strong>
 
                                     {{ $formation->type_libelle }}
-                                </p>
+                                </p> --}}
 
                                 <p>
                                     <strong>
@@ -224,13 +224,13 @@
                     Sessions de cette formation
                 </h3>
 
-                @unless(auth()->user()->hasRole('user'))
+                {{-- @unless(auth()->user()->hasRole('user'))
                     <a href="{{ route('admin.sessions-formation.create', ['formation_id' => $formation->id]) }}"
                        class="btn btn-primary btn-sm">
                         <i class="fas fa-plus mr-1"></i>
                         Nouvelle session
                     </a>
-                @endunless
+                @endunless --}}
 
             </div>
 

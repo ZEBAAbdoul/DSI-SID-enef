@@ -13,7 +13,7 @@
                 l'école : événements, formations, partenariats et communiqués au service des eaux, des forêts et de
                 l'environnement.</p>
             <div style="margin-bottom:10px;">
-                <a href="{{ url('/') }}#actualites" class="btn btn-outline btn-sm">&larr; Retour à l'accueil</a>
+                {{-- <a href="{{ url('/') }}#actualites" class="btn btn-outline btn-sm">&larr; Retour à l'accueil</a> --}}
             </div>
         </div>
     </section>

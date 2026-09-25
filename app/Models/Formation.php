@@ -126,14 +126,15 @@ class Formation extends Model
 
     // Accesseurs
     public function getTypeLibelleAttribute(): string
-    {
-        $types = [
-            'academique' => 'Académique',
-            'continue_programmee' => 'Continue Programmée',
-            'continue_a_la_carte' => 'Continue à la Carte'
-        ];
-        return $types[$this->type] ?? $this->type;
-    }
+{
+    $types = [
+        'academique'          => 'Académique',
+        'continue_programmee' => 'Continue Programmée',
+        'continue_a_la_carte' => 'Continue à la Carte',
+    ];
+
+    return $types[$this->type] ?? ($this->type ?: '—');
+}
 
     public function getStatutLibelleAttribute(): string
     {

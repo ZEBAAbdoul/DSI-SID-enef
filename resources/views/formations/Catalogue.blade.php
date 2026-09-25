@@ -13,7 +13,7 @@
                 2025-2026 — formations programmées à dates fixes et modules à la carte, conçus pour les
                 professionnels de l'environnement et des ressources naturelles.</p>
             <div class="hero-ctas">
-                <a href="{{ url('/') }}#admissions" class="btn btn-ghost-light">&larr; Retour à l'accueil</a>
+                {{-- <a href="{{ url('/') }}#admissions" class="btn btn-ghost-light">&larr; Retour à l'accueil</a> --}}
             </div>
         </div>
     </section>

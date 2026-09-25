@@ -38,7 +38,7 @@
                     <div class="row">
 
                         {{-- Type --}}
-                        <div class="col-md-6">
+                        {{-- <div class="col-md-6">
                             <div class="form-group">
                                 <label>
                                     Type <span class="text-danger">*</span>
@@ -71,7 +71,36 @@
                                     <span class="invalid-feedback">{{ $message }}</span>
                                 @enderror
                             </div>
+                        </div> --}}
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>
+                                    Catégorie
+                                    <span class="text-danger">*</span>
+                                </label>
+
+                                <select name="categorie_id"
+                                        class="form-control @error('categorie_id') is-invalid @enderror"
+                                        required>
+
+                                    <option value="">-- Sélectionner --</option>
+
+                                    @foreach ($categories as $categorie)
+                                        <option value="{{ $categorie->id }}"
+                                            {{ old('categorie_id') == $categorie->id ? 'selected' : '' }}>
+                                            {{ $categorie->nom }}
+                                        </option>
+                                    @endforeach
+
+                                </select>
+
+                                @error('categorie_id')
+                                    <span class="invalid-feedback">{{ $message }}</span>
+                                @enderror
+                            </div>
                         </div>
+
 
                         {{-- Statut --}}
                         <div class="col-md-6">
@@ -85,12 +114,12 @@
                                         required>
 
                                     <option value="brouillon"
-                                        {{ old('statut', 'brouillon') == 'brouillon' ? 'selected' : '' }}>
+                                        {{ old('statut') == 'brouillon' ? 'selected' : '' }}>
                                         Brouillon
                                     </option>
 
                                     <option value="ouverte"
-                                        {{ old('statut') == 'ouverte' ? 'selected' : '' }}>
+                                        {{ old('statut', 'ouverte') == 'ouverte' ? 'selected' : '' }}>
                                         Ouverte
                                     </option>
 
@@ -108,7 +137,7 @@
                         </div>
 
                         {{-- Titre --}}
-                        <div class="col-md-12">
+                        <div class="col-md-6">
                             <div class="form-group">
                                 <label>
                                     Titre de la formation
@@ -154,7 +183,7 @@
                         </div>
 
                         {{-- Catégorie --}}
-                        <div class="col-md-6">
+                        {{-- <div class="col-md-6">
                             <div class="form-group">
                                 <label>
                                     Catégorie
@@ -180,7 +209,7 @@
                                     <span class="invalid-feedback">{{ $message }}</span>
                                 @enderror
                             </div>
-                        </div>
+                        </div> --}}
 
                         {{-- Résumé --}}
                         <div class="col-md-12">

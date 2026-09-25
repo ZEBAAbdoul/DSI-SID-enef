@@ -98,7 +98,7 @@ class FormationController extends Controller
     {
         $validated = $request->validate([
             'type' => [
-                'required',
+                'nullable',
                 'in:academique,continue_programmee,continue_a_la_carte'
             ],
 
@@ -279,7 +279,7 @@ class FormationController extends Controller
 
         $validated = $request->validate([
             'type' => [
-                'required',
+                'nullable',
                 'in:academique,continue_programmee,continue_a_la_carte'
             ],
 

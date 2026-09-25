@@ -67,10 +67,6 @@
                         <p>{{ $param_site->email_contact ?? 'infos@enef.gov.bf' }}</p>
                     </div>
                 </div>
-
-                <div class="ci-note">
-
-                </div>
             </div>
 
             <div class="contact-form">
@@ -96,8 +92,9 @@
                     <div class="row">
                         <div class="field">
                             <label for="telephone">Téléphone <span class="opt">(optionnel)</span></label>
-                            <input type="tel" id="telephone" name="telephone" value="{{ old('telephone') }}" ">
-                            @error('telephone')<small class=" err">{{ $message }}</small>@enderror
+                            <input type="tel" id="telephone" name="telephone" value="{{ old('telephone') }}"
+                                autocomplete="tel">
+                            @error('telephone')<small class="err">{{ $message }}</small>@enderror
                         </div>
 
                         <div class="field">
@@ -136,24 +133,30 @@
     </div>
 </section>
 
+@endsection
+
+@push('scripts')
 <script>
     (function () {
-            var a = {{ $math['a'] }};
-            var b = {{ $math['b'] }};
-            var total = a + b;
-            var input = document.getElementById('math_answer');
-            var btn = document.getElementById('btn-envoyer');
+        var a = {{ (int) $math['a'] }};
+        var b = {{ (int) $math['b'] }};
+        var total = a + b;
+        var input = document.getElementById('math_answer');
+        var btn = document.getElementById('btn-envoyer');
 
-            function verifier() {
-                var val = input.value.replace(/\s+/g, '');
-                var ok = val !== '' && String(total) === val;
-                btn.disabled = !ok;
-            }
+        if (!input || !btn) return;
 
-            input.addEventListener('input', verifier);
-            verifier();
-        })();
+        function verifier() {
+            var val = input.value.replace(/\s+/g, '');
+            var ok = val !== '' && String(total) === val;
+            btn.disabled = !ok;
+        }
+
+        input.addEventListener('input', verifier);
+        verifier();
+    })();
 </script>
+@endpush
 
 @push('styles')
 <style>
@@ -370,5 +373,3 @@
     }
 </style>
 @endpush
-
-@endsection

@@ -24,18 +24,24 @@ return new class extends Migration
             $table->string('adresse', 255)->nullable();
             $table->string('telephone', 30)->nullable();
             $table->string('email_contact', 150)->nullable();
-            $table->smallInteger('annee_creation')->nullable();
-            $table->smallInteger('personne_forme')->nullable();
+            $table->unsignedSmallInteger('annee_creation')->nullable();
+            $table->unsignedInteger('personne_forme')->nullable();
             $table->string('facebook_url', 255)->nullable();
             $table->string('linkedin_url', 255)->nullable();
             $table->string('meta_description', 255)->nullable();
 
-
-            // Champ UUID pour la clé étrangère
+            // Traçabilité : utilisateur ayant effectué la dernière modification
             $table->uuid('updated_by')->nullable();
-            $table->foreign('updated_by')->references('id')->on('users')->onDelete('set null');
 
             $table->timestamps();
+        });
+
+        // Ajout de la clé étrangère dans un second temps pour éviter les conflits d'ordre
+        Schema::table('parametres_site', function (Blueprint $table) {
+            $table->foreign('updated_by')
+                  ->references('id')
+                  ->on('users')
+                  ->nullOnDelete();
         });
     }
 
@@ -44,6 +50,10 @@ return new class extends Migration
      */
     public function down(): void
     {
+        Schema::table('parametres_site', function (Blueprint $table) {
+            $table->dropForeign(['updated_by']);
+        });
+
         Schema::dropIfExists('parametres_site');
     }
 };

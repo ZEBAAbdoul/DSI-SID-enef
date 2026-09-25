@@ -25,9 +25,9 @@ class CatalogueController extends Controller
             ->get();
 
         $formationsInitiales = Formation::whereNotIn('type', ['continue_programmee', 'continue_a_la_carte'])
-            ->orderByRaw("CASE WHEN code_module LIKE 'FI-GRN%' THEN 0 ELSE 1 END")
-            ->orderBy('code_module')
-            ->get();
+    ->orderBy('created_at')
+    ->orderBy('id')
+    ->get();
 
         $informations = FormationInformation::orderBy('ordre')->get()->groupBy('categorie');
 
