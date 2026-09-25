@@ -6,10 +6,22 @@ use App\Models\Photo;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Str;
 use Illuminate\View\View;
 
 class PhotoAdminController extends Controller
 {
+    /**
+     * Seuil à partir duquel une image est compressée (5 Mo).
+     */
+    private const TAILLE_COMPRESSION_MAX = 5 * 1024 * 1024;
+
+    /**
+     * Plus grand côté autorisé après compression.
+     */
+    private const LARGEUR_MAX = 1920;
+
+    /**
     /**
      * Afficher la liste des photos.
      */
@@ -375,7 +387,7 @@ public function update(Request $request, Photo $photo): RedirectResponse
                 $ignoreId === null ? 'required' : 'nullable',
                 'image',
                 'mimes:jpeg,png,jpg,gif,webp',
-                'max:5120',
+                'max:8192',
             ],
 
             'ordre' => [
@@ -394,7 +406,7 @@ public function update(Request $request, Photo $photo): RedirectResponse
             'image.required' => "L'image est obligatoire.",
             'image.image' => 'Le fichier doit être une image.',
             'image.mimes' => "L'image doit être au format JPEG, PNG, JPG, GIF ou WEBP.",
-            'image.max' => "L'image ne doit pas dépasser 5 Mo.",
+            'image.max' => "L'image est trop volumineuse (8 Mo maximum côté serveur). Les photos de plus de 5 Mo sont compressées automatiquement.",
             'ordre.integer' => "L'ordre doit être un nombre entier.",
             'ordre.min' => "L'ordre ne peut pas être négatif.",
             'ordre.max' => "L'ordre doit être inférieur ou égal à 32767.",
@@ -403,16 +415,145 @@ public function update(Request $request, Photo $photo): RedirectResponse
 
     /**
      * Enregistre une image uploadée dans public/photos.
+     * Les images de plus de 5 Mo sont automatiquement compressées
+     * (redimensionnées à 1920 px maximum) avant l'enregistrement.
      * Retourne le chemin relatif (ex. : photos/abcd….jpg).
      */
     private function sauvegarderImagePublique(
         \Illuminate\Http\UploadedFile $fichier
     ): string {
+        // Compression serveur (filet de sécurité) si l'image est lourde
+        $cheminCompresse = $this->compresserImagePublique($fichier);
+
+        if ($cheminCompresse !== null) {
+            return $cheminCompresse;
+        }
+
         $chemin = $fichier->hashName('photos');
 
         $fichier->move(public_path('photos'), basename($chemin));
 
         return $chemin;
+    }
+
+    /**
+     * Compresse une image de plus de 5 Mo avec GD et l'écrit dans
+     * public/photos. Retourne le chemin relatif écrit, ou null si la
+     * compression ne peut pas être appliquée (image déjà légère,
+     * GIF animé, GD indisponible, image illisible, etc.).
+     */
+    private function compresserImagePublique(
+        \Illuminate\Http\UploadedFile $fichier
+    ): ?string {
+        if ($fichier->getSize() <= self::TAILLE_COMPRESSION_MAX) {
+            return null;
+        }
+
+        if (!function_exists('imagecreatefromstring')) {
+            return null;
+        }
+
+        $extensions = [
+            'image/jpeg' => 'jpg',
+            'image/png' => 'png',
+            'image/webp' => 'webp',
+        ];
+
+        $mime = $fichier->getMimeType();
+
+        if (!isset($extensions[$mime])) {
+            return null; // GIF (animé) ou autre : on garde l'original
+        }
+
+        $contenu = $fichier->get();
+
+        if ($contenu === null || $contenu === '') {
+            return null;
+        }
+
+        $image = @imagecreatefromstring($contenu);
+
+        if ($image === false) {
+            return null;
+        }
+
+        // Redimensionnement si le plus grand côté dépasse 1920 px
+        $largeur = imagesx($image);
+        $hauteur = imagesy($image);
+
+        if (max($largeur, $hauteur) > self::LARGEUR_MAX) {
+            $ratio = self::LARGEUR_MAX / max($largeur, $hauteur);
+
+            $nouvelleLargeur = (int) round($largeur * $ratio);
+            $nouvelleHauteur = (int) round($hauteur * $ratio);
+
+            $reduite = imagecreatetruecolor(
+                $nouvelleLargeur,
+                $nouvelleHauteur
+            );
+
+            if ($reduite === false) {
+                imagedestroy($image);
+                return null;
+            }
+
+            if ($mime === 'image/png') {
+                imagealphablending($reduite, false);
+                imagesavealpha($reduite, true);
+            }
+
+            imagecopyresampled(
+                $reduite,
+                $image,
+                0,
+                0,
+                0,
+                0,
+                $nouvelleLargeur,
+                $nouvelleHauteur,
+                $largeur,
+                $hauteur
+            );
+
+            imagedestroy($image);
+            $image = $reduite;
+        }
+
+        $dossier = public_path('photos');
+
+        if (!is_dir($dossier)) {
+            mkdir($dossier, 0775, true);
+        }
+
+        $destination = $dossier . DIRECTORY_SEPARATOR
+            . Str::random(40) . '.' . $extensions[$mime];
+
+        if ($mime === 'image/jpeg') {
+            $ecrit = imagejpeg($image, $destination, 82);
+        } elseif ($mime === 'image/webp') {
+            $ecrit = imagewebp($image, $destination, 82);
+        } else { // image/png (conserve la transparence)
+            imagealphablending($image, false);
+            imagesavealpha($image, true);
+            $ecrit = imagepng($image, $destination, 6);
+        }
+
+        imagedestroy($image);
+
+        if (
+            $ecrit
+            && is_file($destination)
+            && filesize($destination) < $fichier->getSize()
+        ) {
+            return 'photos/' . basename($destination);
+        }
+
+        // La compression n'a pas donné de gain : on garde l'original
+        if (is_file($destination)) {
+            @unlink($destination);
+        }
+
+        return null;
     }
 
     /**
