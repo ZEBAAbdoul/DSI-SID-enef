@@ -168,7 +168,7 @@
                     <table class="table table-bordered table-hover table-striped mb-0">
                         <thead>
                             <tr>
-                                <th>Ville</th>
+                                {{-- <th>Ville</th> --}}
                                 <th>Pays</th>
                                 <th class="text-center">Visiteurs</th>
                             </tr>
@@ -176,12 +176,12 @@
                         <tbody>
                             @forelse($lieux as $lieu)
                                 <tr>
-                                    <td>
+                                    {{-- <td>
                                         @if($lieu->ville !== '—')
                                             <i class="fas fa-city mr-1 text-muted"></i>
                                         @endif
                                         {{ $lieu->ville }}
-                                    </td>
+                                    </td> --}}
                                     <td>
                                         @if($lieu->pays_code !== '—')
                                             <span class="badge badge-primary mr-1">{{ $lieu->pays_code }}</span>
@@ -206,6 +206,7 @@
         </div>
     </div>
 
+    {{-- ===================== JS ===================== --}}
     @section('js')
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -241,7 +242,8 @@
                     }
                 }
             });
-        });
+
+            });
     </script>
     @endsection
 </x-admin>

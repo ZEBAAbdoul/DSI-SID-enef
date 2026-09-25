@@ -16,6 +16,7 @@ class Visite extends Model
         'date',
         'page',
         'session_id',
+        'visiteur',
         'ip',
         'pays',
         'pays_code',
