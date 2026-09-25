@@ -70,7 +70,7 @@
             <!-- Sidebar -->
             <div class="sidebar">
                 <!-- Brand Logo -->
-                <a href="{{ url('/') }}" class="brand-link d-flex align-items-center justify-content-center"
+                <a href="#" class="brand-link d-flex align-items-center justify-content-center"
                     style="height: 90px;">
 
                     <div class="enef-logo">
