@@ -63,7 +63,7 @@
 
                         {{-- ---- Type de candidat ---- --}}
                         <div class="form-row">
-                            <label>Type de candidature</label>
+                            <label>Type de candidature <span class="required-star">*</span></label>
                             <div class="nat-toggle">
                                 <label class="nat-option">
                                     <input type="radio" name="nationalite_type" value="nationale"
@@ -83,7 +83,10 @@
 
                         <div class="form-row" id="rowPaysNationalite"
                             style="{{ old('nationalite_type') === 'internationale' || $errors->has('pays_nationalite') ? 'display:block' : 'display:none' }}">
-                            <label for="pays_nationalite">Pays de nationalité</label>
+                            <label for="pays_nationalite">Pays de nationalité
+                                <span class="required-star" id="starPaysNationalite"
+                                    style="{{ old('nationalite_type') === 'internationale' ? '' : 'display:none;' }}">*</span>
+                            </label>
                             <input id="pays_nationalite" type="text" name="pays_nationalite"
                                 value="{{ old('pays_nationalite') }}"
                                 class="{{ $errors->has('pays_nationalite') ? 'is-invalid' : '' }}"
@@ -95,17 +98,9 @@
 
                         {{-- ---- Identité ---- --}}
                         <div class="form-row-split">
+
                             <div class="form-row">
-                                <label for="prenom">Prénom(s)</label>
-                                <input id="prenom" type="text" name="prenom" value="{{ old('prenom') }}"
-                                    class="{{ $errors->has('prenom') ? 'is-invalid' : '' }}" autocomplete="given-name"
-                                    autofocus required placeholder="Ex. Aïcha">
-                                @error('prenom')
-                                    <span class="field-error">{{ $message }}</span>
-                                @enderror
-                            </div>
-                            <div class="form-row">
-                                <label for="nom">Nom</label>
+                                <label for="nom">Nom <span class="required-star">*</span></label>
                                 <input id="nom" type="text" name="nom" value="{{ old('nom') }}"
                                     class="{{ $errors->has('nom') ? 'is-invalid' : '' }}" autocomplete="family-name"
                                     required placeholder="Ex. KABORÉ">
@@ -113,11 +108,22 @@
                                     <span class="field-error">{{ $message }}</span>
                                 @enderror
                             </div>
+
+                            <div class="form-row">
+                                <label for="prenom">Prénom(s) <span class="required-star">*</span></label>
+                                <input id="prenom" type="text" name="prenom" value="{{ old('prenom') }}"
+                                    class="{{ $errors->has('prenom') ? 'is-invalid' : '' }}" autocomplete="given-name"
+                                    autofocus required placeholder="Ex. Aïcha">
+                                @error('prenom')
+                                    <span class="field-error">{{ $message }}</span>
+                                @enderror
+                            </div>
+
                         </div>
 
                         <div class="form-row-split">
                             <div class="form-row">
-                                <label for="sexe">Sexe</label>
+                                <label for="sexe">Sexe <span class="required-star">*</span></label>
                                 <select id="sexe" name="sexe"
                                     class="{{ $errors->has('sexe') ? 'is-invalid' : '' }}" required>
                                     <option value="">Sélectionner</option>
@@ -129,7 +135,7 @@
                                 @enderror
                             </div>
                             <div class="form-row">
-                                <label for="date_naissance">Date de naissance</label>
+                                <label for="date_naissance">Date de naissance <span class="required-star">*</span></label>
                                 <input id="date_naissance" type="date" name="date_naissance"
                                     value="{{ old('date_naissance') }}"
                                     class="{{ $errors->has('date_naissance') ? 'is-invalid' : '' }}" required>
@@ -140,7 +146,7 @@
                         </div>
 
                         <div class="form-row">
-                            <label for="lieu_naissance">Lieu de naissance</label>
+                            <label for="lieu_naissance">Lieu de naissance <span class="required-star">*</span></label>
                             <input id="lieu_naissance" type="text" name="lieu_naissance"
                                 value="{{ old('lieu_naissance') }}"
                                 class="{{ $errors->has('lieu_naissance') ? 'is-invalid' : '' }}" required
@@ -153,7 +159,7 @@
                         {{-- ---- Pièce d'identité ---- --}}
                         <div class="form-row-split">
                             <div class="form-row">
-                                <label for="piece_type">Pièce d'identité</label>
+                                <label for="piece_type">Pièce d'identité <span class="required-star">*</span></label>
                                 <select id="piece_type" name="piece_type"
                                     class="{{ $errors->has('piece_type') ? 'is-invalid' : '' }}" required>
                                     <option value="cnib" {{ old('piece_type', 'cnib') === 'cnib' ? 'selected' : '' }}>
@@ -166,7 +172,8 @@
                                 @enderror
                             </div>
                             <div class="form-row">
-                                <label for="piece_numero" id="labelPieceNumero">Numéro CNIB</label>
+                                <label for="piece_numero" id="labelPieceNumero">Numéro CNIB <span
+                                        class="required-star">*</span></label>
                                 <input id="piece_numero" type="text" name="piece_numero"
                                     value="{{ old('piece_numero') }}"
                                     class="{{ $errors->has('piece_numero') ? 'is-invalid' : '' }}" required
@@ -179,7 +186,7 @@
 
                         {{-- ---- Contact ---- --}}
                         <div class="form-row">
-                            <label for="email">Adresse e-mail</label>
+                            <label for="email">Adresse e-mail <span class="required-star">*</span></label>
                             <input id="email" type="email" name="email" value="{{ old('email') }}"
                                 class="{{ $errors->has('email') ? 'is-invalid' : '' }}" autocomplete="username" required
                                 placeholder="vous@exemple.com">
@@ -190,7 +197,7 @@
 
                         <div class="form-row-split form-row-split--phone">
                             <div class="form-row">
-                                <label for="telephone_indicatif">Indicatif</label>
+                                <label for="telephone_indicatif">Indicatif <span class="required-star">*</span></label>
                                 <select id="telephone_indicatif" name="telephone_indicatif"
                                     class="{{ $errors->has('telephone_indicatif') ? 'is-invalid' : '' }}" required>
                                     <option value="+226"
@@ -210,8 +217,10 @@
                                         🇸🇳 +221 (Sénégal)</option>
                                     <option value="+233" {{ old('telephone_indicatif') === '+233' ? 'selected' : '' }}>
                                         🇬🇭 +233 (Ghana)</option>
-                                    <option value="+33" {{ old('telephone_indicatif') === '+33' ? 'selected' : '' }}>
-                                        🇫🇷 +33 (France)</option>
+                                    <option value="+241" {{ old('telephone_indicatif') === '+241' ? 'selected' : '' }}>
+                                        🇬🇦 +241 (Gabon)</option>
+                                    <option value="+235" {{ old('telephone_indicatif') === '+235' ? 'selected' : '' }}>
+                                        🇹🇩 +235 (Tchad)</option>
                                     <option value="autre" {{ old('telephone_indicatif') === 'autre' ? 'selected' : '' }}>
                                         Autre</option>
                                 </select>
@@ -220,7 +229,7 @@
                                 @enderror
                             </div>
                             <div class="form-row">
-                                <label for="telephone">Numéro de téléphone</label>
+                                <label for="telephone">Numéro de téléphone <span class="required-star">*</span></label>
                                 <input id="telephone" type="tel" name="telephone" value="{{ old('telephone') }}"
                                     class="{{ $errors->has('telephone') ? 'is-invalid' : '' }}" required
                                     placeholder="Ex. 70 00 00 00">
@@ -232,7 +241,7 @@
 
                         {{-- ---- Adresse / résidence ---- --}}
                         <div class="form-row">
-                            <label for="adresse">Adresse</label>
+                            <label for="adresse">Adresse <span class="required-star">*</span></label>
                             <input id="adresse" type="text" name="adresse" value="{{ old('adresse') }}"
                                 class="{{ $errors->has('adresse') ? 'is-invalid' : '' }}" required
                                 placeholder="Quartier, secteur, rue...">
@@ -243,7 +252,7 @@
 
                         <div class="form-row-split">
                             <div class="form-row">
-                                <label for="ville">Ville</label>
+                                <label for="ville">Ville <span class="required-star">*</span></label>
                                 <input id="ville" type="text" name="ville" value="{{ old('ville') }}"
                                     class="{{ $errors->has('ville') ? 'is-invalid' : '' }}" required
                                     placeholder="Ex. Bobo-Dioulasso">
@@ -252,7 +261,7 @@
                                 @enderror
                             </div>
                             <div class="form-row">
-                                <label for="pays_residence">Pays de résidence</label>
+                                <label for="pays_residence">Pays de résidence <span class="required-star">*</span></label>
                                 <input id="pays_residence" type="text" name="pays_residence"
                                     value="{{ old('pays_residence', 'Burkina Faso') }}"
                                     class="{{ $errors->has('pays_residence') ? 'is-invalid' : '' }}" required>
@@ -265,25 +274,31 @@
                         {{-- ---- Mot de passe ---- --}}
                         <div class="form-row-split">
                             <div class="form-row">
-                                <label for="password">Mot de passe</label>
+                                <label for="password">Mot de passe <span class="required-star">*</span></label>
                                 <input id="password" type="password" name="password"
                                     class="{{ $errors->has('password') ? 'is-invalid' : '' }}"
-                                    autocomplete="new-password" required placeholder="8 caractères minimum">
+                                    autocomplete="new-password" required minlength="12"
+                                    placeholder="12 caractères minimum">
                                 @error('password')
                                     <span class="field-error">{{ $message }}</span>
                                 @enderror
                             </div>
                             <div class="form-row">
-                                <label for="password_confirmation">Confirmer le mot de passe</label>
+                                <label for="password_confirmation">Confirmer le mot de passe <span
+                                        class="required-star">*</span></label>
                                 <input id="password_confirmation" type="password" name="password_confirmation"
-                                    autocomplete="new-password" required placeholder="Répétez le mot de passe">
+                                    autocomplete="new-password" required minlength="12"
+                                    placeholder="Répétez le mot de passe">
                             </div>
                         </div>
 
+
                         <label class="checkbox-row">
                             <input type="checkbox" name="terms" required>
-                            <span>J'accepte les <a href="#">conditions d'utilisation</a> et la
-                                <a href="#">politique de confidentialité</a> de l'ENEF.</span>
+                            <span>J'accepte les <a href="{{ route('conditionutilisation') }}">conditions d'utilisation</a>
+                                et la
+                                <a href="{{ route('politiqueConfidentialite') }}">politique de confidentialité</a> de
+                                l'ENEF.</span>
                         </label>
                         @error('terms')
                             <span class="field-error d-block">{{ $message }}</span>
@@ -401,6 +416,11 @@
             font-size: 12px;
             margin-top: 6px;
             font-weight: 600;
+        }
+
+        .required-star {
+            color: #c0392b;
+            margin-left: 2px;
         }
 
         .form-row input.is-invalid,
@@ -547,6 +567,7 @@
             var pieceType = document.getElementById('piece_type');
             var labelPieceNumero = document.getElementById('labelPieceNumero');
             var paysResidence = document.getElementById('pays_residence');
+            var starPaysNationalite = document.getElementById('starPaysNationalite');
 
             function syncNationalite() {
                 var value = document.querySelector('input[name="nationalite_type"]:checked').value;
@@ -554,6 +575,7 @@
 
                 rowPays.style.display = isInternational ? 'block' : 'none';
                 document.getElementById('pays_nationalite').required = isInternational;
+                starPaysNationalite.style.display = isInternational ? 'inline' : 'none';
 
                 if (isInternational) {
                     pieceType.value = 'passeport';
@@ -570,7 +592,8 @@
             }
 
             function syncPieceLabel() {
-                labelPieceNumero.textContent = pieceType.value === 'cnib' ? 'Numéro CNIB' : 'Numéro de passeport';
+                labelPieceNumero.childNodes[0].textContent = (pieceType.value === 'cnib' ? 'Numéro CNIB' :
+                    'Numéro de passeport') + ' ';
             }
 
             radios.forEach(function(r) {

@@ -130,4 +130,14 @@ class HomeController extends Controller
     {
         return view('unites-pedagogiques.index');
     }
+
+    public function conditionutilisation()
+    {
+        return view('condition-utilisation');
+    }
+
+    public function politiqueConfidentialite()
+    {
+        return view('politique-confidentialite');
+    }
 }

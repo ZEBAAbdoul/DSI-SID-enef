@@ -41,18 +41,18 @@
         <div class="col-md-12">
             <div class="d-flex justify-content-between align-items-center">
                 <div>
-                    <h2 class="fw-bold">
+                    {{-- <h2 class="fw-bold">
                         <i class="fas fa-cogs text-primary"></i> Paramètres du Site
-                    </h2>
+                    </h2> --}}
                     <p class="text-muted">Gérez les informations générales de votre site web</p>
                 </div>
-                @if($parametres)
+                {{-- @if($parametres)
                     <div>
                         <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteParametresModal">
                             <i class="fas fa-trash"></i> Supprimer
                         </button>
                     </div>
-                @endif
+                @endif --}}
             </div>
         </div>
     </div>
@@ -651,4 +651,5 @@
         });
     </script>
 @endsection
+<br>
 </x-admin>

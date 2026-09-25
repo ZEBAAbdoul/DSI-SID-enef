@@ -260,7 +260,7 @@
                 @enderror
             </div>
 
-            @if ($estEdition)
+            {{-- @if ($estEdition)
                 <div class="col-md-6">
                     <label for="password" class="form-label fw-bold">
                         {{ $estEdition ? 'Nouveau mot de passe' : 'Mot de passe' }}
@@ -293,7 +293,7 @@
                         l'utilisateur par e-mail, avec son identifiant de connexion.
                     </div>
                 </div>
-            @endif
+            @endif --}}
 
             <div class="col-12">
                 {{-- Le champ caché garantit l'envoi de 0 quand la case est décochée --}}

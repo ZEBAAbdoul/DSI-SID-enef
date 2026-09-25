@@ -16,61 +16,74 @@ class FormationController extends Controller
      * Liste des formations
      */
     public function index(Request $request): View
-    {
-        $query = Formation::with([
-            'filiere',
-            'categorie',
-            'createur'
-        ]);
+{
+    $query = Formation::with([
+        'filiere',
+        'categorie',
+        'createur'
+    ]);
 
-        // Recherche
-        if ($request->filled('search')) {
-            $search = trim($request->search);
+    // Recherche
+    if ($request->filled('search')) {
+        $search = trim($request->search);
 
-            $query->where(function ($q) use ($search) {
-                $q->where('titre', 'LIKE', "%{$search}%")
-                    ->orWhere('resume', 'LIKE', "%{$search}%")
-                    ->orWhere('mots_cles', 'LIKE', "%{$search}%");
-            });
-        }
-
-        // Filtre type
-        if ($request->filled('type')) {
-            $query->where('type', $request->type);
-        }
-
-        // Filtre filière
-        if ($request->filled('filiere_id')) {
-            $query->where('filiere_id', $request->filiere_id);
-        }
-
-        // Filtre catégorie
-        if ($request->filled('categorie_id')) {
-            $query->where('categorie_id', $request->categorie_id);
-        }
-
-        // Filtre statut
-        if ($request->filled('statut')) {
-            $query->where('statut', $request->statut);
-        }
-
-        $formations = $query
-            ->latest()
-            ->paginate(10)
-            ->withQueryString();
-
-        $filieres = Filiere::orderBy('nom')->get();
-        $categories = CategorieFormation::orderBy('nom')->get();
-
-        return view(
-            'admin.formations.index',
-            compact(
-                'formations',
-                'filieres',
-                'categories'
-            )
-        );
+        $query->where(function ($q) use ($search) {
+            $q->where('titre', 'LIKE', "%{$search}%")
+                ->orWhere('resume', 'LIKE', "%{$search}%")
+                ->orWhere('mots_cles', 'LIKE', "%{$search}%");
+        });
     }
+
+    // Filtre type
+    if ($request->filled('type')) {
+        $query->where('type', $request->type);
+    }
+
+    // Filtre filière
+    if ($request->filled('filiere_id')) {
+        $query->where('filiere_id', $request->filiere_id);
+    }
+
+    // Filtre catégorie
+    if ($request->filled('categorie_id')) {
+        $query->where('categorie_id', $request->categorie_id);
+    }
+
+    // Filtre statut
+    if ($request->filled('statut')) {
+        $query->where('statut', $request->statut);
+    }
+
+    $query->latest();
+
+    // Pagination : 10, 25, 50, 100 ou "tous"
+    $perPage = $request->input('per_page', 10);
+
+    if ($perPage === 'tous') {
+        $total = (clone $query)->count();
+        $formations = $query->paginate($total > 0 ? $total : 1);
+    } else {
+        $perPage = in_array((int) $perPage, [10, 25, 50, 100], true)
+            ? (int) $perPage
+            : 10;
+
+        $formations = $query->paginate($perPage);
+    }
+
+    $formations->withQueryString();
+
+    $filieres = Filiere::orderBy('nom')->get();
+    $categories = CategorieFormation::orderBy('nom')->get();
+
+    return view(
+        'admin.formations.index',
+        compact(
+            'formations',
+            'filieres',
+            'categories'
+        )
+    );
+}
 
 
     /**

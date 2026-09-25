@@ -9,8 +9,8 @@
                     <p>Candidatures reçues</p>
                 </div>
                 <div class="icon"><i class="fa fa-user-graduate"></i></div>
-                <a href="{{ route('admin.user.index') }}" class="small-box-footer">Voir <i
-                        class="fas fa-arrow-circle-right"></i></a>
+                {{-- <a href="{{ route('admin.user.index') }}" class="small-box-footer">Voir <i
+                        class="fas fa-arrow-circle-right"></i></a> --}}
             </div>
         </div>
 
@@ -21,7 +21,7 @@
                     <p>Formations ouvertes</p>
                 </div>
                 <div class="icon"><i class="fas fa-book-open"></i></div>
-                <a href="#" class="small-box-footer">Voir <i class="fas fa-arrow-circle-right"></i></a>
+                {{-- <a href="#" class="small-box-footer">Voir <i class="fas fa-arrow-circle-right"></i></a> --}}
             </div>
         </div>
 
@@ -32,7 +32,7 @@
                     <p>Sessions à venir ({{ $stats['places_disponibles'] ?? 0 }} places dispo.)</p>
                 </div>
                 <div class="icon"><i class="fas fa-calendar-alt"></i></div>
-                <a href="#" class="small-box-footer">Voir <i class="fas fa-arrow-circle-right"></i></a>
+                {{-- <a href="#" class="small-box-footer">Voir <i class="fas fa-arrow-circle-right"></i></a> --}}
             </div>
         </div>
 
@@ -43,8 +43,8 @@
                     <p>Documents publiés</p>
                 </div>
                 <div class="icon"><i class="fas fa-file-alt"></i></div>
-                <a href="{{ route('bibliotheque.index') }}" class="small-box-footer">Voir <i
-                        class="fas fa-arrow-circle-right"></i></a>
+                {{-- <a href="{{ route('bibliotheque.index') }}" class="small-box-footer">Voir <i
+                        class="fas fa-arrow-circle-right"></i></a> --}}
             </div>
         </div>
     </div>
@@ -96,9 +96,9 @@
                             </table>
                         </div>
                     </div>
-                    <div class="card-footer clearfix">
+                    {{-- <div class="card-footer clearfix">
                         <a href="#" class="btn btn-sm btn-secondary float-right">Voir tout</a>
-                    </div>
+                    </div> --}}
                 </div>
 
                 <!-- Graphique des inscriptions mensuelles -->
@@ -111,76 +111,87 @@
                         </div>
                     </div>
                     <div class="card-body">
-    <div style="position: relative; height: 250px;">
-        <canvas id="barChart"></canvas>
-    </div>
-    <p id="barChartMsg" class="text-center text-muted mt-3" style="display:none;"></p>
+                        <div style="position: relative; height: 250px;">
+                            <canvas id="barChart"></canvas>
+                        </div>
+                        <p id="barChartMsg" class="text-center text-muted mt-3" style="display:none;"></p>
 
-    <script>
-        (function () {
-            var msg = document.getElementById('barChartMsg');
+                        <script>
+                            (function() {
+                                var msg = document.getElementById('barChartMsg');
 
-            function afficher(texte) {
-                msg.textContent = texte;
-                msg.style.display = 'block';
-            }
-
-            function dessiner() {
-                fetch('{{ route('admin.dashboard.chart-data') }}', {
-                        headers: { 'Accept': 'application/json' },
-                        credentials: 'same-origin'
-                    })
-                    .then(function (r) {
-                        if (!r.ok) throw new Error('HTTP ' + r.status);
-                        return r.json();
-                    })
-                    .then(function (data) {
-                        new Chart(document.getElementById('barChart').getContext('2d'), {
-                            type: 'bar',
-                            data: {
-                                labels: data.labels,
-                                datasets: [{
-                                    label: 'Inscriptions',
-                                    data: data.values,
-                                    backgroundColor: 'rgba(60,141,188,0.9)',
-                                    borderColor: 'rgba(60,141,188,0.8)',
-                                    borderWidth: 1,
-                                    minBarLength: 3
-                                }]
-                            },
-                            options: {
-                                responsive: true,
-                                maintainAspectRatio: false,
-                                plugins: { legend: { display: false } },
-                                scales: {
-                                    y: {
-                                        beginAtZero: true,
-                                        suggestedMax: 5,
-                                        ticks: { stepSize: 1, precision: 0 }
-                                    }
+                                function afficher(texte) {
+                                    msg.textContent = texte;
+                                    msg.style.display = 'block';
                                 }
-                            }
-                        });
-                    })
-                    .catch(function (e) {
-                        console.error('Graphique inscriptions :', e);
-                        afficher('Impossible de charger les données du graphique (' + e.message + ').');
-                    });
-            }
 
-            // Charge Chart.js seulement s'il n'est pas déjà présent sur la page
-            if (window.Chart) {
-                dessiner();
-            } else {
-                var s = document.createElement('script');
-                s.src = 'https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js';
-                s.onload = dessiner;
-                s.onerror = function () { afficher('Chart.js n\'a pas pu être chargé (connexion ou CDN bloqué).'); };
-                document.head.appendChild(s);
-            }
-        })();
-    </script>
-</div>
+                                function dessiner() {
+                                    fetch('{{ route('admin.dashboard.chart-data') }}', {
+                                            headers: {
+                                                'Accept': 'application/json'
+                                            },
+                                            credentials: 'same-origin'
+                                        })
+                                        .then(function(r) {
+                                            if (!r.ok) throw new Error('HTTP ' + r.status);
+                                            return r.json();
+                                        })
+                                        .then(function(data) {
+                                            new Chart(document.getElementById('barChart').getContext('2d'), {
+                                                type: 'bar',
+                                                data: {
+                                                    labels: data.labels,
+                                                    datasets: [{
+                                                        label: 'Inscriptions',
+                                                        data: data.values,
+                                                        backgroundColor: 'rgba(60,141,188,0.9)',
+                                                        borderColor: 'rgba(60,141,188,0.8)',
+                                                        borderWidth: 1,
+                                                        minBarLength: 3
+                                                    }]
+                                                },
+                                                options: {
+                                                    responsive: true,
+                                                    maintainAspectRatio: false,
+                                                    plugins: {
+                                                        legend: {
+                                                            display: false
+                                                        }
+                                                    },
+                                                    scales: {
+                                                        y: {
+                                                            beginAtZero: true,
+                                                            suggestedMax: 5,
+                                                            ticks: {
+                                                                stepSize: 1,
+                                                                precision: 0
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            });
+                                        })
+                                        .catch(function(e) {
+                                            console.error('Graphique inscriptions :', e);
+                                            afficher('Impossible de charger les données du graphique (' + e.message + ').');
+                                        });
+                                }
+
+                                // Charge Chart.js seulement s'il n'est pas déjà présent sur la page
+                                if (window.Chart) {
+                                    dessiner();
+                                } else {
+                                    var s = document.createElement('script');
+                                    s.src = 'https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js';
+                                    s.onload = dessiner;
+                                    s.onerror = function() {
+                                        afficher('Chart.js n\'a pas pu être chargé (connexion ou CDN bloqué).');
+                                    };
+                                    document.head.appendChild(s);
+                                }
+                            })();
+                        </script>
+                    </div>
                 </div>
             </div>
 
@@ -216,9 +227,9 @@
                             </tbody>
                         </table>
                     </div>
-                    <div class="card-footer text-center">
+                    {{-- <div class="card-footer text-center">
                         <a href="#" class="uppercase">Voir toutes les formations</a>
-                    </div>
+                    </div> --}}
                 </div>
             </div>
         </div>

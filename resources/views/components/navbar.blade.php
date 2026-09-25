@@ -25,6 +25,21 @@
                     </small>
                 </div>
                 <div class="dropdown-divider"></div>
+
+                <!-- Voir / modifier le profil -->
+                <a class="dropdown-item" href="{{ route('admin.profile.edit') }}">
+                    <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                    Mon profil
+                </a>
+
+                <!-- Modifier le mot de passe -->
+                <a class="dropdown-item" href="{{ route('admin.profile.password.edit') }}">
+                    <i class="fas fa-key fa-sm fa-fw mr-2 text-gray-400"></i>
+                    Modifier le mot de passe
+                </a>
+
+                <div class="dropdown-divider"></div>
+
                 <!-- Déconnexion -->
                 <a class="dropdown-item" href="#"
                     onclick="event.preventDefault(); document.getElementById('logout-form').submit();">

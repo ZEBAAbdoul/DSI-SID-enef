@@ -376,7 +376,7 @@
                     <h4>Études &amp; études thématiques</h4>
                     <p>Études socio-économiques, plans d'aménagement, études d'impact environnemental, audits et
                         bilans carbone.</p>
-                    <a href="#prestations" class="btn btn-outline btn-sm">Voir nos références</a>
+                    {{-- <a href="#prestations" class="btn btn-outline btn-sm">Voir nos références</a> --}}
                 </div>
                 <div class="presta-card">
                     <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2">
@@ -386,8 +386,8 @@
                     <h4>Appui-conseil &amp; accompagnement</h4>
                     <p>Planification environnementale, projets finance carbone, valorisation des savoirs locaux,
                         réhabilitation de sites miniers.</p>
-                    <a href="mailto:infos@enef.gov.bf?subject=Demande%20de%20formation%20%C3%A0%20la%20carte"
-                        class="btn btn-primary btn-sm">Découvrir nos missions</a>
+                    {{-- <a href="mailto:infos@enef.gov.bf?subject=Demande%20de%20formation%20%C3%A0%20la%20carte"
+                        class="btn btn-primary btn-sm">Découvrir nos missions</a> --}}
                 </div>
                 <div class="presta-card">
                     <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2">
@@ -397,12 +397,22 @@
                     <h4>Demande de prestation</h4>
                     <p>Formulaire dédié pour formuler une demande d'étude ou d'appui-conseil, distinct de la demande
                         de formation.</p>
-                    <a href="mailto:infos@enef.gov.bf?subject=Demande%20de%20formation%20%C3%A0%20la%20carte"
-                        class="btn btn-primary btn-sm">Faire une demande</a>
+                    {{-- <a href="mailto:infos@enef.gov.bf?subject=Demande%20de%20formation%20%C3%A0%20la%20carte"
+                        class="btn btn-primary btn-sm">Faire une demande</a> --}}
                 </div>
             </div>
         </div>
     </section>
+
+    {{-- ===================== BOUTON FLOTTANT "NOUS ÉCRIRE" ===================== --}}
+    <a href="{{ route('contact.index')}}" class="float-contact-btn" title="Nous écrire">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M4 4h16v16H4z" opacity="0" />
+            <path d="M22 6l-10 7L2 6" />
+            <path d="M2 6h20v12H2z" />
+        </svg>
+        <span>Nous écrire</span>
+    </a>
 
     <!-- ===================== BIBLIOTHÈQUE ===================== -->
     <section id="bibliotheque" class="alt">
@@ -429,7 +439,7 @@
             <div class="biblio-search">
                 <form action="{{ route('bibliotheque.index') }}" method="GET" class="search-row">
                     <input type="text" name="q" placeholder="Rechercher un document, un thème…"
-                        aria-label="Rechercher un document">
+    aria-label="Rechercher un document" style="background:#f0f0f0;">
                     <button type="submit" aria-label="Lancer la recherche"><svg viewBox="0 0 24 24" fill="none"
                             stroke="currentColor" stroke-width="2">
                             <circle cx="11" cy="11" r="7" />
@@ -444,14 +454,14 @@
                         <span class="chip">Aucune catégorie</span>
                     @endforelse
                 </div>
-                <div class="biblio-stats">
+                {{-- <div class="biblio-stats">
                     <div><span class="num">{{ $biblioStats['documents'] }}+</span><span class="lbl">Documents
                             référencés</span></div>
                     <div><span class="num">{{ $biblioStats['annees'] }}</span><span class="lbl">Années
                             d'archives</span></div>
                     <div><span class="num">{{ $biblioStats['thematiques'] }}</span><span class="lbl">Thématiques
                             classées</span></div>
-                </div>
+                </div> --}}
                 <p class="biblio-note-home">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14"
                         height="14">
@@ -1052,156 +1062,627 @@
                     font-size: 16px;
                 }
             }
+
+            .float-contact-btn {
+                position: fixed;
+                right: 24px;
+                bottom: 24px;
+                z-index: 999;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                background: var(--forest-mid, #2e7d32);
+                color: #fff;
+                padding: 13px 20px;
+                border-radius: 50px;
+                font-size: 14px;
+                font-weight: 700;
+                text-decoration: none;
+                box-shadow: 0 8px 22px rgba(0, 0, 0, .22);
+                transition: transform .15s ease, box-shadow .15s ease, background .15s ease;
+            }
+
+            .float-contact-btn svg {
+                width: 18px;
+                height: 18px;
+                flex-shrink: 0;
+            }
+
+            .float-contact-btn:hover {
+                background: var(--forest-deep, #1b5e20);
+                transform: translateY(-2px);
+                box-shadow: 0 10px 26px rgba(0, 0, 0, .28);
+                color: #fff;
+            }
+
+            @media (max-width: 600px) {
+                .float-contact-btn span {
+                    display: none;
+                }
+
+                .float-contact-btn {
+                    padding: 14px;
+                    border-radius: 50%;
+                }
+            }
         </style>
     @endpush
 
 @endsection
 
 @push('styles')
-<style>
-    /* ---------- Sessions dans les cartes de formation ---------- */
-    .sessions-block { border-top: 1px solid var(--line); padding-top: 14px; margin-bottom: 16px; }
-    .sessions-title { display: block; font-size: 12px; font-weight: 700; color: var(--water); text-transform: uppercase; letter-spacing: .03em; margin-bottom: 10px; }
-    .sessions-list { display: flex; flex-direction: column; gap: 8px; }
-    .session-item { display: flex; flex-direction: column; gap: 2px; font-size: 12.5px; background: var(--paper-alt); padding: 8px 10px; border-left: 2px solid var(--forest-accent); }
-    .session-date { font-weight: 700; color: var(--forest-deep); }
-    .session-lieu { color: var(--ink-soft); }
-    .session-places { color: var(--water); font-weight: 600; }
+    <style>
+        /* ---------- Sessions dans les cartes de formation ---------- */
+        .sessions-block {
+            border-top: 1px solid var(--line);
+            padding-top: 14px;
+            margin-bottom: 16px;
+        }
 
-    /* ---------- Agenda des sessions à venir ---------- */
-    .sessions-agenda { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
-    .agenda-card { display: flex; gap: 18px; align-items: flex-start; background: var(--white); border: 1px solid var(--line); padding: 20px; }
-    .agenda-date { display: flex; flex-direction: column; align-items: center; justify-content: center; background: var(--forest-deep); color: #fff; min-width: 64px; padding: 10px 6px; flex-shrink: 0; }
-    .agenda-date .day { font-family: "Fraunces", serif; font-size: 24px; font-weight: 680; line-height: 1; }
-    .agenda-date .month { font-size: 12px; text-transform: uppercase; letter-spacing: .04em; margin-top: 2px; }
-    .agenda-date .year { font-size: 11px; color: #c3d4bf; }
-    .agenda-body { flex: 1; min-width: 0; }
-    .agenda-body h4 { font-size: 16px; margin-bottom: 8px; }
-    .agenda-body .lieu, .agenda-body .duree { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--ink-soft); margin-bottom: 4px; }
-    .agenda-cta { display: flex; flex-direction: column; align-items: flex-end; gap: 10px; flex-shrink: 0; }
-    .places-badge { font-size: 11.5px; font-weight: 700; color: var(--water); background: var(--water-soft); padding: 4px 9px; white-space: nowrap; }
+        .sessions-title {
+            display: block;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--water);
+            text-transform: uppercase;
+            letter-spacing: .03em;
+            margin-bottom: 10px;
+        }
 
-    @media (max-width: 640px) {
-        .agenda-card { flex-direction: column; }
-        .agenda-cta { align-items: flex-start; flex-direction: row; width: 100%; justify-content: space-between; }
-    }
+        .sessions-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
 
-    /* ---------- Bibliothèque : documents récents ---------- */
-    .biblio-recent { display: flex; flex-direction: column; gap: 10px; margin-top: 20px; }
-    .biblio-recent-item { display: flex; align-items: center; gap: 10px; padding: 10px 14px; background: var(--white); border: 1px solid var(--line); text-decoration: none; color: inherit; transition: border-color .2s ease; }
-    .biblio-recent-item:hover { border-color: var(--forest-accent); }
-    .biblio-recent-item .doc-type { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .03em; color: var(--water); white-space: nowrap; }
-    .biblio-recent-item .doc-titre { font-size: 14px; color: var(--ink); }
-    .biblio-note-home { display: flex; align-items: center; gap: 6px; margin-top: 14px; font-size: 12.5px; color: var(--ink-soft); }
-    .biblio-note-home svg { flex-shrink: 0; color: var(--forest-deep); }
+        .session-item {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            font-size: 12.5px;
+            background: var(--paper-alt);
+            padding: 8px 10px;
+            border-left: 2px solid var(--forest-accent);
+        }
 
-    /* ---------- Partenaires ---------- */
-    .partner-logo-img { display: flex; align-items: center; justify-content: center; text-decoration: none; cursor: default; }
-    a.partner-logo-img { cursor: pointer; }
-    .partner-logo-img img { max-height: 100%; max-width: 100%; object-fit: contain; transition: opacity .2s ease, transform .2s ease; }
-    .partner-logo-img:hover img { transform: scale(1.05); }
+        .session-date {
+            font-weight: 700;
+            color: var(--forest-deep);
+        }
 
-    /* ---------- Témoignages défilants ---------- */
-    .testi-marquee { overflow: hidden; padding: 12px 0 28px; -webkit-mask-image: linear-gradient(to right, transparent, #000 6%, #000 94%, transparent); mask-image: linear-gradient(to right, transparent, #000 6%, #000 94%, transparent); }
-    .testi-track { display: flex; width: max-content; animation: testi-scroll 45s linear infinite; }
-    .testi-marquee:hover .testi-track { animation-play-state: paused; }
-    .testi-group { display: flex; gap: 24px; padding-right: 24px; }
-    @keyframes testi-scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+        .session-lieu {
+            color: var(--ink-soft);
+        }
 
-    .testi-card { position: relative; display: flex; flex-direction: column; width: 360px; flex-shrink: 0; background: var(--white); border: 1px solid var(--line); border-top: 3px solid var(--forest-accent); padding: 28px 26px 22px; box-shadow: 0 6px 20px rgba(0,0,0,.05); transition: transform .25s ease, box-shadow .25s ease; }
-    .testi-card:hover { transform: translateY(-4px); box-shadow: 0 12px 28px rgba(0,0,0,.10); }
-    .testi-quote { position: absolute; top: 6px; right: 20px; font-family: "Fraunces", serif; font-size: 84px; line-height: 1; color: var(--forest-accent); opacity: .18; pointer-events: none; }
-    .testi-stars { color: #e0a526; font-size: 16px; letter-spacing: 2px; margin-bottom: 14px; }
-    .testi-body { flex: 1; margin-bottom: 16px; }
-    .testi-text { margin: 0; font-size: 15px; line-height: 1.65; color: var(--ink); display: -webkit-box; -webkit-line-clamp: 6; -webkit-box-orient: vertical; overflow: hidden; }
-    .testi-more { margin-top: 8px; padding: 0; background: none; border: 0; font: inherit; font-size: 12.5px; font-weight: 700; color: var(--water); text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
-    .testi-more[hidden] { display: none; }
-    .testi-more:hover { color: var(--forest-deep); }
-    .testi-formation { align-self: flex-start; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .03em; color: var(--water); background: var(--water-soft); padding: 4px 9px; margin-bottom: 18px; }
-    .testi-who { display: flex; align-items: center; gap: 12px; border-top: 1px solid var(--line); padding-top: 16px; }
-    .testi-avatar { width: 44px; height: 44px; border-radius: 50%; object-fit: cover; flex-shrink: 0; }
-    .testi-avatar-initials { display: flex; align-items: center; justify-content: center; background: var(--forest-deep); color: #fff; font-family: "Fraunces", serif; font-size: 16px; font-weight: 680; }
-    .testi-name { display: block; font-weight: 700; font-size: 14px; color: var(--forest-deep); }
-    .testi-role { display: block; font-size: 12.5px; color: var(--ink-soft); margin-top: 2px; }
+        .session-places {
+            color: var(--water);
+            font-weight: 600;
+        }
 
-    @media (max-width: 640px) {
-        .testi-card { width: 290px; padding: 24px 20px 18px; }
-    }
+        /* ---------- Agenda des sessions à venir ---------- */
+        .sessions-agenda {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
 
-    @media (prefers-reduced-motion: reduce) {
-        .testi-track { animation: none; }
-        .testi-marquee { overflow-x: auto; -webkit-mask-image: none; mask-image: none; }
-        .testi-group[aria-hidden="true"] { display: none; }
-    }
+        .agenda-card {
+            display: flex;
+            gap: 18px;
+            align-items: flex-start;
+            background: var(--white);
+            border: 1px solid var(--line);
+            padding: 20px;
+        }
 
-    .testi-track--reverse { animation-direction: reverse; }
+        .agenda-date {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: var(--forest-deep);
+            color: #fff;
+            min-width: 64px;
+            padding: 10px 6px;
+            flex-shrink: 0;
+        }
 
-    .testi-marquee--compact { padding: 18px 0; background: var(--paper-alt); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
-    .testi-marquee--compact .testi-group { gap: 16px; padding-right: 16px; }
-    .testi-marquee--compact .testi-card { width: 300px; padding: 18px 18px 14px; border-top-width: 2px; box-shadow: none; }
-    .testi-marquee--compact .testi-card:hover { transform: none; box-shadow: none; }
-    .testi-marquee--compact .testi-quote { font-size: 60px; right: 14px; }
-    .testi-marquee--compact .testi-stars { font-size: 14px; margin-bottom: 8px; }
-    .testi-marquee--compact .testi-body { margin-bottom: 12px; }
-    .testi-marquee--compact .testi-text { font-size: 13.5px; line-height: 1.5; -webkit-line-clamp: 3; }
-    .testi-marquee--compact .testi-formation { display: none; }
-    .testi-marquee--compact .testi-who { padding-top: 12px; }
-    .testi-marquee--compact .testi-avatar { width: 36px; height: 36px; font-size: 14px; }
+        .agenda-date .day {
+            font-family: "Fraunces", serif;
+            font-size: 24px;
+            font-weight: 680;
+            line-height: 1;
+        }
 
-    @media (max-width: 640px) {
-        .testi-marquee--compact .testi-card { width: 260px; }
-    }
+        .agenda-date .month {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: .04em;
+            margin-top: 2px;
+        }
 
-    /* ---------- Navigation du défilement des actualités ---------- */
-    .news-slider { position: relative; margin: 0 -28px; }
-    .news-slider .news-marquee { margin-left: 0; margin-right: 0; }
-    .news-nav-btn { width: 38px; height: 38px; display: inline-flex; align-items: center; justify-content: center; border: 1px solid var(--line); border-radius: 50%; background: var(--white); color: var(--ink); font-size: 19px; line-height: 1; cursor: pointer; transition: border-color .15s ease, color .15s ease, background .15s ease; }
-    .news-nav-btn:hover:not(:disabled) { border-color: var(--water); color: var(--water); background: rgba(20, 108, 104, .06); }
-    .news-nav-btn:disabled { opacity: .45; cursor: default; }
-    .news-arrow { position: absolute; top: 50%; transform: translateY(-50%); z-index: 3; }
-    .news-arrow--left { left: 0; }
-    .news-arrow--right { right: 0; }
+        .agenda-date .year {
+            font-size: 11px;
+            color: #c3d4bf;
+        }
 
-    @media (max-width: 640px) {
-        .news-arrow { width: 32px; height: 32px; font-size: 16px; }
-    }
-</style>
+        .agenda-body {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .agenda-body h4 {
+            font-size: 16px;
+            margin-bottom: 8px;
+        }
+
+        .agenda-body .lieu,
+        .agenda-body .duree {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            color: var(--ink-soft);
+            margin-bottom: 4px;
+        }
+
+        .agenda-cta {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 10px;
+            flex-shrink: 0;
+        }
+
+        .places-badge {
+            font-size: 11.5px;
+            font-weight: 700;
+            color: var(--water);
+            background: var(--water-soft);
+            padding: 4px 9px;
+            white-space: nowrap;
+        }
+
+        @media (max-width: 640px) {
+            .agenda-card {
+                flex-direction: column;
+            }
+
+            .agenda-cta {
+                align-items: flex-start;
+                flex-direction: row;
+                width: 100%;
+                justify-content: space-between;
+            }
+        }
+
+        /* ---------- Bibliothèque : documents récents ---------- */
+        .biblio-recent {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .biblio-recent-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 14px;
+            background: var(--white);
+            border: 1px solid var(--line);
+            text-decoration: none;
+            color: inherit;
+            transition: border-color .2s ease;
+        }
+
+        .biblio-recent-item:hover {
+            border-color: var(--forest-accent);
+        }
+
+        .biblio-recent-item .doc-type {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: .03em;
+            color: var(--water);
+            white-space: nowrap;
+        }
+
+        .biblio-recent-item .doc-titre {
+            font-size: 14px;
+            color: var(--ink);
+        }
+
+        .biblio-note-home {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 14px;
+            font-size: 12.5px;
+            color: var(--ink-soft);
+        }
+
+        .biblio-note-home svg {
+            flex-shrink: 0;
+            color: var(--forest-deep);
+        }
+
+        /* ---------- Partenaires ---------- */
+        .partner-logo-img {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            cursor: default;
+        }
+
+        a.partner-logo-img {
+            cursor: pointer;
+        }
+
+        .partner-logo-img img {
+            max-height: 100%;
+            max-width: 100%;
+            object-fit: contain;
+            transition: opacity .2s ease, transform .2s ease;
+        }
+
+        .partner-logo-img:hover img {
+            transform: scale(1.05);
+        }
+
+        /* ---------- Témoignages défilants ---------- */
+        .testi-marquee {
+            overflow: hidden;
+            padding: 12px 0 28px;
+            -webkit-mask-image: linear-gradient(to right, transparent, #000 6%, #000 94%, transparent);
+            mask-image: linear-gradient(to right, transparent, #000 6%, #000 94%, transparent);
+        }
+
+        .testi-track {
+            display: flex;
+            width: max-content;
+            animation: testi-scroll 45s linear infinite;
+        }
+
+        .testi-marquee:hover .testi-track {
+            animation-play-state: paused;
+        }
+
+        .testi-group {
+            display: flex;
+            gap: 24px;
+            padding-right: 24px;
+        }
+
+        @keyframes testi-scroll {
+            from {
+                transform: translateX(0);
+            }
+
+            to {
+                transform: translateX(-50%);
+            }
+        }
+
+        .testi-card {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            width: 360px;
+            flex-shrink: 0;
+            background: var(--white);
+            border: 1px solid var(--line);
+            border-top: 3px solid var(--forest-accent);
+            padding: 28px 26px 22px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, .05);
+            transition: transform .25s ease, box-shadow .25s ease;
+        }
+
+        .testi-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 28px rgba(0, 0, 0, .10);
+        }
+
+        .testi-quote {
+            position: absolute;
+            top: 6px;
+            right: 20px;
+            font-family: "Fraunces", serif;
+            font-size: 84px;
+            line-height: 1;
+            color: var(--forest-accent);
+            opacity: .18;
+            pointer-events: none;
+        }
+
+        .testi-stars {
+            color: #e0a526;
+            font-size: 16px;
+            letter-spacing: 2px;
+            margin-bottom: 14px;
+        }
+
+        .testi-body {
+            flex: 1;
+            margin-bottom: 16px;
+        }
+
+        .testi-text {
+            margin: 0;
+            font-size: 15px;
+            line-height: 1.65;
+            color: var(--ink);
+            display: -webkit-box;
+            -webkit-line-clamp: 6;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .testi-more {
+            margin-top: 8px;
+            padding: 0;
+            background: none;
+            border: 0;
+            font: inherit;
+            font-size: 12.5px;
+            font-weight: 700;
+            color: var(--water);
+            text-decoration: underline;
+            text-underline-offset: 3px;
+            cursor: pointer;
+        }
+
+        .testi-more[hidden] {
+            display: none;
+        }
+
+        .testi-more:hover {
+            color: var(--forest-deep);
+        }
+
+        .testi-formation {
+            align-self: flex-start;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: .03em;
+            color: var(--water);
+            background: var(--water-soft);
+            padding: 4px 9px;
+            margin-bottom: 18px;
+        }
+
+        .testi-who {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-top: 1px solid var(--line);
+            padding-top: 16px;
+        }
+
+        .testi-avatar {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            object-fit: cover;
+            flex-shrink: 0;
+        }
+
+        .testi-avatar-initials {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--forest-deep);
+            color: #fff;
+            font-family: "Fraunces", serif;
+            font-size: 16px;
+            font-weight: 680;
+        }
+
+        .testi-name {
+            display: block;
+            font-weight: 700;
+            font-size: 14px;
+            color: var(--forest-deep);
+        }
+
+        .testi-role {
+            display: block;
+            font-size: 12.5px;
+            color: var(--ink-soft);
+            margin-top: 2px;
+        }
+
+        @media (max-width: 640px) {
+            .testi-card {
+                width: 290px;
+                padding: 24px 20px 18px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .testi-track {
+                animation: none;
+            }
+
+            .testi-marquee {
+                overflow-x: auto;
+                -webkit-mask-image: none;
+                mask-image: none;
+            }
+
+            .testi-group[aria-hidden="true"] {
+                display: none;
+            }
+        }
+
+        .testi-track--reverse {
+            animation-direction: reverse;
+        }
+
+        .testi-marquee--compact {
+            padding: 18px 0;
+            background: var(--paper-alt);
+            border-top: 1px solid var(--line);
+            border-bottom: 1px solid var(--line);
+        }
+
+        .testi-marquee--compact .testi-group {
+            gap: 16px;
+            padding-right: 16px;
+        }
+
+        .testi-marquee--compact .testi-card {
+            width: 300px;
+            padding: 18px 18px 14px;
+            border-top-width: 2px;
+            box-shadow: none;
+        }
+
+        .testi-marquee--compact .testi-card:hover {
+            transform: none;
+            box-shadow: none;
+        }
+
+        .testi-marquee--compact .testi-quote {
+            font-size: 60px;
+            right: 14px;
+        }
+
+        .testi-marquee--compact .testi-stars {
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+
+        .testi-marquee--compact .testi-body {
+            margin-bottom: 12px;
+        }
+
+        .testi-marquee--compact .testi-text {
+            font-size: 13.5px;
+            line-height: 1.5;
+            -webkit-line-clamp: 3;
+        }
+
+        .testi-marquee--compact .testi-formation {
+            display: none;
+        }
+
+        .testi-marquee--compact .testi-who {
+            padding-top: 12px;
+        }
+
+        .testi-marquee--compact .testi-avatar {
+            width: 36px;
+            height: 36px;
+            font-size: 14px;
+        }
+
+        @media (max-width: 640px) {
+            .testi-marquee--compact .testi-card {
+                width: 260px;
+            }
+        }
+
+        /* ---------- Navigation du défilement des actualités ---------- */
+        .news-slider {
+            position: relative;
+            margin: 0 -28px;
+        }
+
+        .news-slider .news-marquee {
+            margin-left: 0;
+            margin-right: 0;
+        }
+
+        .news-nav-btn {
+            width: 38px;
+            height: 38px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--line);
+            border-radius: 50%;
+            background: var(--white);
+            color: var(--ink);
+            font-size: 19px;
+            line-height: 1;
+            cursor: pointer;
+            transition: border-color .15s ease, color .15s ease, background .15s ease;
+        }
+
+        .news-nav-btn:hover:not(:disabled) {
+            border-color: var(--water);
+            color: var(--water);
+            background: rgba(20, 108, 104, .06);
+        }
+
+        .news-nav-btn:disabled {
+            opacity: .45;
+            cursor: default;
+        }
+
+        .news-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 3;
+        }
+
+        .news-arrow--left {
+            left: 0;
+        }
+
+        .news-arrow--right {
+            right: 0;
+        }
+
+        @media (max-width: 640px) {
+            .news-arrow {
+                width: 32px;
+                height: 32px;
+                font-size: 16px;
+            }
+        }
+    </style>
 @endpush
 
 @push('scripts')
-<script>
-    // Navigation précédent / suivant du défilement des actualités
-    (function () {
-        var marquee = document.getElementById('news-marquee');
-        if (!marquee) return;
-        var track = marquee.querySelector('.news-track');
-        var prevBtn = document.getElementById('news-prev');
-        var nextBtn = document.getElementById('news-next');
-        if (!track || !prevBtn || !nextBtn) return;
+    <script>
+        // Navigation précédent / suivant du défilement des actualités
+        (function() {
+            var marquee = document.getElementById('news-marquee');
+            if (!marquee) return;
+            var track = marquee.querySelector('.news-track');
+            var prevBtn = document.getElementById('news-prev');
+            var nextBtn = document.getElementById('news-next');
+            if (!track || !prevBtn || !nextBtn) return;
 
-        var gap = 26;
-        var pos = 0;
+            var gap = 26;
+            var pos = 0;
 
-        function stepSize() {
-            var card = track.querySelector('.news-card');
-            if (!card) return 320 + gap;
-            return card.getBoundingClientRect().width + gap;
-        }
+            function stepSize() {
+                var card = track.querySelector('.news-card');
+                if (!card) return 320 + gap;
+                return card.getBoundingClientRect().width + gap;
+            }
 
-        function maxPos() {
-            var uniqueWidth = (track.scrollWidth - gap) / 2;
-            return -(uniqueWidth - marquee.clientWidth);
-        }
+            function maxPos() {
+                var uniqueWidth = (track.scrollWidth - gap) / 2;
+                return -(uniqueWidth - marquee.clientWidth);
+            }
 
-        function updateButtons() {
-            prevBtn.disabled = pos >= -1;
-            nextBtn.disabled = pos <= maxPos() + 1;
-        }
+            function updateButtons() {
+                prevBtn.disabled = pos >= -1;
+                nextBtn.disabled = pos <= maxPos() + 1;
+            }
 
-        function pause() {
-            track.style.animation = 'none';
-            track.style.transform = 'translateX(' + pos + 'px)';
-        }
+            function pause() {
+                track.style.animation = 'none';
+                track.style.transform = 'translateX(' + pos + 'px)';
+            }
 
             function go(direction) {
                 pause();

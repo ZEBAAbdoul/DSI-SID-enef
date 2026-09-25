@@ -933,7 +933,7 @@ $filieresActive = Route::is('admin.filieres.*');
         {{-- DOCUMENTATION. --}}
         {{-- ===================================================== --}}
 
-        <li class="nav-item">
+        {{-- <li class="nav-item">
 
             <a href="{{ route('manual.index') }}" class="nav-link {{ Route::is('manual.index') ? 'active' : '' }}">
 
@@ -945,7 +945,7 @@ $filieresActive = Route::is('admin.filieres.*');
 
             </a>
 
-        </li>
+        </li> --}}
         @endif
 
     </ul>
