@@ -134,7 +134,7 @@
 
     <small class="text-muted d-block mt-1">
         Utilisez <strong>+</strong> pour ajouter une photo et <strong>−</strong> pour la retirer. Le bouton − sert aussi à retirer une photo déjà enregistrée (recliquez sur + pour annuler).
-        JPG, PNG ou WEBP — les photos de plus de 2 Mo sont compressées automatiquement avant l'envoi. La première photo sert de couverture.
+        JPG, PNG ou WEBP. La première photo sert de couverture.
     </small>
 
 </div>

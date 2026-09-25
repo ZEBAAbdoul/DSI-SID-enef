@@ -90,8 +90,7 @@
             </div>
 
             <small class="form-text text-muted">
-                JPG, JPEG, PNG, GIF, WEBP — 5 Mo ou plus : la photo est
-                compressée automatiquement avant l'envoi.
+                JPG, JPEG, PNG, GIF, WEBP 
             </small>
 
             @error('image')
