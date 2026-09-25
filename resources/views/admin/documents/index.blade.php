@@ -98,6 +98,7 @@
                                 <option value="0" @selected(request('telechargeable') === '0')>Non</option>
                             </select>
                         </div>
+                        
 
                         <div class="col-lg-2 col-md-6 d-flex gap-2">
                             <button type="submit" class="btn btn-success flex-grow-1">
@@ -115,6 +116,21 @@
                         </div>
 
                     </div>
+
+                    <div class="col-lg-2 col-md-6">
+    <label for="per_page" class="form-label small text-muted mb-1">
+        Afficher
+    </label>
+    <select id="per_page" name="per_page" class="form-select" onchange="this.form.submit()">
+        @foreach ([10, 25, 50, 100] as $valeur)
+            <option value="{{ $valeur }}"
+                    {{ (string) request('per_page', 15) === (string) $valeur ? 'selected' : '' }}>
+                {{ $valeur }}
+            </option>
+        @endforeach
+        <option value="tous" @selected(request('per_page') === 'tous')>Tous</option>
+    </select>
+</div>
                 </form>
 
             </div>

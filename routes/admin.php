@@ -54,6 +54,12 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(
     Route::delete('/profile', [ProfileController::class, 'destroy'])
         ->name('profile.destroy');
 
+    Route::get('/profile/password', [ProfileController::class, 'editPassword'])
+        ->name('profile.password.edit');
+
+    Route::put('/profile/password', [ProfileController::class, 'updatePassword'])
+        ->name('profile.password.update');
+
 
     // ==================== UTILISATEURS ====================
 
@@ -475,8 +481,8 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(
     Route::patch('recherches-innovations/{recherches_innovation}/publier', [RechercheInnovationController::class, 'publier'])
         ->name('recherches-innovations.publier');
 
-Route::patch('recherches-innovations/{recherches_innovation}/depublier', [RechercheInnovationController::class, 'depublier'])
-    ->name('recherches-innovations.depublier');
+    Route::patch('recherches-innovations/{recherches_innovation}/depublier', [RechercheInnovationController::class, 'depublier'])
+        ->name('recherches-innovations.depublier');
 
 
     // ==================== STATISTIQUES ====================
@@ -488,8 +494,5 @@ Route::patch('recherches-innovations/{recherches_innovation}/depublier', [Recher
 
         Route::get('/fonctionnalites', [StatistiqueFonctionnaliteController::class, 'index'])
             ->name('fonctionnalites');
-
     });
-
-
 });

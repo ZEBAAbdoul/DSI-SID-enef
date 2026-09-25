@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Enseignant;
 use App\Models\Personne;
 use App\Models\User;
+use App\Notifications\CompteCreeNotification;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
@@ -42,56 +43,78 @@ class EnseignantController extends Controller
         return view('admin.enseignants.create');
     }
 
-    public function store(Request $request): RedirectResponse
-    {
-        $validated = $request->validate($this->reglesPersonneEtUser() + [
-            'specialite' => ['nullable', 'string', 'max:150'],
-            'telephone'  => ['nullable', 'string', 'max:20'],
-            'statut'     => ['required', 'in:actif,inactif,suspendu'],
+// À fusionner dans ton EnseignantController : remplace uniquement la méthode store()
+// et ajoute l'import de la notification en haut du fichier :
+//     use App\Notifications\CompteCreeNotification;
+
+public function store(Request $request): RedirectResponse
+{
+    $validated = $request->validate($this->reglesPersonneEtUser() + [
+        'specialite' => ['nullable', 'string', 'max:150'],
+        'telephone'  => ['nullable', 'string', 'max:20'],
+        'statut'     => ['required', 'in:actif,inactif,suspendu'],
+    ]);
+
+    $user = DB::transaction(function () use ($validated) {
+
+        $personne = Personne::create([
+            'nationalite_type'    => $validated['nationalite_type'],
+            'pays_nationalite'    => $validated['pays_nationalite'] ?? null,
+            'nom'                 => $validated['nom'],
+            'prenom'              => $validated['prenom'],
+            'sexe'                => $validated['sexe'],
+            'date_naissance'      => $validated['date_naissance'],
+            'lieu_naissance'      => $validated['lieu_naissance'],
+            'piece_type'          => $validated['piece_type'],
+            'piece_numero'        => $validated['piece_numero'],
+            'telephone_indicatif' => $validated['telephone_indicatif'] ?? '+226',
+            'telephone'           => $validated['telephone_personne'],
+            'adresse'             => $validated['adresse'] ?? null,
+            'ville'               => $validated['ville'] ?? null,
+            'pays_residence'      => $validated['pays_residence'] ?? 'Burkina Faso',
         ]);
 
-        DB::transaction(function () use ($validated) {
+        $user = User::create([
+            'personne_id' => $personne->id,
+            'email'       => $validated['email'],
+            'password'    => Hash::make(self::MOT_DE_PASSE_PAR_DEFAUT),
+            // Compte créé par un administrateur : adresse considérée comme vérifiée
+            // (sinon le middleware "verified" bloquerait l'accès sans qu'aucun e-mail ne soit envoyé)
+            'email_verified_at' => now(),
+        ]);
 
-            $personne = Personne::create([
-                'nationalite_type'    => $validated['nationalite_type'],
-                'pays_nationalite'    => $validated['pays_nationalite'] ?? null,
-                'nom'                 => $validated['nom'],
-                'prenom'              => $validated['prenom'],
-                'sexe'                => $validated['sexe'],
-                'date_naissance'      => $validated['date_naissance'],
-                'lieu_naissance'      => $validated['lieu_naissance'],
-                'piece_type'          => $validated['piece_type'],
-                'piece_numero'        => $validated['piece_numero'],
-                'telephone_indicatif' => $validated['telephone_indicatif'] ?? '+226',
-                'telephone'           => $validated['telephone_personne'],
-                'adresse'             => $validated['adresse'] ?? null,
-                'ville'               => $validated['ville'] ?? null,
-                'pays_residence'      => $validated['pays_residence'] ?? 'Burkina Faso',
-            ]);
+        $user->assignRole(self::ROLE);
 
-            $user = User::create([
-                'personne_id' => $personne->id,
-                'email'       => $validated['email'],
-                'password'    => Hash::make(self::MOT_DE_PASSE_PAR_DEFAUT),
-            ]);
+        Enseignant::create([
+            'user_id'    => $user->id,
+            'specialite' => $validated['specialite'] ?? null,
+            'telephone'  => $validated['telephone'] ?? $validated['telephone_personne'],
+            'statut'     => $validated['statut'],
+        ]);
 
-            $user->assignRole(self::ROLE);
+        return $user;
+    });
 
-            Enseignant::create([
-                'user_id'    => $user->id,
-                'specialite' => $validated['specialite'] ?? null,
-                'telephone'  => $validated['telephone'] ?? $validated['telephone_personne'],
-                'statut'     => $validated['statut'],
-            ]);
-        });
+    // Envoi des identifiants, une fois le compte enregistré (en dehors de la transaction :
+    // un e-mail qui échoue ne doit pas annuler la création du compte).
+    try {
+        $user->notify(new CompteCreeNotification(self::MOT_DE_PASSE_PAR_DEFAUT));
+    } catch (\Throwable $e) {
+        report($e);
 
         return redirect()
             ->route('admin.enseignants.index')
             ->with(
-                'success',
-                'L\'enseignant a été créé avec succès. Mot de passe par défaut : ' . self::MOT_DE_PASSE_PAR_DEFAUT
+                'warning',
+                "Enseignant créé, mais l'e-mail n'a pas pu être envoyé à {$user->email}. "
+                . 'Mot de passe par défaut à lui transmettre : ' . self::MOT_DE_PASSE_PAR_DEFAUT
             );
     }
+
+    return redirect()
+        ->route('admin.enseignants.index')
+        ->with('success', "L'enseignant a été créé. Ses identifiants ont été envoyés à {$user->email}.");
+}
 
     public function edit(Enseignant $enseignant): View
     {

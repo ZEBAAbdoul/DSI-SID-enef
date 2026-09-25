@@ -1,46 +1,63 @@
-<section>
-    <header>
-        <h2 class="text-lg font-medium text-gray-900">
-            {{ __('Update Password') }}
-        </h2>
+<x-admin>
 
-        <p class="mt-1 text-sm text-gray-600">
-            {{ __('Ensure your account is using a long, random password to stay secure.') }}
-        </p>
-    </header>
+    @section('title', 'Modifier le mot de passe')
 
-    <form method="post" action="{{ route('password.update') }}" class="mt-6 space-y-6">
-        @csrf
-        @method('put')
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card card-primary">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <i class="fas fa-key mr-2"></i>Changer mon mot de passe
+                    </h3>
+                </div>
 
-        <div class="mb-3">
-            <x-input-label for="current_password" :value="__('Current Password')" />
-            <x-text-input id="current_password" name="current_password" type="password" class="form-control" autocomplete="current-password" />
-            <x-input-error :messages="$errors->updatePassword->get('current_password')" class="mt-2 text-danger" />
-        </div>
+                <form method="POST" action="{{ route('admin.profile.password.update') }}">
+                    @csrf
+                    @method('PUT')
 
-        <div class="mb-3">
-            <x-input-label for="password" :value="__('New Password')" />
-            <x-text-input id="password" name="password" type="password" class="form-control" autocomplete="new-password" />
-            <x-input-error :messages="$errors->updatePassword->get('password')" class="mt-2 text-danger" />
-        </div>
+                    <div class="card-body">
 
-        <div class="mb-3">
-            <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
-            <x-text-input id="password_confirmation" name="password_confirmation" type="password" class="form-control" autocomplete="new-password" />
-            <x-input-error :messages="$errors->updatePassword->get('password_confirmation')" class="mt-2 text-danger" />
-        </div>
+                        @if (session('status') === 'password-updated')
+                            <div class="alert alert-success">
+                                Votre mot de passe a été mis à jour avec succès.
+                            </div>
+                        @endif
 
-        <div class="flex items-center gap-4">
-            <button class="btn btn-primary btn-sm" type="submit">{{ __('Save') }}</button>
+                        <div class="form-group">
+                            <label for="current_password">Mot de passe actuel</label>
+                            <input id="current_password" type="password" name="current_password"
+                                class="form-control" autocomplete="current-password" required>
+                            <x-input-error class="mt-2" field="current_password" />
+                        </div>
 
-            @if (session('status') === 'password-updated')
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                {{ 'Saved' }}
-                <button type="button" class="btn btn-sm float-end float-right" data-bs-dismiss="alert"
-                    aria-label="Close">&times;</button>
+                        <div class="form-group">
+                            <label for="password">Nouveau mot de passe</label>
+                            <input id="password" type="password" name="password" class="form-control"
+                                autocomplete="new-password" required minlength="12"
+                                placeholder="12 caractères minimum">
+                            <x-input-error class="mt-2" field="password" />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="password_confirmation">Confirmer le nouveau mot de passe</label>
+                            <input id="password_confirmation" type="password" name="password_confirmation"
+                                class="form-control" autocomplete="new-password" required minlength="12"
+                                placeholder="Répétez le nouveau mot de passe">
+                        </div>
+
+                    </div>
+
+                    <div class="card-footer">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save mr-1"></i> Enregistrer
+                        </button>
+                        <a href="{{ route('admin.profile.edit') }}" class="btn btn-outline-secondary">
+                            Annuler
+                        </a>
+                    </div>
+                </form>
             </div>
-            @endif
         </div>
-    </form>
-</section>
+    </div>
+
+</x-admin>

@@ -15,12 +15,16 @@ use App\Models\Formation;
 use App\Models\Inscription;
 use App\Models\SessionFormation;
 
+use Illuminate\Validation\Rules\Password;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\ValidationException;
+
 class ProfileController extends Controller
 {
     public function dashboard(): View
     {
         $stats = [
-            'candidatures_total' => User::count(), // à remplacer par Candidature::count() si cette table existe
+            'candidatures_total' => Inscription::count(), // à remplacer par Candidature::count() si cette table existe
             'formations_ouvertes' => Formation::ouvertes()->count(),
             'sessions_a_venir' => SessionFormation::ouvertes()
                 ->where('date_debut', '>=', now())
@@ -91,7 +95,7 @@ class ProfileController extends Controller
      */
     public function edit(Request $request): View
     {
-        return view('profile.edit', [
+        return view('profile.partials.update-profile-information-form', [
             'user' => $request->user(),
         ]);
     }
@@ -99,17 +103,29 @@ class ProfileController extends Controller
     /**
      * Update the user's profile information.
      */
+    /**
+     * Update the user's profile information.
+     */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
-        $request->user()->fill($request->validated());
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
+        $user = $request->user();
+        $validated = $request->validated();
+
+        // Nom / prénom vivent sur la Personne rattachée, pas sur le User
+        $user->personne->update([
+            'nom'    => $validated['nom'],
+            'prenom' => $validated['prenom'],
+        ]);
+
+        if ($user->email !== $validated['email']) {
+            $user->email_verified_at = null;
         }
-        User::where('id', $request->user()->id)->update(['mode' => $request->mode]);
 
-        $request->user()->save();
+        $user->email = $validated['email'];
+        // $user->mode  = $validated['mode'];
+        $user->save();
 
-        return Redirect::route('admin.profile.edit')->with('status', 'profile-updated');
+        return Redirect::route('admin.profile.edit')->with('success', 'profil mis à jour avec succès');
     }
 
     /**
@@ -131,5 +147,46 @@ class ProfileController extends Controller
         $request->session()->regenerateToken();
 
         return Redirect::to('/');
+    }
+
+
+// ...
+
+    /**
+     * Display the user's password edit form.
+     */
+    public function editPassword(Request $request): View
+    {
+        return view('profile.partials.update-password-form', [
+            'user' => $request->user(),
+        ]);
+    }
+
+    /**
+     * Update the user's password.
+     */
+
+    /**
+     * Update the user's password.
+     */
+    public function updatePassword(Request $request): RedirectResponse
+    {
+        $request->validate([
+            'current_password' => ['required', 'current_password'],
+            'password'          => ['required', 'confirmed', Password::min(12)],
+        ]);
+
+        // Interdit de reprendre le même mot de passe
+        if (Hash::check($request->password, $request->user()->password)) {
+            throw ValidationException::withMessages([
+                'password' => 'Le nouveau mot de passe doit être différent de l\'actuel.',
+            ]);
+        }
+
+        $request->user()->update([
+            'password' => Hash::make($request->password),
+        ]);
+
+        return Redirect::route('admin.profile.password.edit')->with('success', 'Mot de passe mis à jour avec succès');
     }
 }

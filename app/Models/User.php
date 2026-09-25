@@ -63,6 +63,8 @@ class User extends Authenticatable
         'created_at'        => 'datetime:d/m/Y H:i',
         'updated_at'        => 'datetime:d/m/Y H:i',
         'est_actif'         => 'boolean',
+        'password' => 'hashed',
+
     ];
 
     /**

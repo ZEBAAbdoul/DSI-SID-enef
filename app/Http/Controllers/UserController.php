@@ -32,7 +32,7 @@ class UserController extends Controller
 
     /** Mot de passe attribué lors d'une réinitialisation par un administrateur. */
     private const MOT_DE_PASSE_PAR_DEFAUT = 'enef@enef2026';
-    
+
 
     /** Rôles proposés dans les formulaires de création / modification. */
     private function rolesAttribuables()

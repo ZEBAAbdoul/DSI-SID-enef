@@ -33,6 +33,8 @@ use App\Http\Controllers\VideoPublicController;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/mentions_legale', [HomeController::class, 'mentionLegale'])->name('mentionLegale');
+Route::get('/conditionutilisation', [HomeController::class, 'conditionutilisation'])->name('conditionutilisation');
+Route::get('/politiqueConfidentialite', [HomeController::class, 'politiqueConfidentialite'])->name('politiqueConfidentialite');
 
 Route::get('/enef', function () {
     return view('auth.login');

@@ -51,7 +51,7 @@
                     <div class="row">
 
                         {{-- Recherche --}}
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <label>Recherche</label>
 
                             <div class="input-group">
@@ -67,7 +67,7 @@
                         </div>
 
                         {{-- Type --}}
-                        <div class="col-md-2">
+                        {{-- <div class="col-md-2">
                             <label>Type</label>
 
                             <select name="type" class="form-control">
@@ -87,7 +87,7 @@
                                     Continue à la Carte
                                 </option>
                             </select>
-                        </div>
+                        </div> --}}
 
                         {{-- Filière --}}
                         <div class="col-md-2">
@@ -138,6 +138,23 @@
 
                                 <option value="brouillon" {{ request('statut') == 'brouillon' ? 'selected' : '' }}>
                                     Brouillon
+                                </option>
+                            </select>
+                        </div>
+
+                        {{-- Par page --}}
+                        <div class="col-md-1">
+                            <label>Afficher</label>
+
+                            <select name="per_page" class="form-control" onchange="this.form.submit()">
+                                @foreach ([10, 25, 50, 100] as $valeur)
+                                    <option value="{{ $valeur }}"
+                                        {{ (string) request('per_page', 10) === (string) $valeur ? 'selected' : '' }}>
+                                        {{ $valeur }}
+                                    </option>
+                                @endforeach
+                                <option value="tous" {{ request('per_page') === 'tous' ? 'selected' : '' }}>
+                                    Tous
                                 </option>
                             </select>
                         </div>
@@ -259,7 +276,7 @@
                             @empty
 
                                 <tr>
-                                    <td colspan="9" class="text-center py-5">
+                                    <td colspan="8" class="text-center py-5">
 
                                         <i class="fas fa-graduation-cap fa-3x text-muted mb-3"></i>
 
@@ -279,12 +296,21 @@
 
                 </div>
 
-                {{-- Pagination --}}
-                @if ($formations->hasPages())
-                    <div class="mt-3">
-                        {{ $formations->links() }}
+                {{-- Total + Pagination --}}
+                <div class="d-flex justify-content-between align-items-center mt-3">
+                    <div class="text-muted small">
+                        @if ($formations->total() > 0)
+                            Affichage de {{ $formations->firstItem() }} à {{ $formations->lastItem() }}
+                            sur {{ $formations->total() }} formation(s)
+                        @endif
                     </div>
-                @endif
+
+                    @if ($formations->hasPages())
+                        <div>
+                            {{ $formations->appends(request()->query())->links() }}
+                        </div>
+                    @endif
+                </div>
 
             </div>
         </div>
