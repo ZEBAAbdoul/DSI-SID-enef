@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'ENEF — École Nationale des Eaux et Forêts')</title>
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
@@ -2088,6 +2089,27 @@
         });
     </script>
     @stack('scripts')
+
+    <script>
+        // Révèle l'IP publique du navigateur (sans GPS, sans permission) : les
+        // visites effectuées en local (localhost/LAN) sont alors géolocalisées
+        // avec la vraie IP du visiteur au lieu de celle du serveur. Le cookie
+        // est renouvelé chaque heure, au cas où l'IP change.
+        (function () {
+            try {
+                var nom = 'enef_ip_pub';
+                if (document.cookie.indexOf(nom + '=') !== -1) { return; }
+                fetch('https://api.ipify.org?format=json', { method: 'GET' })
+                    .then(function (r) { return r.json(); })
+                    .then(function (d) {
+                        if (d && d.ip) {
+                            document.cookie = nom + '=' + encodeURIComponent(d.ip) + '; path=/; max-age=3600';
+                        }
+                    })
+                    .catch(function () {});
+            } catch (e) {}
+        })();
+    </script>
 </body>
 
 </html>

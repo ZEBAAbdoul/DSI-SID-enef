@@ -41,7 +41,7 @@ class StatistiqueVisiteController extends Controller
             ->whereBetween('date', [$debut, $fin])
             ->selectRaw(
                 'COUNT(*) AS vues, '
-                . 'COUNT(DISTINCT session_id) AS visiteurs, '
+                . 'COUNT(DISTINCT visiteur) AS visiteurs, '
                 . 'COUNT(DISTINCT page) AS pages'
             )
             ->first();
@@ -51,7 +51,7 @@ class StatistiqueVisiteController extends Controller
             ->fromSub(
                 Visite::query()
                     ->whereBetween('date', [$debut, $fin])
-                    ->selectRaw('page, date, COUNT(*) AS vues_jour, COUNT(DISTINCT session_id) AS visiteurs_jour')
+                    ->selectRaw('page, date, COUNT(*) AS vues_jour, COUNT(DISTINCT visiteur) AS visiteurs_jour')
                     ->groupBy('date', 'page'),
                 'par_jour'
             )
@@ -65,7 +65,7 @@ class StatistiqueVisiteController extends Controller
         // Top 10 des pages les plus visitées sur la période.
         $topPages = Visite::query()
             ->whereBetween('date', [$debut, $fin])
-            ->selectRaw('page, COUNT(*) AS vues, COUNT(DISTINCT session_id) AS visiteurs')
+            ->selectRaw('page, COUNT(*) AS vues, COUNT(DISTINCT visiteur) AS visiteurs')
             ->groupBy('page')
             ->orderByDesc('vues')
             ->limit(10)
@@ -80,7 +80,7 @@ class StatistiqueVisiteController extends Controller
                 "COALESCE(NULLIF(ville, ''), '—') AS ville, "
                 . "COALESCE(NULLIF(pays, ''), 'Non déterminé') AS pays, "
                 . "COALESCE(NULLIF(pays_code, ''), '—') AS pays_code, "
-                . 'COUNT(DISTINCT session_id) AS visiteurs_jour'
+                . 'COUNT(DISTINCT visiteur) AS visiteurs_jour'
             )
             ->groupBy('date', 'ville', 'pays', 'pays_code')
             ->get()
@@ -112,7 +112,7 @@ class StatistiqueVisiteController extends Controller
         // Série pour le graphe (journalière, re-découpée selon la période).
         $journalier = Visite::query()
             ->whereBetween('date', [$debut, $fin])
-            ->selectRaw('date, COUNT(*) AS vues, COUNT(DISTINCT session_id) AS visiteurs')
+            ->selectRaw('date, COUNT(*) AS vues, COUNT(DISTINCT visiteur) AS visiteurs')
             ->groupBy('date')
             ->orderBy('date')
             ->get()
@@ -214,7 +214,7 @@ class StatistiqueVisiteController extends Controller
             ->whereDate('visite_a', $jour->toDateString())
             ->selectRaw(
                 'EXTRACT(HOUR FROM visite_a) AS heure, '
-                . 'COUNT(*) AS vues, COUNT(DISTINCT session_id) AS visiteurs'
+                . 'COUNT(*) AS vues, COUNT(DISTINCT visiteur) AS visiteurs'
             )
             ->groupByRaw('EXTRACT(HOUR FROM visite_a)')
             ->orderByRaw('EXTRACT(HOUR FROM visite_a)')

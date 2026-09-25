@@ -134,7 +134,7 @@
 
     <small class="text-muted d-block mt-1">
         Utilisez <strong>+</strong> pour ajouter une photo et <strong>−</strong> pour la retirer. Le bouton − sert aussi à retirer une photo déjà enregistrée (recliquez sur + pour annuler).
-        JPG, PNG ou WEBP — 2 Mo maximum par photo. La première photo sert de couverture.
+        JPG, PNG ou WEBP. La première photo sert de couverture.
     </small>
 
 </div>
@@ -238,6 +238,114 @@
         return;
     }
 
+    // Seuil de compression : 2 Mo
+    const SEUIL_COMPRESSION = 2 * 1024 * 1024;
+
+    // Plus grand côté conservé après compression
+    const LARGEUR_MAX = 1920;
+
+    function formatTaille(octets) {
+        if (octets >= 1024 * 1024) {
+            return (octets / (1024 * 1024)).toFixed(1) + ' Mo';
+        }
+        return Math.max(1, Math.round(octets / 1024)) + ' Ko';
+    }
+
+    /**
+     * Compresse une photo lourde via un canvas :
+     * redimensionnée à 1920 px max puis ré-encodée (WebP si possible,
+     * sinon PNG pour les images avec transparence, sinon JPEG).
+     * Retourne une promesse { blob, ext } ou null (échec).
+     */
+    function compresserPhoto(fichier) {
+        return new Promise(function (resolve) {
+
+            const image = new Image();
+            const url = URL.createObjectURL(fichier);
+
+            image.onload = function () {
+
+                let largeur = image.naturalWidth;
+                let hauteur = image.naturalHeight;
+
+                if (!largeur || !hauteur) {
+                    URL.revokeObjectURL(url);
+                    resolve(null);
+                    return;
+                }
+
+                if (Math.max(largeur, hauteur) > LARGEUR_MAX) {
+                    const ratio = LARGEUR_MAX / Math.max(largeur, hauteur);
+                    largeur = Math.round(largeur * ratio);
+                    hauteur = Math.round(hauteur * ratio);
+                }
+
+                const canvas = document.createElement('canvas');
+                canvas.width = largeur;
+                canvas.height = hauteur;
+
+                const contexte = canvas.getContext('2d');
+
+                if (fichier.type === 'image/png') {
+                    contexte.clearRect(0, 0, largeur, hauteur);
+                }
+
+                contexte.drawImage(image, 0, 0, largeur, hauteur);
+
+                URL.revokeObjectURL(url);
+
+                const supportWebp =
+                    canvas.toDataURL('image/webp', 0.8)
+                        .indexOf('data:image/webp') === 0;
+
+                let type;
+                let ext;
+
+                if (supportWebp) {
+                    type = 'image/webp';
+                    ext = 'webp';
+                } else if (fichier.type === 'image/png') {
+                    type = 'image/png';
+                    ext = 'png';
+                } else {
+                    type = 'image/jpeg';
+                    ext = 'jpg';
+                }
+
+                // Qualité décroissante jusqu'à être sous le seuil
+                let qualite = 0.85;
+
+                function essayer() {
+                    canvas.toBlob(function (blob) {
+                        if (!blob) {
+                            resolve(null);
+                            return;
+                        }
+                        if (
+                            blob.size > SEUIL_COMPRESSION &&
+                            qualite > 0.5 &&
+                            type !== 'image/png'
+                        ) {
+                            qualite -= 0.1;
+                            essayer();
+                            return;
+                        }
+                        resolve({ blob: blob, ext: ext });
+                    }, type, qualite);
+                }
+
+                essayer();
+            };
+
+            image.onerror = function () {
+                URL.revokeObjectURL(url);
+                resolve(null);
+            };
+
+            image.src = url;
+        });
+    }
+
     function creerLignePhoto() {
         const ligne = document.createElement('div');
         ligne.className = 'photos-ligne d-flex align-items-center gap-2 border rounded p-2';
@@ -250,6 +358,10 @@
         icone.className = 'fas fa-image text-muted';
         apercu.appendChild(icone);
 
+        // Colonne champ fichier + information de compression
+        const colonne = document.createElement('div');
+        colonne.className = 'flex-grow-1 d-flex flex-column gap-1';
+
         // Champ fichier
         const input = document.createElement('input');
         input.type = 'file';
@@ -257,9 +369,18 @@
         input.accept = '.jpg,.jpeg,.png,.webp';
         input.className = 'form-control form-control-sm';
 
-        // Aperçu immédiat
+        // Information de compression (compressée / taille d'origine)
+        const infos = document.createElement('small');
+        infos.className = 'text-muted photos-infos';
+        infos.style.fontSize = '11px';
+
+        colonne.appendChild(input);
+        colonne.appendChild(infos);
+
+        // Aperçu immédiat + compression des photos de plus de 2 Mo
         input.addEventListener('change', function () {
             apercu.innerHTML = '';
+            infos.textContent = '';
             const fichier = input.files && input.files[0];
 
             if (!fichier) {
@@ -267,10 +388,54 @@
                 return;
             }
 
-            const img = document.createElement('img');
-            img.style.cssText = 'width:100%;height:100%;object-fit:cover;display:block;';
-            img.src = URL.createObjectURL(fichier);
-            apercu.appendChild(img);
+            const afficher = function (fichierAAfficher) {
+                const img = document.createElement('img');
+                img.style.cssText = 'width:100%;height:100%;object-fit:cover;display:block;';
+                img.src = URL.createObjectURL(fichierAAfficher);
+                apercu.appendChild(img);
+            };
+
+            if (fichier.size > SEUIL_COMPRESSION) {
+
+                compresserPhoto(fichier).then(function (resultat) {
+
+                    if (!resultat) {
+                        // Compression impossible : on garde l'original
+                        afficher(fichier);
+                        return;
+                    }
+
+                    const nomSansExtension = fichier.name
+                        .replace(/\.[^.]+$/, '');
+
+                    const nouveauFichier = new File(
+                        [resultat.blob],
+                        nomSansExtension + '.' + resultat.ext,
+                        { type: resultat.blob.type }
+                    );
+
+                    // Remplacer le fichier du champ pour que l'envoi
+                    // utilise la version compressée.
+                    try {
+                        const transfert = new DataTransfer();
+                        transfert.items.add(nouveauFichier);
+                        input.files = transfert.files;
+                    } catch (e) {
+                        // Navigateur sans DataTransfer : le serveur
+                        // compressera à la réception.
+                    }
+
+                    infos.textContent =
+                        'compressée : ' + formatTaille(nouveauFichier.size) +
+                        ' (au lieu de ' + formatTaille(fichier.size) + ')';
+
+                    afficher(nouveauFichier);
+                });
+
+                return;
+            }
+
+            afficher(fichier);
         });
 
         // Bouton − (retirer la ligne)
@@ -285,7 +450,7 @@
         });
 
         ligne.appendChild(apercu);
-        ligne.appendChild(input);
+        ligne.appendChild(colonne);
         ligne.appendChild(retirer);
         conteneur.appendChild(ligne);
     }

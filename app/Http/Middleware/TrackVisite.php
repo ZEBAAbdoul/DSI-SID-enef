@@ -27,7 +27,7 @@ class TrackVisite
 
         // La statistique ne doit jamais faire tomber le site.
         try {
-            $this->enregistrer($request);
+            $this->enregistrer($request, $response);
         } catch (\Throwable $e) {
             report($e);
         }
@@ -35,22 +35,62 @@ class TrackVisite
         return $response;
     }
 
-    private function enregistrer(Request $request): void
+    private function enregistrer(Request $request, Response $response): void
     {
         $ip = $request->ip() ?? '0.0.0.0';
+
+        // Requête locale (localhost / LAN) : l'IP vue par le serveur est privée
+        // et ne décrit pas le lieu du visiteur. Si le navigateur a révélé son
+        // IP publique (cookie enef_ip_pub posé par les pages du site), on
+        // géolocalise cette IP plutôt que le réseau local du serveur.
+        if (! filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE)) {
+            $ipPublique = $request->cookie('enef_ip_pub');
+            if (is_string($ipPublique) && $ipPublique !== ''
+                && filter_var($ipPublique, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE)) {
+                $ip = $ipPublique;
+            }
+        }
+
+        $session = substr(hash('sha256', (string) $request->session()->getId()), 0, 32);
+        $visiteur = $this->visiteur($request, $response, $session);
+
         $geo = app(Geolocateur::class)->pour($ip);
 
         Visite::create([
             'visite_a' => now(),
             'date' => now()->toDateString(),
             'page' => $request->path() ?: '/',
-            'session_id' => substr(hash('sha256', (string) $request->session()->getId()), 0, 32),
+            'session_id' => $session,
+            'visiteur' => $visiteur,
             'ip' => $ip,
             'pays' => $geo['pays'],
             'pays_code' => $geo['pays_code'],
             'region' => $geo['region'],
             'ville' => $geo['ville'],
         ]);
+    }
+
+    /**
+     * Identifiant stable du visiteur : le cookie enef_visiteur est posé dès la
+     * première page publique et survit à la régénération de session (connexion /
+     * déconnexion de l'administration). Sans cookie (refusé par le navigateur),
+     * on retombe sur l'identité de session : comportement d'avant, sans inflation.
+     */
+    private function visiteur(Request $request, Response $response, string $session): string
+    {
+        $present = $request->cookie('enef_visiteur');
+        if (is_string($present) && preg_match('/^[A-Za-z0-9-]{20,64}$/', $present)) {
+            return $present;
+        }
+
+        // Première visite (ou cookie refusé) : on garde l'identité de la session
+        // et on la prolonge par cookie pour les prochaines visites (le cookie
+        // n'étant pas encrypté, il est lisible par ce middleware).
+        $response->headers->setCookie(
+            cookie('enef_visiteur', $session, 525600, '/', null, false, true, false, 'lax')
+        );
+
+        return $session;
     }
 
     private function doitIgnorer(Request $request, Response $response): bool

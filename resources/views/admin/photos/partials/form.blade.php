@@ -90,7 +90,7 @@
             </div>
 
             <small class="form-text text-muted">
-                JPG, JPEG, PNG, GIF, WEBP — 5 Mo maximum.
+                JPG, JPEG, PNG, GIF, WEBP 
             </small>
 
             @error('image')
@@ -314,18 +314,132 @@ document.addEventListener('DOMContentLoaded', function () {
     );
     const preview = document.getElementById('image-preview');
 
-
     if (!imageInput) {
         return;
     }
 
+    // Seuil de compression : 5 Mo
+    const SEUIL_COMPRESSION = 5 * 1024 * 1024;
+
+    // Plus grand côté conservé après compression
+    const LARGEUR_MAX = 1920;
+
+    function formatTaille(octets) {
+        if (octets >= 1024 * 1024) {
+            return (octets / (1024 * 1024)).toFixed(1) + ' Mo';
+        }
+        return Math.max(1, Math.round(octets / 1024)) + ' Ko';
+    }
+
+    /**
+     * Compresse une image lourde via un canvas :
+     * redimensionnée à 1920 px max puis ré-encodée (WebP si possible,
+     * sinon JPEG ; PNG conservé s'il a pu avoir de la transparence
+     * et que WebP n'est pas disponible).
+     * Retourne une promesse { blob, ext } ou null (échec / GIF).
+     */
+    function compresserImage(fichier) {
+        return new Promise(function (resolve) {
+
+            // GIF animé : on ne touche pas (seul le 1er cadre serait gardé)
+            if (fichier.type === 'image/gif') {
+                resolve(null);
+                return;
+            }
+
+            const image = new Image();
+            const url = URL.createObjectURL(fichier);
+
+            image.onload = function () {
+
+                let largeur = image.naturalWidth;
+                let hauteur = image.naturalHeight;
+
+                if (!largeur || !hauteur) {
+                    URL.revokeObjectURL(url);
+                    resolve(null);
+                    return;
+                }
+
+                if (Math.max(largeur, hauteur) > LARGEUR_MAX) {
+                    const ratio = LARGEUR_MAX / Math.max(largeur, hauteur);
+                    largeur = Math.round(largeur * ratio);
+                    hauteur = Math.round(hauteur * ratio);
+                }
+
+                const canvas = document.createElement('canvas');
+                canvas.width = largeur;
+                canvas.height = hauteur;
+
+                const contexte = canvas.getContext('2d');
+
+                if (fichier.type === 'image/png') {
+                    contexte.clearRect(0, 0, largeur, hauteur);
+                }
+
+                contexte.drawImage(image, 0, 0, largeur, hauteur);
+
+                URL.revokeObjectURL(url);
+
+                // Format cible : WebP si supporté, sinon PNG pour les
+                // images avec transparence, sinon JPEG.
+                const supportWebp =
+                    canvas.toDataURL('image/webp', 0.8)
+                        .indexOf('data:image/webp') === 0;
+
+                let type;
+                let ext;
+
+                if (supportWebp) {
+                    type = 'image/webp';
+                    ext = 'webp';
+                } else if (fichier.type === 'image/png') {
+                    type = 'image/png';
+                    ext = 'png';
+                } else {
+                    type = 'image/jpeg';
+                    ext = 'jpg';
+                }
+
+                // Qualité décroissante jusqu'à être sous le seuil
+                let qualite = 0.85;
+
+                function essayer() {
+                    canvas.toBlob(function (blob) {
+                        if (!blob) {
+                            resolve(null);
+                            return;
+                        }
+                        if (
+                            blob.size > SEUIL_COMPRESSION &&
+                            qualite > 0.5 &&
+                            type !== 'image/png'
+                        ) {
+                            qualite -= 0.1;
+                            essayer();
+                            return;
+                        }
+                        resolve({ blob: blob, ext: ext });
+                    }, type, qualite);
+                }
+
+                essayer();
+            };
+
+            image.onerror = function () {
+                URL.revokeObjectURL(url);
+                resolve(null);
+            };
+
+            image.src = url;
+        });
+    }
 
     imageInput.addEventListener('change', function (event) {
 
-        const file = event.target.files[0];
+        const fichier = event.target.files[0];
 
-
-        if (!file) {
+        if (!fichier) {
 
             previewContainer.style.display = 'none';
 
@@ -334,13 +448,8 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
 
-
-        // Afficher le nom du fichier
-        imageLabel.textContent = file.name;
-
-
         // Vérification du type
-        const allowedTypes = [
+        const typesAutorises = [
             'image/jpeg',
             'image/png',
             'image/jpg',
@@ -348,20 +457,72 @@ document.addEventListener('DOMContentLoaded', function () {
             'image/webp'
         ];
 
-
-        if (!allowedTypes.includes(file.type)) {
+        if (!typesAutorises.includes(fichier.type)) {
 
             previewContainer.style.display = 'none';
+
+            imageLabel.textContent = 'Choisir une image';
 
             return;
         }
 
+        // Afficher le nom du fichier
+        imageLabel.textContent = fichier.name;
 
-        // Aperçu
-        const reader = new FileReader();
+        // Compression des photos de plus de 5 Mo (avant l'envoi)
+        if (fichier.size > SEUIL_COMPRESSION) {
 
+            compresserImage(fichier).then(function (resultat) {
 
-        reader.onload = function (e) {
+                if (!resultat) {
+
+                    // Compression impossible : on garde l'original
+                    afficherApercu(fichier);
+
+                    return;
+                }
+
+                const nomSansExtension = fichier.name
+                    .replace(/\.[^.]+$/, '');
+
+                const nouveauFichier = new File(
+                    [resultat.blob],
+                    nomSansExtension + '.' + resultat.ext,
+                    { type: resultat.type ?? resultat.blob.type }
+                );
+
+                // Remplacer le fichier du champ pour que l'envoi
+                // utilise la version compressée.
+                try {
+
+                    const transfert = new DataTransfer();
+                    transfert.items.add(nouveauFichier);
+                    imageInput.files = transfert.files;
+
+                } catch (e) {
+                    // Navigateur sans DataTransfer : le serveur
+                    // compressera à la réception.
+                }
+
+                imageLabel.textContent =
+                    nouveauFichier.name + ' — compressée : ' +
+                    formatTaille(nouveauFichier.size) +
+                    ' (au lieu de ' + formatTaille(fichier.size) + ')';
+
+                afficherApercu(nouveauFichier);
+            });
+
+            return;
+        }
+
+        afficherApercu(fichier);
+    });
+
+    function afficherApercu(fichier) {
+
+        const lecteur = new FileReader();
+
+        lecteur.onload = function (e) {
 
             preview.src = e.target.result;
 
@@ -369,10 +530,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
         };
 
-
-        reader.readAsDataURL(file);
-
-    });
+        lecteur.readAsDataURL(fichier);
+    }
 
 });
 

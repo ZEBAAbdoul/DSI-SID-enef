@@ -19,6 +19,7 @@ use App\Http\Controllers\InscriptionController;
 use App\Http\Controllers\PhotoPublicController;
 use App\Http\Controllers\VideoPublicController;
 
+
 /*
 |---------------------------------------------------------------------------
 | Web Routes
