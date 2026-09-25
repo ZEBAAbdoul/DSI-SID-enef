@@ -163,7 +163,7 @@
                                 <select id="piece_type" name="piece_type"
                                     class="{{ $errors->has('piece_type') ? 'is-invalid' : '' }}" required>
                                     <option value="cnib" {{ old('piece_type', 'cnib') === 'cnib' ? 'selected' : '' }}>
-                                        CNIB</option>
+                                        Carte d'identité</option>
                                     <option value="passeport" {{ old('piece_type') === 'passeport' ? 'selected' : '' }}>
                                         Passeport</option>
                                 </select>

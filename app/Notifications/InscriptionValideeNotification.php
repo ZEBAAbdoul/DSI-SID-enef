@@ -38,7 +38,7 @@ class InscriptionValideeNotification extends Notification implements ShouldQueue
             ->view('emails.notification', [
                 'greeting' => 'Félicitations ' . ($notifiable->name ?? ''),
                 'lines' => $lines,
-                'contactLabel' => 'Service des Ressources Humaines',
+                'contactLabel' => 'Agence comptable',
                 'contactPhone' => $contactRh,
                 'actionText' => 'Voir mon dossier',
                 'actionUrl' => url('/enef'),

@@ -100,7 +100,7 @@
                     @forelse ($formationsProgrammees as $item)
                         <details class="module-card">
                             <summary>
-                                <span class="module-code">{{ $item->code_module }}</span>
+                                {{-- <span class="module-code">{{ $item->code_module }}</span> --}}
                                 <span class="module-title">{{ $item->titre }}</span>
                                 <span class="module-meta">
                                     @if ($item->duree)
