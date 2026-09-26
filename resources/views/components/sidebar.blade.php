@@ -157,20 +157,22 @@
                     </li>
 
                     {{-- Unités pédagogiques --}}
-                    <li class="nav-item">
+                    @unless ($isUser)
+    <li class="nav-item">
 
-                        <a href="{{ route('admin.unites-pedagogiques.index') }}"
-                            class="nav-link {{ Route::is('admin.unites-pedagogiques.*') ? 'active' : '' }}">
+        <a href="{{ route('admin.unites-pedagogiques.index') }}"
+            class="nav-link {{ Route::is('admin.unites-pedagogiques.*') ? 'active' : '' }}">
 
-                            <i class="fas fa-sitemap nav-icon"></i>
+            <i class="fas fa-sitemap nav-icon"></i>
 
-                            <p>
-                                Unités pédagogiques
-                            </p>
+            <p>
+                Unités pédagogiques
+            </p>
 
-                        </a>
+        </a>
 
-                    </li>
+    </li>
+@endunless
 
                     {{-- Inscriptions --}}
                     {{-- Visible uniquement pour le rôle USER --}}

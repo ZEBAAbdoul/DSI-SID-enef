@@ -27,6 +27,7 @@ class Actualite extends Model
         'ordre_menu',
         'is_publiee',
         'meta_description',
+        'lien_facebook',
         'created_by',
         'updated_by',
     ];

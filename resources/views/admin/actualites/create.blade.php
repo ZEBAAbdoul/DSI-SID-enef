@@ -1,271 +1,233 @@
 <x-admin>
 
-@section('title', 'Nouvelle actualité')
+    @section('title', 'Nouvelle actualité')
 
-@section('content')
+    @section('content')
 
-<div class="container-fluid py-4">
+        <div class="container-fluid py-4">
 
-    <div class="mb-4">
+            <div class="mb-4">
 
-        <h1 class="h3 fw-bold">
-            Nouvelle actualité
-        </h1>
+                <h1 class="h3 fw-bold">
+                    Nouvelle actualité
+                </h1>
 
-        <p class="text-muted">
-            Publier une nouvelle information sur le site de l'ENEF.
-        </p>
+                <p class="text-muted">
+                    Publier une nouvelle information sur le site de l'ENEF.
+                </p>
 
-    </div>
+            </div>
 
 
-    @if($errors->any())
+            @if ($errors->any())
 
-        <div class="alert alert-danger">
+                <div class="alert alert-danger">
 
-            <ul class="mb-0">
+                    <ul class="mb-0">
 
-                @foreach($errors->all() as $error)
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
 
-                    <li>{{ $error }}</li>
+                    </ul>
 
-                @endforeach
+                </div>
 
-            </ul>
+            @endif
 
-        </div>
 
-    @endif
+            <form method="POST" action="{{ route('admin.actualites.store') }}" enctype="multipart/form-data">
 
+                @csrf
 
-    <form
-        method="POST"
-        action="{{ route('admin.actualites.store') }}"
-        enctype="multipart/form-data"
-    >
 
-        @csrf
+                <div class="card shadow-sm border-0">
 
+                    <div class="card-body">
 
-        <div class="card shadow-sm border-0">
+                        <div class="row g-4">
 
-            <div class="card-body">
+                            {{-- Titre --}}
+                            <div class="col-md-8">
 
-                <div class="row g-4">
+                                <label class="form-label fw-bold">
+                                    Titre *
+                                </label>
 
-                    {{-- Titre --}}
-                    <div class="col-md-8">
+                                <input type="text" name="titre" class="form-control" value="{{ old('titre') }}"
+                                    required>
 
-                        <label class="form-label fw-bold">
-                            Titre *
-                        </label>
+                            </div>
 
-                        <input
-                            type="text"
-                            name="titre"
-                            class="form-control"
-                            value="{{ old('titre') }}"
-                            required
-                        >
 
-                    </div>
+                            {{-- Type --}}
+                            <div class="col-md-4">
 
+                                <label class="form-label fw-bold">
+                                    Type *
+                                </label>
 
-                    {{-- Type --}}
-                    <div class="col-md-4">
+                                <select name="type" class="form-select" required>
 
-                        <label class="form-label fw-bold">
-                            Type *
-                        </label>
+                                    <option value="">
+                                        Sélectionner
+                                    </option>
 
-                        <select
-                            name="type"
-                            class="form-select"
-                            required
-                        >
+                                    <option value="institutionnelle">
+                                        Institutionnelle
+                                    </option>
 
-                            <option value="">
-                                Sélectionner
-                            </option>
+                                    <option value="formation">
+                                        Formation
+                                    </option>
 
-                            <option value="institutionnelle">
-                                Institutionnelle
-                            </option>
+                                    <option value="evenement">
+                                        Événement
+                                    </option>
 
-                            <option value="formation">
-                                Formation
-                            </option>
+                                    <option value="partenariat">
+                                        Partenariat
+                                    </option>
 
-                            <option value="evenement">
-                                Événement
-                            </option>
+                                    <option value="communique">
+                                        Communiqué
+                                    </option>
 
-                            <option value="partenariat">
-                                Partenariat
-                            </option>
+                                </select>
 
-                            <option value="communique">
-                                Communiqué
-                            </option>
+                            </div>
 
-                        </select>
 
-                    </div>
+                            {{-- Chapo --}}
+                            <div class="col-12">
 
+                                <label class="form-label fw-bold">
+                                    Chapo
+                                </label>
 
-                    {{-- Chapo --}}
-                    <div class="col-12">
+                                <textarea name="chapo" rows="3" class="form-control" maxlength="1000">{{ old('chapo') }}</textarea>
 
-                        <label class="form-label fw-bold">
-                            Chapo
-                        </label>
+                                <small class="text-muted">
+                                    Résumé court de l'actualité.
+                                </small>
 
-                        <textarea
-                            name="chapo"
-                            rows="3"
-                            class="form-control"
-                            maxlength="1000"
-                        >{{ old('chapo') }}</textarea>
+                            </div>
 
-                        <small class="text-muted">
-                            Résumé court de l'actualité.
-                        </small>
 
-                    </div>
+                            {{-- Contenu --}}
+                            <div class="col-12">
 
+                                <label class="form-label fw-bold">
+                                    Contenu *
+                                </label>
 
-                    {{-- Contenu --}}
-                    <div class="col-12">
+                                <textarea name="contenu" rows="12" class="form-control" required>{{ old('contenu') }}</textarea>
 
-                        <label class="form-label fw-bold">
-                            Contenu *
-                        </label>
+                            </div>
 
-                        <textarea
-                            name="contenu"
-                            rows="12"
-                            class="form-control"
-                            required
-                        >{{ old('contenu') }}</textarea>
 
-                    </div>
+                            {{-- Image --}}
+                            <div class="col-md-6">
 
+                                <label class="form-label fw-bold">
+                                    Image de couverture
+                                </label>
 
-                    {{-- Image --}}
-                    <div class="col-md-6">
+                                <input type="file" name="image" class="form-control" accept=".jpg,.jpeg,.png,.webp">
 
-                        <label class="form-label fw-bold">
-                            Image de couverture
-                        </label>
+                                <small class="text-muted">
+                                    JPG, PNG ou WEBP — maximum 4 Mo.
+                                </small>
 
-                        <input
-                            type="file"
-                            name="image"
-                            class="form-control"
-                            accept=".jpg,.jpeg,.png,.webp"
-                        >
+                            </div>
 
-                        <small class="text-muted">
-                            JPG, PNG ou WEBP — maximum 4 Mo.
-                        </small>
+                            {{-- Lien Facebook --}}
+                            <div class="col-md-6">
 
-                    </div>
+                                <label class="form-label fw-bold">
+                                    Lien Facebook
+                                </label>
 
+                                <input type="url" name="lien_facebook" class="form-control"
+                                    value="{{ old('lien_facebook') }}" placeholder="https://www.facebook.com/...">
 
-                    {{-- Ordre --}}
-                    <div class="col-md-3">
+                                <small class="text-muted">
+                                    URL de la publication ou page Facebook liée à cette actualité.
+                                </small>
 
-                        <label class="form-label fw-bold">
-                            Ordre
-                        </label>
+                            </div>
 
-                        <input
-                            type="number"
-                            name="ordre_menu"
-                            class="form-control"
-                            value="{{ old('ordre_menu', 0) }}"
-                            min="0"
-                        >
 
-                    </div>
+                            {{-- Ordre --}}
+                            <div class="col-md-3">
 
+                                <label class="form-label fw-bold">
+                                    Ordre
+                                </label>
 
-                    {{-- Publication --}}
-                    <div class="col-md-3">
+                                <input type="number" name="ordre_menu" class="form-control"
+                                    value="{{ old('ordre_menu', 0) }}" min="0">
 
-                        <label class="form-label fw-bold d-block">
-                            Publication
-                        </label>
+                            </div>
 
-                        <div class="form-check form-switch mt-2">
 
-                            <input
-                                type="checkbox"
-                                name="is_publiee"
-                                value="1"
-                                class="form-check-input"
-                                id="is_publiee"
-                            >
+                            {{-- Publication --}}
+                            <div class="col-md-3">
 
-                            <label
-                                class="form-check-label"
-                                for="is_publiee"
-                            >
-                                Publier immédiatement
-                            </label>
+                                <label class="form-label fw-bold d-block">
+                                    Publication
+                                </label>
+
+                                <div class="form-check form-switch mt-2">
+
+                                    <input type="checkbox" name="is_publiee" value="1" class="form-check-input"
+                                        id="is_publiee">
+
+                                    <label class="form-check-label" for="is_publiee">
+                                        Publier immédiatement
+                                    </label>
+
+                                </div>
+
+                            </div>
+
+
+                            {{-- SEO --}}
+                            <div class="col-12">
+
+                                <label class="form-label fw-bold">
+                                    Meta description
+                                </label>
+
+                                <textarea name="meta_description" rows="2" maxlength="160" class="form-control">{{ old('meta_description') }}</textarea>
+
+                            </div>
 
                         </div>
 
                     </div>
 
 
-                    {{-- SEO --}}
-                    <div class="col-12">
+                    <div class="card-footer bg-white d-flex justify-content-between">
 
-                        <label class="form-label fw-bold">
-                            Meta description
-                        </label>
+                        <a href="{{ route('admin.actualites.index') }}" class="btn btn-secondary">
+                            Annuler
+                        </a>
 
-                        <textarea
-                            name="meta_description"
-                            rows="2"
-                            maxlength="160"
-                            class="form-control"
-                        >{{ old('meta_description') }}</textarea>
+                        <button type="submit" class="btn btn-success">
+
+                            <i class="fas fa-save me-1"></i>
+
+                            Enregistrer
+
+                        </button>
 
                     </div>
 
                 </div>
 
-            </div>
-
-
-            <div class="card-footer bg-white d-flex justify-content-between">
-
-                <a
-                    href="{{ route('admin.actualites.index') }}"
-                    class="btn btn-secondary"
-                >
-                    Annuler
-                </a>
-
-                <button
-                    type="submit"
-                    class="btn btn-success"
-                >
-
-                    <i class="fas fa-save me-1"></i>
-
-                    Enregistrer
-
-                </button>
-
-            </div>
+            </form>
 
         </div>
 
-    </form>
-
-</div>
-
-</x-admin>
+    </x-admin>

@@ -26,6 +26,16 @@
                 {{ $actualite->contenu }}
             </div>
 
+            @if ($actualite->lien_facebook)
+                <div style="margin-top:24px;">
+                    <a href="{{ $actualite->lien_facebook }}" target="_blank" rel="noopener noreferrer"
+                        class="btn btn-outline">
+                        <i class="fab fa-facebook-f me-1"></i>
+                        Voir sur Facebook
+                    </a>
+                </div>
+            @endif
+
             <div style="margin-top:36px;">
                 <a href="{{ route('actualites.index') }}" class="btn btn-outline">Retour aux actualités</a>
             </div>
@@ -35,11 +45,11 @@
 
     @push('scripts')
         <script>
-            (function () {
+            (function() {
                 var btn = document.getElementById('btn-retour');
                 if (!btn) return;
 
-                btn.addEventListener('click', function (e) {
+                btn.addEventListener('click', function(e) {
                     e.preventDefault();
                     if (window.history.length > 1) {
                         window.history.back();
