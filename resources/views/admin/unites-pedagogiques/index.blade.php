@@ -20,7 +20,7 @@
                         <tr>
                             <th style="width:64px;">Photo</th>
                             <th style="width:60px;">N°</th>
-                            <th style="width:70px;">Ordre</th>
+                            {{-- <th style="width:70px;">Ordre</th> --}}
                             <th>Titre</th>
                             <th style="width:130px;">Statut</th>
                             <th style="width:190px;" class="text-end">Actions</th>
@@ -41,7 +41,7 @@
                                     @endif
                                 </td>
                                 <td>{{ $unite->numero }}</td>
-                                <td>{{ $unite->ordre }}</td>
+                                {{-- <td>{{ $unite->ordre }}</td> --}}
                                 <td>
                                     {{ $unite->titre }}
                                     @if ($unite->note)
