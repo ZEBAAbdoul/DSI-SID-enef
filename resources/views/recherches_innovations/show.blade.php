@@ -347,14 +347,27 @@
             @endif
 
             @if ($rechercheInnovation->url_video)
-                <a href="{{ $rechercheInnovation->url_video }}" target="_blank" rel="noopener noreferrer"
-                    style="display:inline-flex; align-items:center; gap:8px; margin-top:20px; font-weight:700;">
+                <a href="{{ $rechercheInnovation->url_video }}"
+   target="_blank"
+   rel="noopener noreferrer"
+   style="display:inline-flex; align-items:center; gap:8px; margin-top:20px; font-weight:700;">
 
+    <svg width="18"
+         height="18"
+         viewBox="0 0 24 24"
+         fill="none"
+         stroke="currentColor"
+         stroke-width="2"
+         style="display:inline-block; vertical-align:-2px;"
+         aria-hidden="true">
 
-                    <i class="fas fa-eye" style="font-size:18px;"></i>
+        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+        <circle cx="12" cy="12" r="3" />
 
-                    Consulter le lien
-                </a>
+    </svg>
+
+    Consulter l'intégration
+</a>
             @endif
 
 
