@@ -87,6 +87,22 @@ class Enseignant extends Model
         return $query->where('statut', 'actif');
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    | SCOPE : enseignants « réels » (compte lié avec le rôle 'enseignant')
+    |--------------------------------------------------------------------------
+    |
+    | Ne retient que les fiches dont le compte utilisateur lié possède bien le
+    | rôle 'enseignant' — la même population que la liste « Gestion des
+    | enseignants ». Les fiches liées à des comptes d'autres rôles (sg, se,
+    | admin, user…) sont écartées des statistiques.
+    |--------------------------------------------------------------------------
+    */
+    public function scopeReels($query)
+    {
+        return $query->whereHas('user', fn ($q) => $q->role('enseignant'));
+    }
+
     public function scopeByStatut($query, $statut)
     {
         return $query->where('statut', $statut);

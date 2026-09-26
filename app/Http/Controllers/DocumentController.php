@@ -177,6 +177,23 @@ class DocumentController extends Controller
 
         return Storage::disk('public')->download($document->fichier_url, $nomTelecharge);
     }
+
+    /**
+     * Compteur de téléchargements à jour (JSON, lecture seule).
+     *
+     * Sert au centre de téléchargement public pour actualiser instantanément
+     * le nombre affiché sans recharger la page. N'incrémente rien : le
+     * comptage est fait une seule fois, par la route de téléchargement réelle
+     * (documents.telecharger), ce qui garantit la cohérence avec les
+     * statistiques d'administration.
+     */
+    public function compteur(Document $document)
+    {
+        return response()->json([
+            'id' => $document->id,
+            'nombre_telechargements' => (int) $document->nombre_telechargements,
+        ]);
+    }
     
 
     private function validateRequest(Request $request, ?Document $document = null): array

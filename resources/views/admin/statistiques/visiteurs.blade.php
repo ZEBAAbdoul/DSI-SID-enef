@@ -98,18 +98,20 @@
                             $top3 = $index < 3;
                         @endphp
                         <div class="d-flex align-items-center mb-3">
-                            <span class="badge badge-{{ $top3 ? 'danger' : 'secondary' }} mr-2" style="min-width: 2.1rem; font-size: 1rem;">
+                            <span class="badge badge-{{ $top3 ? 'success' : 'secondary' }} mr-2" style="min-width: 2.1rem; font-size: 1rem;">
                                 {{ $index + 1 }}
                             </span>
                             <div class="flex-grow-1 mr-3">
                                 <div class="d-flex justify-content-between flex-wrap">
-                                    <code class="mr-2">{{ $page->page }}</code>
+                                    <span class="mr-2" style="color: #222; font-weight: 500;">
+    {{ $page->page }}
+</span>
                                     <span class="text-muted text-nowrap">
                                         <i class="fas fa-eye mr-1"></i>{{ number_format($page->vues, 0, ',', ' ') }} vue(s)
                                     </span>
                                 </div>
                                 <div class="progress" style="height: 6px;">
-                                    <div class="progress-bar bg-{{ $top3 ? 'danger' : 'info' }}" style="width: {{ $largeur }}%;"></div>
+                                    <div class="progress-bar bg-{{ $top3 ? 'success' : 'info' }}" style="width: {{ $largeur }}%;"></div>
                                 </div>
                             </div>
                         </div>
@@ -134,15 +136,16 @@
                             <tr>
                                 <th>Page</th>
                                 <th class="text-center">Vues</th>
-                                <th class="text-center">Visiteurs</th>
+
                             </tr>
                         </thead>
                         <tbody>
                             @forelse($pages as $page)
                                 <tr>
-                                    <td><code>{{ $page->page }}</code></td>
+                                    <td><span class="mr-2" style="color: #222; font-weight: 500;">
+    {{ $page->page }}
+</span></td>
                                     <td class="text-center">{{ number_format($page->vues, 0, ',', ' ') }}</td>
-                                    <td class="text-center">{{ number_format($page->visiteurs, 0, ',', ' ') }}</td>
                                 </tr>
                             @empty
                                 <tr>

@@ -140,6 +140,12 @@ Route::get('/bibliotheque/consultation', [BibliothequeController::class, 'consul
 Route::get('/bibliotheque/{document}/telecharger', [DocumentController::class, 'telecharger'])
     ->name('documents.telecharger');
 
+// Compteur de téléchargements à jour (JSON, lecture seule) : utilisé par le
+// centre de téléchargement pour rafraîchir l'affichage sans recharger la page.
+// Ne compte pas : le comptage réel se fait sur la route de téléchargement.
+Route::get('/bibliotheque/{document}/compteur', [DocumentController::class, 'compteur'])
+    ->name('documents.compteur');
+
 
 // Routes pour la galerie photos
 

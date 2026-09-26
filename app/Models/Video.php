@@ -43,6 +43,30 @@ class Video extends Model
             return 'https://www.dailymotion.com/embed/video/' . $m[1];
         }
 
+        // Facebook (vidéos, reels, watch, partages) : lecteur d'embed
+        // officiel par identifiant. Contrairement au plugin
+        // plugins/video.php, celui-ci sert toujours les données vidéo
+        // (même hd_src) et s'intègre en iframe (pas de X-Frame-Options).
+        $patternsId = [
+            '~facebook\.com/(?:reel|watch|share/video|videos)/(\d+)~i',
+            '~facebook\.com/watch\?v=(\d+)~i',
+            '~facebook\.com/video\.php\?v=(\d+)~i',
+            '~facebook\.com/video\.php\?video_id=(\d+)~i',
+        ];
+        foreach ($patternsId as $patron) {
+            if (preg_match($patron, $url, $m)) {
+                return 'https://www.facebook.com/video/embed?video_id=' . $m[1];
+            }
+        }
+
+        // Autre lien Facebook (page, publication sans identifiant) :
+        // repli sur le plugin officiel.
+        if (preg_match('~facebook\.com/(?:reel|watch|share/video|video)~i', $url)) {
+            return 'https://www.facebook.com/plugins/video.php?href='
+                . urlencode($url)
+                . '&show_text=false&mute=0';
+        }
+
         return null;
     }
 

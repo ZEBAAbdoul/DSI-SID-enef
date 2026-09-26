@@ -97,7 +97,7 @@ class StatistiqueFonctionnaliteController extends Controller
         $nbDocumentsTelecharges = (int) $telechargements()->distinct()->count('page');
         $nbTelechargementsPeriode = (int) $telechargements()->count();
         $nbInscriptions = (int) $dansPeriode(Inscription::query(), 'date_soumission')->count();
-        $nbEnseignants  = (int) $dansPeriode(Enseignant::query())->count();
+        $nbEnseignants  = (int) $dansPeriode(Enseignant::reels())->count();
         // Comptes hors super-admin (statistique globale).
         $nbUtilisateurs = (int) $dansPeriode(
             User::whereDoesntHave('roles', fn ($q) => $q->where('name', 'super-admin'))
@@ -275,7 +275,7 @@ class StatistiqueFonctionnaliteController extends Controller
                     ['Sessions de formation créées', (int) $dansPeriode(SessionFormation::query())->count()],
                     ['Sessions ouvertes', (int) $dansPeriode(SessionFormation::ouvertes())->count()],
                     ['Enseignants', $nbEnseignants],
-                    ['Enseignants actifs', (int) $dansPeriode(Enseignant::actifs())->count()],
+                    ['Enseignants actifs', (int) $dansPeriode(Enseignant::reels()->actifs())->count()],
                     ['Notes déposées', (int) $dansPeriode(Note::query())->count()],
                 ],
                 'referentiels_globaux' => [

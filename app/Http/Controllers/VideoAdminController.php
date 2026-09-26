@@ -25,9 +25,11 @@ class VideoAdminController extends Controller
             });
         }
 
+        // Les vidéos les plus récentes apparaissent en premier.
+        // (L'ordre manuel reste disponible à la modification.)
         $videos = $query
-            ->orderBy('ordre', 'asc')
             ->orderBy('created_at', 'desc')
+            ->orderBy('id', 'desc')
             ->paginate(10);
 
         return view('admin.videos.index', compact('videos'));

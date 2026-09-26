@@ -43,11 +43,39 @@
 
                     <div class="embed-responsive embed-responsive-16by9 bg-dark">
 
-                        <iframe
-                            class="embed-responsive-item"
-                            src="{{ $video->url }}"
-                            allowfullscreen
-                        ></iframe>
+                        @if ($video->embed_url)
+
+                            <iframe
+                                class="embed-responsive-item"
+                                src="{{ $video->embed_url }}"
+                                title="{{ $video->titre }}"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                referrerpolicy="strict-origin-when-cross-origin"
+                                allowfullscreen
+                            ></iframe>
+
+                        @else
+
+                            <div
+                                class="embed-responsive-item d-flex align-items-center justify-content-center"
+                            >
+
+                                <div class="text-center text-muted">
+
+                                    <i
+                                        class="fas fa-video fa-2x d-block mb-2"
+                                    ></i>
+
+                                    <span class="small">
+                                        Aperçu non disponible pour cette
+                                        plateforme — ouvrez la vidéo.
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+                        @endif
 
                     </div>
 

@@ -115,7 +115,8 @@
                             <div class="biblio-card-footer">
                                 <a href="{{ route('documents.telecharger', $document) }}"
                                     class="btn btn-primary btn-sm js-download"
-                                    data-count-target="count-{{ $document->id }}">
+                                    data-count-target="count-{{ $document->id }}"
+                                    data-count-url="{{ route('documents.compteur', $document) }}">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                                         width="15" height="15">
                                         <path d="M12 3v12m0 0-4-4m4 4 4-4" />
@@ -146,12 +147,45 @@
 
     @push('scripts')
         <script>
+            // Rafraîchissement « quasi instantané » du compteur de téléchargements.
+            // Le clic laisse le navigateur lancer le vrai téléchargement (compté une
+            // seule fois par le serveur), puis on relit le compteur réel via la route
+            // JSON de lecture seule jusqu'à ce qu'il soit stable. L'affichage reste
+            // ainsi toujours égal aux statistiques d'administration.
             document.querySelectorAll('.js-download').forEach(function(link) {
                 link.addEventListener('click', function() {
                     var el = document.getElementById(link.dataset.countTarget);
-                    if (el) {
-                        el.textContent = parseInt(el.textContent, 10) + 1;
+                    if (!el || !link.dataset.countUrl) {
+                        return;
                     }
+
+                    var debut = Date.now();
+                    var dernier = -1;
+
+                    var maj = function() {
+                        if (Date.now() - debut > 4000) {
+                            return; // garde-fou : au-delà, on garde la dernière valeur lue
+                        }
+
+                        fetch(link.dataset.countUrl, { cache: 'no-store' })
+                            .then(function(r) { return r.json(); })
+                            .then(function(donnees) {
+                                var n = parseInt(donnees.nombre_telechargements, 10);
+                                if (Number.isFinite(n) && n >= 0) {
+                                    el.textContent = n;
+                                    if (n === dernier) {
+                                        return; // valeur stable : on arrête de relire
+                                    }
+                                    dernier = n;
+                                }
+                                setTimeout(maj, 500);
+                            })
+                            .catch(function() {
+                                setTimeout(maj, 500); // erreur réseau : on retente
+                            });
+                    };
+
+                    setTimeout(maj, 300);
                 });
             });
         </script>

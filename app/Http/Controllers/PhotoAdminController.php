@@ -27,8 +27,10 @@ class PhotoAdminController extends Controller
      */
     public function index(): View
     {
-        $photos = Photo::orderBy('ordre', 'asc')
-            ->orderBy('created_at', 'desc')
+        // Les photos les plus récentes apparaissent en premier.
+        // (L'ordre manuel reste disponible à la modification.)
+        $photos = Photo::orderBy('created_at', 'desc')
+            ->orderBy('id', 'desc')
             ->paginate(10);
 
         return view('admin.photos.index', compact('photos'));

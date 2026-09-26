@@ -20,7 +20,7 @@ class EnseignantController extends Controller
     public function index(Request $request): View
     {
         $query = Enseignant::with('user.personne')
-            ->whereHas('user', fn($q) => $q->role('enseignant'));
+            ->reels();
 
         if ($request->filled('search')) {
             $query->recherche(trim($request->search));

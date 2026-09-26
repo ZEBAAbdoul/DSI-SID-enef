@@ -598,9 +598,13 @@
                                             @if ($video->description)
                                                 <p>{{ \Illuminate\Support\Str::limit($video->description, 70) }}</p>
                                             @endif
-                                            <a href="{{ $video->url }}" target="_blank" rel="noopener noreferrer" class="gal-vlink">
-                                                Ouvrir sur {{ $video->platform }}
-                                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <a href="{{ $video->url }}" target="_blank" rel="noopener noreferrer" class="gal-vlink" title="{{ $video->url }}">
+                                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                                                    <circle cx="12" cy="12" r="3" />
+                                                </svg>
+                                                Consulter le lien
+                                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                                                     <path d="M7 17 17 7M9 7h8v8" />
                                                 </svg>
                                             </a>

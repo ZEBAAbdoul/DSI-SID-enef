@@ -191,6 +191,13 @@ class RechercheInnovation extends Model
             return 'https://www.dailymotion.com/embed/video/' . $m[1];
         }
 
+        // Facebook (vidéos, reels, watch)
+        if (preg_match('~facebook\.com/(?:reel|watch|share/video|video)~i', $url)) {
+            return 'https://www.facebook.com/plugins/video.php?href='
+                . urlencode($url)
+                . '&show_text=false&mute=0';
+        }
+
         return null;
     }
 
