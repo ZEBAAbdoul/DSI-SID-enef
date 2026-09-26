@@ -67,4 +67,6 @@ class CategorieFormation extends Model
     {
         $this->attributes['nom'] = trim($value);
     }
+
+    
 }

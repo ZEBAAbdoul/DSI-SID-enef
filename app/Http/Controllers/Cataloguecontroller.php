@@ -7,30 +7,35 @@ use App\Models\FormationInformation;
 
 class CatalogueController extends Controller
 {
-    /**
-     * Affiche le catalogue complet de formations (programmées + à la carte)
-     * tel qu'ouvert depuis le bouton "Découvrir le catalogue de formations".
-     */
+    private const CAT_PROGRAMMEE = 'formation-programmee';
+    private const CAT_A_LA_CARTE = 'formation-a-la-carte';
+    private const CAT_INITIALE   = 'formation-initiale';
+
     public function index()
     {
-        $formationsProgrammees = Formation::where('type', 'continue_programmee')
+        $formationsProgrammees = Formation::whereHas('categorie', function ($q) {
+                $q->where('slug', self::CAT_PROGRAMMEE);
+            })
             ->orderBy('code_module')
             ->with(['sessions' => function ($q) {
                 $q->where('date_debut', '>=', now())->orderBy('date_debut');
             }])
             ->get();
 
-        $formationsALaCarte = Formation::where('type', 'continue_a_la_carte')
+        $formationsALaCarte = Formation::whereHas('categorie', function ($q) {
+                $q->where('slug', self::CAT_A_LA_CARTE);
+            })
             ->orderBy('code_module')
             ->get();
 
-        $formationsInitiales = Formation::whereNotIn('type', ['continue_programmee', 'continue_a_la_carte'])
-    ->orderBy('created_at')
-    ->orderBy('id')
-    ->get();
+        $formationsInitiales = Formation::whereHas('categorie', function ($q) {
+                $q->where('slug', self::CAT_INITIALE);
+            })
+            ->orderBy('created_at')
+            ->orderBy('id')
+            ->get();
 
         $informations = FormationInformation::orderBy('ordre')->get()->groupBy('categorie');
-
 
         return view('formations.catalogue', [
             'formationsProgrammees' => $formationsProgrammees,
@@ -44,27 +49,31 @@ class CatalogueController extends Controller
         ]);
     }
 
-
     public function formationContinue()
     {
-        $formationsProgrammees = Formation::where('type', 'continue_programmee')
+        $formationsProgrammees = Formation::whereHas('categorie', function ($q) {
+                $q->where('slug', self::CAT_PROGRAMMEE);
+            })
             ->orderBy('code_module')
             ->with(['sessions' => function ($q) {
                 $q->where('date_debut', '>=', now())->orderBy('date_debut');
             }])
             ->get();
 
-        $formationsALaCarte = Formation::where('type', 'continue_a_la_carte')
+        $formationsALaCarte = Formation::whereHas('categorie', function ($q) {
+                $q->where('slug', self::CAT_A_LA_CARTE);
+            })
             ->orderBy('code_module')
             ->get();
 
-        $formationsInitiales = Formation::whereNotIn('type', ['continue_programmee', 'continue_a_la_carte'])
+        $formationsInitiales = Formation::whereHas('categorie', function ($q) {
+                $q->where('slug', self::CAT_INITIALE);
+            })
             ->orderByRaw("CASE WHEN code_module LIKE 'FI-GRN%' THEN 0 ELSE 1 END")
             ->orderBy('code_module')
             ->get();
 
         $informations = FormationInformation::orderBy('ordre')->get()->groupBy('categorie');
-
 
         return view('formations.Catalogue_formation_continue', [
             'formationsProgrammees' => $formationsProgrammees,

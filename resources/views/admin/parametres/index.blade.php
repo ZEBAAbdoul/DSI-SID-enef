@@ -250,7 +250,7 @@
                     </div>
 
                     <div class="col-md-12 mb-3">
-                        <label for="contact_rh" class="form-label fw-bold">Contact ressources humaines</label>
+                        <label for="contact_rh" class="form-label fw-bold">Agence comptable</label>
                         <input type="text" class="form-control @error('contact_rh') is-invalid @enderror"
                                id="contact_rh" name="contact_rh"
                                value="{{ old('contact_rh', $parametres->contact_rh ?? '') }}"

@@ -111,7 +111,7 @@
                                 <p class="vb-line vb-d3 mb-0">
                                     Pour procéder au <strong>paiement des frais de scolarité</strong>,
                                     veuillez contacter le
-                                    <strong>Service des Ressources Humaines</strong> au numéro :
+                                    <strong>Agence comptable</strong> au numéro :
                                 </p>
 
                                 @if ($contactRh)

@@ -12,6 +12,7 @@ use App\Models\CategorieDocument;
 use App\Models\Document;
 use App\Models\Partenaire;
 use App\Models\SessionFormation;
+use App\Models\UnitePedagogique;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\View\View;
 
@@ -128,7 +129,12 @@ class HomeController extends Controller
     // Unites Pedagogiques
     public function unitesPedagogiques()
     {
-        return view('unites-pedagogiques.index');
+        $unites = UnitePedagogique::publiees()
+            ->orderBy('ordre')
+            ->get();
+            
+
+        return view('unites-pedagogiques.index', compact('unites'));
     }
 
     public function conditionutilisation()

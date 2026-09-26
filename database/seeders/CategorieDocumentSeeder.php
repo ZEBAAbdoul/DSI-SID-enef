@@ -9,8 +9,6 @@ class CategorieDocumentSeeder extends Seeder
 {
     public function run(): void
     {
-        
-
         CategorieDocument::create(['nom' => 'Rapports annuels']);
         CategorieDocument::create(['nom' => 'Rapports d\'activités']);
         CategorieDocument::create(['nom' => 'Rapports de mission']);
@@ -19,5 +17,8 @@ class CategorieDocumentSeeder extends Seeder
         CategorieDocument::create(['nom' => 'Statuts et règlements']);
         CategorieDocument::create(['nom' => 'Guides pratiques']);
         CategorieDocument::create(['nom' => 'Manuels de cours']);
+        CategorieDocument::create(['nom' => 'Lois']);
+        CategorieDocument::create(['nom' => 'Romans']);
+        CategorieDocument::create(['nom' => 'Rapports de stage']);
     }
 }

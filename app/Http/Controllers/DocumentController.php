@@ -20,6 +20,8 @@ class DocumentController extends Controller
         'brochure' => 'Brochure',
         'texte_reglementaire' => 'Texte réglementaire',
         'support_pedagogique' => 'Support pédagogique',
+        'livre' => 'Livre',
+        'ouvrage' => 'Ouvrage',
     ];
 
     private array $accesOptions = [
