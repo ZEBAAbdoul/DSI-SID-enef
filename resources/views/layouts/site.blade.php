@@ -1678,13 +1678,33 @@
         /* Responsive */
         @media (max-width:980px) {
 
-            .menu,
-            .nav-actions .btn.btn-outline {
+            .menu {
                 display: none;
             }
 
             .burger {
                 display: flex;
+            }
+
+            .menu .dropdown {
+                position: static;
+                min-width: 0;
+                width: 100%;
+                box-shadow: none;
+                border: 0;
+                border-top: 1px solid var(--line);
+                background: var(--paper-alt);
+                padding: 2px 0 8px;
+            }
+
+            .menu .dropdown .dropdown {
+                padding-left: 14px;
+                background: transparent;
+                border: 0;
+            }
+
+            .menu .dropdown a {
+                padding: 10px 16px;
             }
 
             .hero-grid {
@@ -1717,7 +1737,7 @@
             }
 
             .footer-grid {
-                grid-template-columns: 1fr 1fr;
+                grid-template-columns: 1fr 1fr !important;
             }
 
             .stats-grid {
@@ -1727,6 +1747,34 @@
         }
 
         @media (max-width:640px) {
+            .container {
+                padding: 0 16px;
+            }
+
+            .nav {
+                flex-wrap: wrap;
+                gap: 10px 14px;
+            }
+
+            .brand-mark {
+                width: 40px;
+                height: 40px;
+            }
+
+            .brand-text .sub {
+                display: none;
+            }
+
+            .nav-actions {
+                gap: 8px;
+                margin-left: auto;
+            }
+
+            .nav-actions .btn {
+                padding: 8px 12px;
+                font-size: 12.5px;
+            }
+
             .topbar .container {
                 justify-content: center;
                 text-align: center;
@@ -1746,7 +1794,7 @@
             }
 
             .footer-grid {
-                grid-template-columns: 1fr;
+                grid-template-columns: 1fr !important;
             }
 
             .hero-stats {
@@ -1770,6 +1818,16 @@
             .cta-inner {
                 flex-direction: column;
                 align-items: flex-start;
+            }
+        }
+
+        @media (max-width:480px) {
+            .topbar-social {
+                display: none;
+            }
+
+            .topbar-contacts span {
+                display: none;
             }
         }
 
