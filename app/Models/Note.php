@@ -19,6 +19,7 @@ class Note extends Model
         'taille',
         'commentaire',
         'date_evaluation',
+        'annee'
     ];
 
     protected $casts = [
@@ -43,5 +44,15 @@ class Note extends Model
     public function matiere()
     {
         return $this->belongsTo(Matiere::class);
+    }
+
+    // app/Models/Note.php
+    public function getAnneeLabelAttribute(): ?string
+    {
+        return match ($this->annee) {
+            1 => '1ère année',
+            2 => '2ème année',
+            default => null,
+        };
     }
 }

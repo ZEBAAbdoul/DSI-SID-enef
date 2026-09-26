@@ -107,60 +107,72 @@ $filieresActive = Route::is('admin.filieres.*');
         {{-- ========================================================= --}}
 
         @if (!$isEnseignant)
-        <li class="nav-item {{ $formationsActive ? 'menu-open' : '' }}">
+    <li class="nav-item {{ $formationsActive ? 'menu-open' : '' }}">
 
-            <a href="#" class="nav-link {{ $formationsActive ? 'active' : '' }}">
+        <a href="#" class="nav-link {{ $formationsActive ? 'active' : '' }}">
 
-                <i class="nav-icon fas fa-book-open"></i>
+            <i class="nav-icon fas fa-book-open"></i>
 
-                <p>
-                    Formations
-                    <i class="fas fa-angle-left right"></i>
-                </p>
+            <p>
+                Formations
+                <i class="fas fa-angle-left right"></i>
+            </p>
 
-            </a>
+        </a>
 
+        <ul class="nav nav-treeview">
 
-            <ul class="nav nav-treeview">
+            {{-- Liste des formations --}}
+            <li class="nav-item">
 
+                <a href="{{ route('admin.formations.index') }}"
+                    class="nav-link {{ Route::is('admin.formations.*') ? 'active' : '' }}">
 
-                {{-- Sessions --}}
-                <li class="nav-item">
+                    <i class="fas fa-list nav-icon"></i>
 
-                    <a href="{{ route('admin.sessions-formation.index') }}"
-                        class="nav-link {{ Route::is('admin.sessions-formation.*') ? 'active' : '' }}">
+                    <p>
+                        Liste des formations
+                    </p>
 
-                        <i class="fas fa-calendar-alt nav-icon"></i>
+                </a>
 
-                        <p>
-                            Sessions de formation
-                        </p>
+            </li>
 
-                    </a>
+            {{-- Sessions --}}
+            <li class="nav-item">
 
-                </li>
+                <a href="{{ route('admin.sessions-formation.index') }}"
+                    class="nav-link {{ Route::is('admin.sessions-formation.*') ? 'active' : '' }}">
 
+                    <i class="fas fa-calendar-alt nav-icon"></i>
 
-                {{-- Liste des formations --}}
-                <li class="nav-item">
+                    <p>
+                        Sessions de formation
+                    </p>
 
-                    <a href="{{ route('admin.formations.index') }}"
-                        class="nav-link {{ Route::is('admin.formations.*') ? 'active' : '' }}">
+                </a>
 
-                        <i class="fas fa-list nav-icon"></i>
+            </li>
 
-                        <p>
-                            Liste des formations
-                        </p>
+            {{-- Unités pédagogiques --}}
+            <li class="nav-item">
 
-                    </a>
+                <a href="{{ route('admin.unites-pedagogiques.index') }}"
+                    class="nav-link {{ Route::is('admin.unites-pedagogiques.*') ? 'active' : '' }}">
 
-                </li>
+                    <i class="fas fa-sitemap nav-icon"></i>
 
+                    <p>
+                        Unités pédagogiques
+                    </p>
 
-                {{-- Inscriptions --}}
-                {{-- Visible uniquement pour le rôle USER --}}
-                @if ($isUser)
+                </a>
+
+            </li>
+
+            {{-- Inscriptions --}}
+            {{-- Visible uniquement pour le rôle USER --}}
+            @if ($isUser)
                 <li class="nav-item">
 
                     <a href="{{ route('admin.inscription.create') }}"
@@ -175,12 +187,13 @@ $filieresActive = Route::is('admin.filieres.*');
                     </a>
 
                 </li>
-                @endif
+            @endif
 
-            </ul>
+        </ul>
 
-        </li>
-        @endif
+    </li>
+@endif
+        
 
         {{-- ========================================================= --}}
         {{-- MES TÉMOIGNAGES — visible uniquement pour le rôle USER --}}

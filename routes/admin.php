@@ -30,6 +30,7 @@ use App\Http\Controllers\VideoAdminController;
 use App\Http\Controllers\RechercheInnovationController;
 use App\Http\Controllers\StatistiqueVisiteController;
 use App\Http\Controllers\StatistiqueFonctionnaliteController;
+use App\Http\Controllers\UnitePedagogiqueController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(function () {
@@ -279,6 +280,19 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(
             Route::delete('/{formationInformation}', [AdminFormationInformationController::class, 'destroy'])
                 ->name('destroy');
         });
+
+
+    // Unitée pédagigiques
+
+    // ==================== UNITÉS PÉDAGOGIQUES ====================
+
+    Route::resource('unites-pedagogiques', UnitePedagogiqueController::class)
+        ->parameters(['unites-pedagogiques' => 'unite_pedagogique']);
+
+    Route::patch(
+        'unites-pedagogiques/{unite_pedagogique}/toggle-publication',
+        [UnitePedagogiqueController::class, 'togglePublication']
+    )->name('unites-pedagogiques.toggle-publication');
 
     /*
 |--------------------------------------------------------------------------

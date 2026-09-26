@@ -122,6 +122,7 @@
                         <thead class="table-light">
                             <tr>
                                 <th>Formation</th>
+                                <th>Année</th>
                                 <th>Enseignant</th>
                                 <th>Session</th>
                                 <th>Matière</th>
@@ -163,6 +164,18 @@
                                     <td>
                                         {{ $note->formation->nom ?? ($note->formation->titre ?? '—') }}
                                     </td>
+
+
+                                    <td>
+    @if($note->annee_label)
+        <span class="badge {{ $note->annee == 1 ? 'bg-info' : 'bg-primary' }}">
+            {{ $note->annee_label }}
+        </span>
+    @else
+        <span class="text-muted">—</span>
+    @endif
+</td>
+
 
                                     <td>
                                         {{ $note->enseignant->user->personne->nom_complet ?? '—' }}

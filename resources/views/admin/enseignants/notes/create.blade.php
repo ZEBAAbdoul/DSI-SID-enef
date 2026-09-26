@@ -80,6 +80,15 @@
                         </div>
 
                         <div class="col-md-3">
+                            <label class="form-label">Année <span class="text-danger">*</span></label>
+                            <select name="annee" class="form-select" required>
+                                <option value="">— Sélectionner —</option>
+                                <option value="1" @selected(old('annee') == '1')>1ère année</option>
+                                <option value="2" @selected(old('annee') == '2')>2ème année</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-3">
                             <label class="form-label">Date de l'évaluation</label>
                             <input type="date" name="date_evaluation" class="form-control"
                                    value="{{ old('date_evaluation') }}">

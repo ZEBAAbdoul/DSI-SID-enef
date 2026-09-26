@@ -222,4 +222,6 @@ class Formation extends Model
     {
         return $this->hasMany(SessionFormation::class);
     }
+
+    
 }

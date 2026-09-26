@@ -69,15 +69,24 @@ class NoteController extends Controller
     }
 
     public function create()
-    {
-        $formations = Formation::orderBy('titre')->get();
-        $matieres = Matiere::orderBy('nom')->get();
-        $sessions = SessionFormation::with('formation')
-            ->orderByDesc('date_debut')
-            ->get();
+{
+    $formations = Formation::whereHas('categorie', function ($q) {
+            $q->where('slug', 'formation-initiale');
+        })
+        ->orderBy('titre')
+        ->get();
 
-        return view('admin.enseignants.notes.create', compact('formations', 'matieres', 'sessions'));
-    }
+    $matieres = Matiere::orderBy('nom')->get();
+
+    $sessions = SessionFormation::with('formation')
+        ->whereHas('formation.categorie', function ($q) {
+            $q->where('slug', 'formation-initiale');
+        })
+        ->orderByDesc('date_debut')
+        ->get();
+
+    return view('admin.enseignants.notes.create', compact('formations', 'matieres', 'sessions'));
+}
 
     public function store(Request $request)
     {
@@ -88,6 +97,7 @@ class NoteController extends Controller
             'type_evaluation' => 'required|in:controle,examen,tp,oral,projet',
             'date_evaluation' => 'nullable|date',
             'commentaire' => 'nullable|string',
+            'annee' => 'nullable|string',
             'fichier' => 'required|file|mimes:xlsx,xls,csv,pdf|max:10240',
         ]);
 
@@ -105,6 +115,7 @@ class NoteController extends Controller
             'mime_type' => $file->getClientMimeType(),
             'taille' => $file->getSize(),
             'commentaire' => $request->commentaire,
+            'annee' => $request->annee,
             'date_evaluation' => $request->date_evaluation,
         ]);
 
