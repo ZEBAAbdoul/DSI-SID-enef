@@ -463,6 +463,52 @@
                 right: 8px;
             }
         }
+
+        /* ---------- Carrousel vidéos : grille 2 × 3 ---------- */
+        .gal-page--videos {
+            grid-template-columns: repeat(2, 1fr);
+            grid-template-rows: repeat(3, auto);
+        }
+
+        @media (max-width: 560px) {
+            .gal-page--videos {
+                grid-template-columns: 1fr;
+                grid-template-rows: auto;
+            }
+        }
+
+        /* ---------- Pagination vidéos en français ---------- */
+        .gal-nav {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin-top: 28px;
+            flex-wrap: wrap;
+        }
+
+        .gal-nav .gal-pbtn {
+            min-width: 0;
+            padding: 0 18px;
+            white-space: nowrap;
+        }
+
+        .gal-nav .gal-pbtn[disabled] {
+            opacity: .45;
+            cursor: default;
+        }
+
+        .gal-nav .gal-pbtn[disabled]:hover {
+            background: var(--white);
+        }
+
+        .gal-pinfo {
+            min-width: 96px;
+            text-align: center;
+            font-size: 13.5px;
+            font-weight: 700;
+            color: var(--forest-deep);
+        }
     </style>
 @endpush
 
@@ -470,7 +516,7 @@
 
     @php
         $photoPages = $photos->chunk(8);
-        $videoPages = $videos->chunk(8);
+        $videoPages = $videos->chunk(6); // carrousel 2 × 3 : 6 vidéos par page
     @endphp
 
     <!-- ===================== EN-TÊTE ===================== -->
@@ -563,7 +609,7 @@
                     <div class="gal-carousel" data-carousel="videos">
 
                         @foreach ($videoPages as $pageIndex => $page)
-                            <div class="gal-page {{ $pageIndex === 0 ? 'active' : '' }}">
+                            <div class="gal-page gal-page--videos {{ $pageIndex === 0 ? 'active' : '' }}">
                                 @foreach ($page as $video)
                                     <div class="gal-vcard">
                                         <div class="gal-vframe">
@@ -615,13 +661,12 @@
                         @endforeach
 
                         @if ($videoPages->count() > 1)
-                            <div class="gal-pagination">
-                                @foreach ($videoPages as $pageNum => $page)
-                                    <button type="button" class="gal-pbtn {{ $pageNum === 0 ? 'active' : '' }}"
-                                            data-page="{{ $pageNum }}" aria-label="Page {{ $pageNum + 1 }}">
-                                        {{ $pageNum + 1 }}
-                                    </button>
-                                @endforeach
+                            <div class="gal-nav">
+                                <button type="button" class="gal-pbtn gal-pbtn--prev" data-nav="prev"
+                                        aria-label="Vidéos précédentes" disabled>&lsaquo; Pr&eacute;c&eacute;dent</button>
+                                <span class="gal-pinfo">Page 1 / {{ $videoPages->count() }}</span>
+                                <button type="button" class="gal-pbtn gal-pbtn--next" data-nav="next"
+                                        aria-label="Vidéos suivantes">Suivant &rsaquo;</button>
                             </div>
                         @endif
 
@@ -742,6 +787,31 @@
                     aller(parseInt(btn.dataset.page, 10));
                 });
             });
+        });
+
+        // ---------- Carrousel vidéos 2×3 : Précédent / Suivant (en français) ----------
+        document.querySelectorAll('.gal-nav').forEach(function(nav) {
+            var car = nav.closest('.gal-carousel');
+            if (!car) return;
+
+            var pages = car.querySelectorAll('.gal-page');
+            var prev = nav.querySelector('[data-nav="prev"]');
+            var next = nav.querySelector('[data-nav="next"]');
+            var info = nav.querySelector('.gal-pinfo');
+            var idx = 0;
+
+            function aller(i) {
+                idx = Math.max(0, Math.min(pages.length - 1, i));
+                pages.forEach(function(p, k) {
+                    p.classList.toggle('active', k === idx);
+                });
+                if (prev) prev.disabled = (idx === 0);
+                if (next) next.disabled = (idx === pages.length - 1);
+                if (info) info.textContent = 'Page ' + (idx + 1) + ' / ' + pages.length;
+            }
+
+            if (prev) prev.addEventListener('click', function() { aller(idx - 1); });
+            if (next) next.addEventListener('click', function() { aller(idx + 1); });
         });
 
         // ---------- Lecture des vidéos (l'iframe n'est chargée qu'au clic) ----------
