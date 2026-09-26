@@ -347,7 +347,7 @@
                             <div class="agenda-cta">
                                 <span class="places-badge">{{ $session->places_disponibles }} /
                                     {{ $session->places_totales }} places</span>
-                                <a href="{{ url('/enef') }}" class="btn btn-primary btn-sm">S'inscrire</a>
+                                {{-- <a href="{{ url('/enef') }}" class="btn btn-primary btn-sm">S'inscrire</a> --}}
                             </div>
                         </div>
                     @endforeach

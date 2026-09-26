@@ -193,6 +193,11 @@ class ActualiteController extends Controller
                 'min:0',
             ],
 
+            'lien_facebook' => [
+                'nullable',
+                'string',
+            ],
+
             'is_publiee' => [
                 'nullable',
                 'boolean',
@@ -236,6 +241,7 @@ class ActualiteController extends Controller
         $actualite->titre = $validated['titre'];
         $actualite->chapo = $validated['chapo'] ?? null;
         $actualite->contenu = $validated['contenu'];
+        $actualite->lien_facebook = $validated['lien_facebook'];
         $actualite->type = $validated['type'];
         $actualite->ordre_menu = $validated['ordre_menu'] ?? 0;
 
@@ -391,6 +397,11 @@ class ActualiteController extends Controller
                 'string',
             ],
 
+            'lien_facebook' => [
+                'nullable',
+                'string',
+            ],
+
             'type' => [
                 'required',
                 'in:institutionnelle,formation,evenement,partenariat,communique',
@@ -441,6 +452,8 @@ class ActualiteController extends Controller
         $actualite->titre = $validated['titre'];
         $actualite->chapo = $validated['chapo'] ?? null;
         $actualite->contenu = $validated['contenu'];
+        $actualite->lien_facebook = $validated['lien_facebook'];
+
         $actualite->type = $validated['type'];
         $actualite->ordre_menu = $validated['ordre_menu'] ?? 0;
 

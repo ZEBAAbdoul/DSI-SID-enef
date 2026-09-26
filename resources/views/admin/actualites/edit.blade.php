@@ -1,266 +1,222 @@
 <x-admin>
 
-@section('title', 'Modifier l’actualité')
+    @section('title', 'Modifier l’actualité')
 
-@section('content')
+    @section('content')
 
-<div class="container-fluid py-4">
+        <div class="container-fluid py-4">
 
-    <div class="mb-4">
+            <div class="mb-4">
 
-        <h1 class="h3 fw-bold">
-            Modifier l'actualité
-        </h1>
+                <h1 class="h3 fw-bold">
+                    Modifier l'actualité
+                </h1>
 
-        <p class="text-muted">
-            {{ $actualite->titre }}
-        </p>
+                <p class="text-muted">
+                    {{ $actualite->titre }}
+                </p>
 
-    </div>
-
-
-    @if($errors->any())
-
-        <div class="alert alert-danger">
-
-            <ul class="mb-0">
-
-                @foreach($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-
-            </ul>
-
-        </div>
-
-    @endif
+            </div>
 
 
-    <form
-        method="POST"
-        action="{{ route('admin.actualites.update', $actualite) }}"
-        enctype="multipart/form-data"
-    >
+            @if ($errors->any())
 
-        @csrf
-        @method('PUT')
+                <div class="alert alert-danger">
 
+                    <ul class="mb-0">
 
-        <div class="card shadow-sm border-0">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
 
-            <div class="card-body">
+                    </ul>
 
-                <div class="row g-4">
+                </div>
 
-                    {{-- Titre --}}
-                    <div class="col-md-8">
-
-                        <label class="form-label fw-bold">
-                            Titre *
-                        </label>
-
-                        <input
-                            type="text"
-                            name="titre"
-                            class="form-control"
-                            value="{{ old('titre', $actualite->titre) }}"
-                            required
-                        >
-
-                    </div>
+            @endif
 
 
-                    {{-- Type --}}
-                    <div class="col-md-4">
+            <form method="POST" action="{{ route('admin.actualites.update', $actualite) }}" enctype="multipart/form-data">
 
-                        <label class="form-label fw-bold">
-                            Type *
-                        </label>
-
-                        <select
-                            name="type"
-                            class="form-select"
-                            required
-                        >
-
-                            @foreach([
-                                'institutionnelle' => 'Institutionnelle',
-                                'formation' => 'Formation',
-                                'evenement' => 'Événement',
-                                'partenariat' => 'Partenariat',
-                                'communique' => 'Communiqué'
-                            ] as $key => $label)
-
-                                <option
-                                    value="{{ $key }}"
-                                    @selected(old('type', $actualite->type) === $key)
-                                >
-                                    {{ $label }}
-                                </option>
-
-                            @endforeach
-
-                        </select>
-
-                    </div>
+                @csrf
+                @method('PUT')
 
 
-                    {{-- Chapo --}}
-                    <div class="col-12">
+                <div class="card shadow-sm border-0">
 
-                        <label class="form-label fw-bold">
-                            Chapo
-                        </label>
+                    <div class="card-body">
 
-                        <textarea
-                            name="chapo"
-                            rows="3"
-                            class="form-control"
-                        >{{ old('chapo', $actualite->chapo) }}</textarea>
+                        <div class="row g-4">
 
-                    </div>
+                            {{-- Titre --}}
+                            <div class="col-md-8">
 
+                                <label class="form-label fw-bold">
+                                    Titre *
+                                </label>
 
-                    {{-- Contenu --}}
-                    <div class="col-12">
+                                <input type="text" name="titre" class="form-control"
+                                    value="{{ old('titre', $actualite->titre) }}" required>
 
-                        <label class="form-label fw-bold">
-                            Contenu *
-                        </label>
-
-                        <textarea
-                            name="contenu"
-                            rows="12"
-                            class="form-control"
-                            required
-                        >{{ old('contenu', $actualite->contenu) }}</textarea>
-
-                    </div>
+                            </div>
 
 
-                    {{-- Image actuelle --}}
-                    <div class="col-md-6">
+                            {{-- Type --}}
+                            <div class="col-md-4">
 
-                        <label class="form-label fw-bold d-block">
-                            Image actuelle
-                        </label>
+                                <label class="form-label fw-bold">
+                                    Type *
+                                </label>
 
-                        <img
-                            src="{{ $actualite->image }}"
-                            alt="{{ $actualite->titre }}"
-                            class="img-thumbnail mb-3"
-                            style="max-height:180px;"
-                        >
+                                <select name="type" class="form-select" required>
 
-                        <label class="form-label fw-bold d-block">
-                            Remplacer l'image
-                        </label>
+                                    @foreach ([
+            'institutionnelle' => 'Institutionnelle',
+            'formation' => 'Formation',
+            'evenement' => 'Événement',
+            'partenariat' => 'Partenariat',
+            'communique' => 'Communiqué',
+        ] as $key => $label)
+                                        <option value="{{ $key }}" @selected(old('type', $actualite->type) === $key)>
+                                            {{ $label }}
+                                        </option>
+                                    @endforeach
 
-                        <input
-                            type="file"
-                            name="image"
-                            class="form-control"
-                            accept=".jpg,.jpeg,.png,.webp"
-                        >
+                                </select>
 
-                    </div>
+                            </div>
 
 
-                    {{-- Ordre --}}
-                    <div class="col-md-3">
+                            {{-- Chapo --}}
+                            <div class="col-12">
 
-                        <label class="form-label fw-bold">
-                            Ordre
-                        </label>
+                                <label class="form-label fw-bold">
+                                    Chapo
+                                </label>
 
-                        <input
-                            type="number"
-                            name="ordre_menu"
-                            class="form-control"
-                            value="{{ old('ordre_menu', $actualite->ordre_menu) }}"
-                            min="0"
-                        >
+                                <textarea name="chapo" rows="3" class="form-control">{{ old('chapo', $actualite->chapo) }}</textarea>
 
-                    </div>
+                            </div>
 
 
-                    {{-- Publication --}}
-                    <div class="col-md-3">
+                            {{-- Contenu --}}
+                            <div class="col-12">
 
-                        <label class="form-label fw-bold d-block">
-                            Publication
-                        </label>
+                                <label class="form-label fw-bold">
+                                    Contenu *
+                                </label>
 
-                        <div class="form-check form-switch mt-2">
+                                <textarea name="contenu" rows="12" class="form-control" required>{{ old('contenu', $actualite->contenu) }}</textarea>
 
-                            <input
-                                type="checkbox"
-                                name="is_publiee"
-                                value="1"
-                                class="form-check-input"
-                                id="is_publiee"
-                                @checked(old('is_publiee', $actualite->is_publiee))
-                            >
+                            </div>
 
-                            <label
-                                class="form-check-label"
-                                for="is_publiee"
-                            >
-                                Publiée
-                            </label>
+
+                            {{-- Image actuelle --}}
+                            <div class="col-md-6">
+
+                                <label class="form-label fw-bold d-block">
+                                    Image actuelle
+                                </label>
+
+                                <img src="{{ $actualite->image }}" alt="{{ $actualite->titre }}" class="img-thumbnail mb-3"
+                                    style="max-height:180px;">
+
+                                <label class="form-label fw-bold d-block">
+                                    Remplacer l'image
+                                </label>
+
+                                <input type="file" name="image" class="form-control" accept=".jpg,.jpeg,.png,.webp">
+
+                            </div>
+
+                            {{-- Lien Facebook --}}
+                            <div class="col-md-6">
+
+                                <label class="form-label fw-bold">
+                                    Lien Facebook
+                                </label>
+
+                                <input type="url" name="lien_facebook" class="form-control"
+                                    value="{{ old('lien_facebook', $actualite->lien_facebook) }}"
+                                    placeholder="https://www.facebook.com/...">
+
+                                <small class="text-muted">
+                                    URL de la publication ou page Facebook liée à cette actualité.
+                                </small>
+
+                            </div>
+
+
+                            {{-- Ordre --}}
+                            <div class="col-md-3">
+
+                                <label class="form-label fw-bold">
+                                    Ordre
+                                </label>
+
+                                <input type="number" name="ordre_menu" class="form-control"
+                                    value="{{ old('ordre_menu', $actualite->ordre_menu) }}" min="0">
+
+                            </div>
+
+
+                            {{-- Publication --}}
+                            <div class="col-md-3">
+
+                                <label class="form-label fw-bold d-block">
+                                    Publication
+                                </label>
+
+                                <div class="form-check form-switch mt-2">
+
+                                    <input type="checkbox" name="is_publiee" value="1" class="form-check-input"
+                                        id="is_publiee" @checked(old('is_publiee', $actualite->is_publiee))>
+
+                                    <label class="form-check-label" for="is_publiee">
+                                        Publiée
+                                    </label>
+
+                                </div>
+
+                            </div>
+
+
+                            {{-- SEO --}}
+                            <div class="col-12">
+
+                                <label class="form-label fw-bold">
+                                    Meta description
+                                </label>
+
+                                <textarea name="meta_description" rows="2" maxlength="160" class="form-control">{{ old('meta_description', $actualite->meta_description) }}</textarea>
+
+                            </div>
 
                         </div>
 
                     </div>
 
 
-                    {{-- SEO --}}
-                    <div class="col-12">
+                    <div class="card-footer bg-white d-flex justify-content-between">
 
-                        <label class="form-label fw-bold">
-                            Meta description
-                        </label>
+                        <a href="{{ route('admin.actualites.index') }}" class="btn btn-secondary">
+                            Annuler
+                        </a>
 
-                        <textarea
-                            name="meta_description"
-                            rows="2"
-                            maxlength="160"
-                            class="form-control"
-                        >{{ old('meta_description', $actualite->meta_description) }}</textarea>
+                        <button type="submit" class="btn btn-primary">
+
+                            <i class="fas fa-save me-1"></i>
+
+                            Enregistrer les modifications
+
+                        </button>
 
                     </div>
 
                 </div>
 
-            </div>
-
-
-            <div class="card-footer bg-white d-flex justify-content-between">
-
-                <a
-                    href="{{ route('admin.actualites.index') }}"
-                    class="btn btn-secondary"
-                >
-                    Annuler
-                </a>
-
-                <button
-                    type="submit"
-                    class="btn btn-primary"
-                >
-
-                    <i class="fas fa-save me-1"></i>
-
-                    Enregistrer les modifications
-
-                </button>
-
-            </div>
+            </form>
 
         </div>
 
-    </form>
-
-</div>
-
-</x-admin>
+    </x-admin>
