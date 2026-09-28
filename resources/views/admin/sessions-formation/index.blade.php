@@ -1,6 +1,11 @@
 <x-admin>
     @section('title', 'Sessions de formation')
 
+    @php
+        $peutGerer = ! auth()->user()->hasRole('user');
+        $nbColonnes = $peutGerer ? 8 : 7;
+    @endphp
+
     @if (session('status'))
         <div class="alert alert-info">{{ session('status') }}</div>
     @endif
@@ -19,14 +24,14 @@
                         <option value="cloturee" @selected(request('statut') === 'cloturee')>Clôturée</option>
                     </select>
                 </form>
-                @unless (auth()->user()->hasRole('user'))
+                @if ($peutGerer)
                     <a href="{{ route('admin.sessions-formation.create') }}" class="btn btn-primary btn-sm">
                         <i class="fas fa-plus"></i> Nouvelle session
                     </a>
-                @endunless
-
+                @endif
             </div>
         </div>
+
         <div class="card-body p-0">
             <div class="table-responsive">
                 <table class="table table-bordered" width="100%" cellspacing="0">
@@ -36,21 +41,38 @@
                             <th>LIEU</th>
                             <th>DATE DÉBUT</th>
                             <th>DATE FIN</th>
+                            <th>DÉPÔT JUSQU'AU</th>
                             <th>PLACES</th>
                             <th>STATUT</th>
-                            @unless (auth()->user()->hasRole('user'))
+                            @if ($peutGerer)
                                 <th>ACTIONS</th>
-                            @endunless
-
+                            @endif
                         </tr>
                     </thead>
                     <tbody>
                         @forelse ($sessions as $session)
+                            @php
+                                $limite = $session->date_limite_depot
+                                    ? \Carbon\Carbon::parse($session->date_limite_depot)
+                                    : null;
+                                $depotClos = $limite && $limite->copy()->endOfDay()->isPast();
+                            @endphp
                             <tr>
                                 <td>{{ $session->formation->titre ?? 'Formation supprimée' }}</td>
                                 <td>{{ $session->lieu ?? '—' }}</td>
                                 <td>{{ \Carbon\Carbon::parse($session->date_debut)->format('d/m/Y') }}</td>
-                                <td>{{ $session->date_fin ? \Carbon\Carbon::parse($session->date_fin)->format('d/m/Y') : '—' }}
+                                <td>{{ $session->date_fin ? \Carbon\Carbon::parse($session->date_fin)->format('d/m/Y') : '—' }}</td>
+                                <td>
+                                    @if ($limite)
+                                        <span class="{{ $depotClos ? 'text-danger' : '' }}">
+                                            {{ $limite->format('d/m/Y') }}
+                                        </span>
+                                        @if ($depotClos)
+                                            <small class="d-block text-danger">Dépôt clos</small>
+                                        @endif
+                                    @else
+                                        <span class="text-muted">—</span>
+                                    @endif
                                 </td>
                                 <td>{{ $session->places_disponibles }} / {{ $session->places_totales }}</td>
                                 <td>
@@ -58,7 +80,7 @@
                                         {{ ucfirst($session->statut) }}
                                     </span>
                                 </td>
-                                @unless (auth()->user()->hasRole('user'))
+                                @if ($peutGerer)
                                     <td>
                                         <a href="{{ route('admin.sessions-formation.edit', $session) }}"
                                             class="btn btn-sm btn-warning">
@@ -74,18 +96,20 @@
                                             </button>
                                         </form>
                                     </td>
-                                @endunless
-
+                                @endif
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="7" class="text-center text-muted">Aucune session trouvée.</td>
+                                <td colspan="{{ $nbColonnes }}" class="text-center text-muted">
+                                    Aucune session trouvée.
+                                </td>
                             </tr>
                         @endforelse
                     </tbody>
                 </table>
             </div>
         </div>
+
         <div class="card-footer">
             {{ $sessions->links() }}
         </div>
@@ -93,20 +117,9 @@
 
     @push('styles')
         <style>
-            .statut-badge-ouverte {
-                background: #d4edda;
-                color: #155724;
-            }
-
-            .statut-badge-complete {
-                background: #fff3cd;
-                color: #856404;
-            }
-
-            .statut-badge-cloturee {
-                background: #f8d7da;
-                color: #721c24;
-            }
+            .statut-badge-ouverte  { background: #d4edda; color: #155724; }
+            .statut-badge-complete { background: #fff3cd; color: #856404; }
+            .statut-badge-cloturee { background: #f8d7da; color: #721c24; }
         </style>
     @endpush
 </x-admin>

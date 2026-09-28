@@ -16,82 +16,114 @@
     @endif
 
     <div class="card">
-        <div class="card-header">
-            <h3 class="card-title">Sessions de formation disponibles</h3>
-        </div>
-        <div class="card-body p-0">
-            <div class="table-responsive">
-                <table class="table table-bordered" width="100%" cellspacing="0">
-                    <thead>
+    <div class="card-header">
+        <h3 class="card-title">Sessions de formation disponibles</h3>
+    </div>
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-bordered" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>FORMATION</th>
+                        <th>CATÉGORIE</th>
+                        <th>LIEU</th>
+                        <th>DATE DÉBUT</th>
+                        <th>DATE FIN</th>
+                        <th>DÉPÔT JUSQU'AU</th>
+                        <th>PLACES DISPONIBLES</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse ($sessions as $session)
+                        @php
+                            $formation = $session->formation;
+                            $complet = $session->places_disponibles <= 0;
+
+                            $limite = $session->date_limite_depot;
+                            $depotClos = $limite && $limite->copy()->endOfDay()->isPast();
+                            $joursRestants = $limite && !$depotClos ? today()->diffInDays($limite) : null;
+                            $urgent = $joursRestants !== null && $joursRestants <= 7;
+                        @endphp
                         <tr>
-                            <th>FORMATION</th>
-                            <th>CATÉGORIE</th>
-                            <th>LIEU</th>
-                            <th>DATE DÉBUT</th>
-                            <th>DATE FIN</th>
-                            <th>PLACES DISPONIBLES</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @forelse ($sessions as $session)
-                            @php
-                                $formation = $session->formation;
-                                $complet = $session->places_disponibles <= 0;
-                            @endphp
-                            <tr>
-                                <td>{{ $formation->titre ?? 'Formation supprimée' }}</td>
-                                <td>{{ $formation->categorie->nom ?? '—' }}</td>
-                                <td>{{ $session->lieu ?? '—' }}</td>
-                                <td>{{ optional($session->date_debut)->format('d/m/Y') ?? '—' }}</td>
-                                <td>{{ optional($session->date_fin)->format('d/m/Y') ?? '—' }}</td>
-                                <td>
-                                    <span class="badge {{ $complet ? 'badge-secondary' : 'badge-success' }}">
-                                        {{ $session->places_disponibles }} / {{ $session->places_totales }}
+                            <td>{{ $formation->titre ?? 'Formation supprimée' }}</td>
+                            <td>{{ $formation->categorie->nom ?? '—' }}</td>
+                            <td>{{ $session->lieu ?? '—' }}</td>
+                            <td>{{ optional($session->date_debut)->format('d/m/Y') ?? '—' }}</td>
+                            <td>{{ optional($session->date_fin)->format('d/m/Y') ?? '—' }}</td>
+                            <td>
+                                @if ($limite)
+                                    <span class="{{ $depotClos ? 'text-danger' : ($urgent ? 'text-warning font-weight-bold' : '') }}">
+                                        {{ $limite->format('d/m/Y') }}
                                     </span>
-                                </td>
-                                <td>
-    @if ($inscriptions->has($session->id))
+                                    @if ($depotClos)
+                                        <small class="d-block text-danger">Dépôt clos</small>
+                                    @elseif ($joursRestants === 0)
+                                        <small class="d-block text-warning font-weight-bold">Dernier jour</small>
+                                    @elseif ($urgent)
+                                        <small class="d-block text-warning">
+                                            Plus que {{ $joursRestants }} jour{{ $joursRestants > 1 ? 's' : '' }}
+                                        </small>
+                                    @endif
+                                @else
+                                    <span class="text-muted">—</span>
+                                @endif
+                            </td>
+                            <td>
+                                <span class="badge {{ $complet ? 'badge-secondary' : 'badge-success' }}">
+                                    {{ $session->places_disponibles }} / {{ $session->places_totales }}
+                                </span>
+                            </td>
+                            <td>
+                                @if ($inscriptions->has($session->id))
 
-        {{-- Le candidat est déjà inscrit --}}
-        <a href="{{ route('admin.inscription.show', $inscriptions[$session->id]->id) }}"
-            class="btn btn-sm btn-info">
-            <i class="fas fa-eye mr-1"></i>
-            Voir ma candidature
-        </a>
+                                    {{-- Le candidat est déjà inscrit --}}
+                                    <a href="{{ route('admin.inscription.show', $inscriptions[$session->id]->id) }}"
+                                        class="btn btn-sm btn-info">
+                                        <i class="fas fa-eye mr-1"></i>
+                                        Voir ma candidature
+                                    </a>
 
-    @elseif ($complet)
+                                @elseif ($depotClos)
 
-        {{-- Session complète --}}
-        <button type="button" class="btn btn-sm btn-secondary" disabled>
-            <i class="fas fa-ban mr-1"></i>
-            Session complète
-        </button>
+                                    {{-- Date limite dépassée --}}
+                                    <button type="button" class="btn btn-sm btn-secondary" disabled>
+                                        <i class="fas fa-lock mr-1"></i>
+                                        Dépôt clos
+                                    </button>
 
-    @else
+                                @elseif ($complet)
 
-        {{-- Pas encore inscrit --}}
-        <a href="{{ route('admin.inscription.inscriptionforme', $session->id) }}"
-            class="btn btn-sm btn-primary">
-            <i class="fas fa-user-plus mr-1"></i>
-            S'inscrire
-        </a>
+                                    {{-- Session complète --}}
+                                    <button type="button" class="btn btn-sm btn-secondary" disabled>
+                                        <i class="fas fa-ban mr-1"></i>
+                                        Session complète
+                                    </button>
 
-    @endif
-</td>
-                            </tr>
-                        @empty
-                            <tr>
-                                <td colspan="7" class="text-center text-muted">
-                                    Aucune session ouverte pour le moment.
-                                </td>
-                            </tr>
-                        @endforelse
-                    </tbody>
-                </table>
-            </div>
+                                @else
+
+                                    {{-- Pas encore inscrit --}}
+                                    <a href="{{ route('admin.inscription.inscriptionforme', $session->id) }}"
+                                        class="btn btn-sm btn-primary">
+                                        <i class="fas fa-user-plus mr-1"></i>
+                                        S'inscrire
+                                    </a>
+
+                                @endif
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="8" class="text-center text-muted">
+                                Aucune session ouverte pour le moment.
+                            </td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
         </div>
     </div>
+</div>
 
     {{-- Modal de confirmation d'inscription --}}
     <div class="modal fade" id="modalInscription" tabindex="-1" role="dialog" aria-labelledby="modalInscriptionLabel"

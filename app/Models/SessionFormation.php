@@ -24,6 +24,7 @@ class SessionFormation extends Model
         'lieu',
         'places_totales',
         'places_disponibles',
+        'date_limite_depot',
         'statut',
         'created_by',
     ];
@@ -31,6 +32,8 @@ class SessionFormation extends Model
     protected $casts = [
         'date_debut' => 'date',
         'date_fin'   => 'date',
+        'date_limite_depot' => 'date',
+
     ];
 
     /**
@@ -55,5 +58,11 @@ class SessionFormation extends Model
     public function scopeOuvertes($query)
     {
         return $query->where('statut', 'ouverte');
+    }
+
+    public function depotOuvert(): bool
+    {
+        return $this->statut === 'ouverte'
+            && (! $this->date_limite_depot || $this->date_limite_depot->endOfDay()->isFuture());
     }
 }
