@@ -70,6 +70,26 @@
 |--------------------------------------------------------------------------
 */
     $filieresActive = Route::is('admin.filieres.*');
+
+    /*
+|--------------------------------------------------------------------------
+| Informations (annonces avec PDF)
+|--------------------------------------------------------------------------
+*/
+    $informationsGestionActive =
+        Route::is('admin.informations.index') ||
+        Route::is('admin.informations.create') ||
+        Route::is('admin.informations.edit');
+
+    $informationsConsultActive = Route::is('admin.informations.consulter');
+
+    // Badge : informations reçues ces 7 derniers jours (rôles user et enseignant)
+    $nouvellesInformations =
+        $isUser || $isEnseignant
+            ? \App\Models\Information::pourUtilisateur(auth()->user())
+                ->where('publie_le', '>=', now()->subDays(7))
+                ->count()
+            : 0;
 @endphp
 
 
@@ -83,22 +103,17 @@
         {{-- INVISIBLE POUR LES RÔLES USER ET ENSEIGNANT --}}
         {{-- ========================================================= --}}
 
-        @if (!$isUser && !$isEnseignant)
+        {{-- @if (!$isUser && !$isEnseignant) --}}
             <li class="nav-item">
 
                 <a href="{{ route('admin.dashboard') }}"
                     class="nav-link {{ Route::is('admin.dashboard') ? 'active' : '' }}">
-
                     <i class="nav-icon fas fa-tachometer-alt"></i>
-
-                    <p>
-                        Tableau de bord
-                    </p>
-
+                    <p>{{ $isUser || $isEnseignant ? 'Mon espace' : 'Tableau de bord' }}</p>
                 </a>
 
             </li>
-        @endif
+        {{-- @endif --}}
 
 
 
@@ -158,21 +173,21 @@
 
                     {{-- Unités pédagogiques --}}
                     @unless ($isUser)
-    <li class="nav-item">
+                        <li class="nav-item">
 
-        <a href="{{ route('admin.unites-pedagogiques.index') }}"
-            class="nav-link {{ Route::is('admin.unites-pedagogiques.*') ? 'active' : '' }}">
+                            <a href="{{ route('admin.unites-pedagogiques.index') }}"
+                                class="nav-link {{ Route::is('admin.unites-pedagogiques.*') ? 'active' : '' }}">
 
-            <i class="fas fa-sitemap nav-icon"></i>
+                                <i class="fas fa-sitemap nav-icon"></i>
 
-            <p>
-                Unités pédagogiques
-            </p>
+                                <p>
+                                    Unités pédagogiques
+                                </p>
 
-        </a>
+                            </a>
 
-    </li>
-@endunless
+                        </li>
+                    @endunless
 
                     {{-- Inscriptions --}}
                     {{-- Visible uniquement pour le rôle USER --}}
@@ -412,6 +427,25 @@
             </li>
         @endif
 
+        {{-- ========================================================= --}}
+        {{-- INFORMATIONS (consultation) --}}
+        {{-- Visible pour les rôles USER et ENSEIGNANT --}}
+        {{-- ========================================================= --}}
+        @if ($isUser || $isEnseignant)
+            <li class="nav-item">
+                <a href="{{ route('admin.informations.consulter') }}"
+                    class="nav-link {{ $informationsConsultActive ? 'active' : '' }}">
+                    <i class="nav-icon fas fa-bullhorn"></i>
+                    <p>
+                        Informations
+                        @if ($nouvellesInformations > 0)
+                            <span class="badge badge-warning right">{{ $nouvellesInformations }}</span>
+                        @endif
+                    </p>
+                </a>
+            </li>
+        @endif
+
 
 
         {{-- ========================================================= --}}
@@ -455,6 +489,36 @@
 
                 </ul>
 
+            </li>
+
+            {{-- ===================================================== --}}
+            {{-- INFORMATIONS (gestion) --}}
+            {{-- ===================================================== --}}
+            <li class="nav-item {{ $informationsGestionActive ? 'menu-open' : '' }}">
+                <a href="#" class="nav-link {{ $informationsGestionActive ? 'active' : '' }}">
+                    <i class="nav-icon fas fa-bullhorn"></i>
+                    <p>
+                        Informations
+                        <i class="fas fa-angle-left right"></i>
+                    </p>
+                </a>
+
+                <ul class="nav nav-treeview">
+                    {{-- <li class="nav-item">
+                        <a href="{{ route('admin.informations.create') }}"
+                            class="nav-link {{ Route::is('admin.informations.create') ? 'active' : '' }}">
+                            <i class="fas fa-plus-circle nav-icon"></i>
+                            <p>Nouvelle information</p>
+                        </a>
+                    </li> --}}
+                    <li class="nav-item">
+                        <a href="{{ route('admin.informations.index') }}"
+                            class="nav-link {{ Route::is('admin.informations.index') || Route::is('admin.informations.edit') ? 'active' : '' }}">
+                            <i class="fas fa-list nav-icon"></i>
+                            <p>Liste des informations</p>
+                        </a>
+                    </li>
+                </ul>
             </li>
 
             {{-- ===================================================== --}}
