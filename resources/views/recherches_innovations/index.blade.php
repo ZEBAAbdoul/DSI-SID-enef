@@ -89,13 +89,27 @@
 
                         <p>{{ $rechercheInnovation->chapo ?? \Illuminate\Support\Str::limit(strip_tags((string) $rechercheInnovation->contenu), 140) }}</p>
 
-                        <a class="ri-link"
-                           href="{{ route('recherches-innovations.show', $rechercheInnovation->slug) }}">Lire la
-                            suite
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M5 12h14M13 6l6 6-6 6" />
-                            </svg>
-                        </a>
+                        <div class="ri-actions">
+                            <a class="ri-link"
+                               href="{{ route('recherches-innovations.show', $rechercheInnovation->slug) }}">Lire la
+                                suite
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M5 12h14M13 6l6 6-6 6" />
+                                </svg>
+                            </a>
+
+                            <button type="button" class="ri-share" data-partage
+                                    data-titre="{{ $rechercheInnovation->titre }}"
+                                    data-url="{{ route('recherches-innovations.show', $rechercheInnovation->slug) }}"
+                                    aria-label="Partager « {{ $rechercheInnovation->titre }} »">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                                    <line x1="12" y1="2" x2="12" y2="15" />
+                                    <polyline points="16 6 12 2 8 6" />
+                                    <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8" />
+                                </svg>
+                                Partager
+                            </button>
+                        </div>
                     </div>
                 </article>
                 @empty
@@ -291,6 +305,46 @@
         .ri-link:hover {
             color: var(--clay);
         }
+
+        .ri-actions {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            margin-top: 14px;
+            flex-wrap: wrap;
+        }
+
+        .ri-share {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 7px 12px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--forest-deep);
+            background: var(--paper-alt);
+            border: 1.5px solid var(--line);
+            border-radius: 2px;
+            cursor: pointer;
+            font-family: inherit;
+            transition: background .18s ease, color .18s ease, border-color .18s ease;
+        }
+
+        .ri-share svg {
+            width: 15px;
+            height: 15px;
+        }
+
+        .ri-share:hover {
+            background: var(--forest-deep);
+            color: #fff;
+            border-color: var(--forest-deep);
+        }
     </style>
+
+    @push('scripts')
+        @include('partials.share-action')
+    @endpush
 
 @endsection

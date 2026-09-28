@@ -29,7 +29,7 @@ class InscriptionValideeNotification extends Notification implements ShouldQueue
         $lines = [
             "Votre dossier de candidature n° {$this->inscription->numero_dossier} a été validé. Bienvenue à l'ENEF !",
             $contactRh
-                ? 'Pour procéder au paiement des frais de scolarité, veuillez contacter le Service des Ressources Humaines au numéro suivant :'
+                ? 'Pour procéder au paiement des frais de scolarité, veuillez contacter le Service de L\'agence comptable au numéro suivant :'
                 : 'Vous pouvez maintenant procéder au paiement des frais de scolarité.',
         ];
 
