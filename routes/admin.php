@@ -32,6 +32,8 @@ use App\Http\Controllers\StatistiqueVisiteController;
 use App\Http\Controllers\StatistiqueFonctionnaliteController;
 use App\Http\Controllers\UnitePedagogiqueController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\InformationController;
+use App\Http\Controllers\InformationConsultationController;
 
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(function () {
 
@@ -509,4 +511,16 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(
         Route::get('/fonctionnalites', [StatistiqueFonctionnaliteController::class, 'index'])
             ->name('fonctionnalites');
     });
+    
+
+    // Consultation : tout utilisateur connecté
+    Route::get('informations/consulter', [InformationConsultationController::class, 'index'])
+        ->name('informations.consulter');
+    Route::get('informations/{information}/fichier', [InformationConsultationController::class, 'telecharger'])
+        ->name('informations.fichier');
+
+    // Gestion : réservée aux gestionnaires (adapte le middleware à ton système de rôles)
+    Route::resource('informations', InformationController::class)
+        ->except('show')
+        ->parameters(['informations' => 'information']);
 });

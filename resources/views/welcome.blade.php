@@ -87,7 +87,6 @@
     </section>
 
     <!-- ===================== TÉMOIGNAGES (BANDE COMPACTE) ===================== -->
-    <!-- ===================== TÉMOIGNAGES (BANDE COMPACTE) ===================== -->
     @if ($temoignages->isNotEmpty())
         <section id="temoignages" class="alt">
             <div class="container">
