@@ -1926,6 +1926,26 @@
         </div>
     </div>
 
+    @php
+    $navAccueil = request()->is('/');
+    $navUnites = request()->routeIs('unites-pedagogiques');
+    $navRecherche = request()->routeIs('recherches-innovations.*');
+    $navGalerie = request()->routeIs('galerie.*');
+    $navEnef = $navUnites || $navRecherche || $navGalerie;
+
+    $navInitiales = request()->is('catalogue-formations-initiales*');
+    $navContinues = request()->is('catalogue-formations-continues*');
+    $navFormations = $navInitiales || $navContinues || request()->routeIs('formations.*');
+
+    $navActualites = request()->routeIs('actualites.*');
+
+    $navBiblioEnLigne = request()->routeIs('bibliotheque.consultation');
+    $navTelechargement = request()->routeIs('bibliotheque.index');
+    $navEservices = $navBiblioEnLigne || $navTelechargement;
+
+    $navContact = request()->routeIs('contact.*');
+@endphp
+
     <!-- ===================== MAIN NAV ===================== -->
     <div class="navwrap">
         <div class="container nav">
@@ -1936,24 +1956,29 @@
                 </span> </a>
 
             <ul class="menu" id="mainMenu">
-                <li><a href="{{ url('/') }}">Accueil</a></li>
-                <li>
-                    <button class="toplink" aria-expanded="false">L'ENEF <svg class="chev" viewBox="0 0 12 8"
-                            fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M1 1l5 5 5-5" />
-                        </svg></button>
-                    <ul class="dropdown">
-                        <li><a href="{{ url('/') }}#dg">Mot du Directeur Général</a></li>
-                                                <li><a href="{{ url('/') }}#actualites">Actualités</a></li>
-                        {{-- <li><a href="{{ url('/formations/informations-complementaires') }}">Conditions d'entrée à l'ENEF</a></li> --}}
-                        {{-- <li><a href="{{ url('/') }}#presentation">Présentation &amp; historique</a></li> --}}
-                        <li><a href="{{ route('unites-pedagogiques') }}">Unités pédagogiques</a></li>
-                        <li><a href="{{ url('/') }}#partenaires">Nos partenaires</a></li>
-                        <li><a href="{{ route('recherches-innovations.index') }}">Recherche &amp; innovation</a></li>
-                        <li><a href="{{ route('galerie.index') }}">Galerie photo &amp; vidéo</a></li>
+    <li>
+        <a href="{{ url('/') }}" class="{{ $navAccueil ? 'active' : '' }}"
+            @if ($navAccueil) aria-current="page" @endif>Accueil</a>
+    </li>
 
-                    </ul>
-                </li>
+    <li>
+        <button class="toplink {{ $navEnef ? 'active' : '' }}" aria-expanded="false">L'ENEF
+            <svg class="chev" viewBox="0 0 12 8" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M1 1l5 5 5-5" />
+            </svg>
+        </button>
+        <ul class="dropdown">
+            <li><a href="{{ url('/') }}#dg">Mot du Directeur Général</a></li>
+            <li><a href="{{ url('/') }}#actualites">Actualités</a></li>
+            <li><a href="{{ route('unites-pedagogiques') }}" class="{{ $navUnites ? 'active' : '' }}"
+                    @if ($navUnites) aria-current="page" @endif>Unités pédagogiques</a></li>
+            <li><a href="{{ url('/') }}#partenaires">Nos partenaires</a></li>
+            <li><a href="{{ route('recherches-innovations.index') }}" class="{{ $navRecherche ? 'active' : '' }}"
+                    @if ($navRecherche) aria-current="page" @endif>Recherche &amp; innovation</a></li>
+            <li><a href="{{ route('galerie.index') }}" class="{{ $navGalerie ? 'active' : '' }}"
+                    @if ($navGalerie) aria-current="page" @endif>Galerie photo &amp; vidéo</a></li>
+        </ul>
+    </li>
 
                 <li>
                     <button class="toplink" aria-expanded="false">Formations <svg class="chev" viewBox="0 0 12 8"

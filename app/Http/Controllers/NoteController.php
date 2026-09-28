@@ -69,24 +69,24 @@ class NoteController extends Controller
     }
 
     public function create()
-{
-    $formations = Formation::whereHas('categorie', function ($q) {
+    {
+        $formations = Formation::whereHas('categorie', function ($q) {
             $q->where('slug', 'formation-initiale');
         })
-        ->orderBy('titre')
-        ->get();
+            ->orderBy('titre')
+            ->get();
 
-    $matieres = Matiere::orderBy('nom')->get();
+        $matieres = Matiere::orderBy('nom')->get();
 
-    $sessions = SessionFormation::with('formation')
-        ->whereHas('formation.categorie', function ($q) {
-            $q->where('slug', 'formation-initiale');
-        })
-        ->orderByDesc('date_debut')
-        ->get();
+        $sessions = SessionFormation::with('formation')
+            ->whereHas('formation.categorie', function ($q) {
+                $q->where('slug', 'formation-initiale');
+            })
+            ->orderByDesc('date_debut')
+            ->get();
 
-    return view('admin.enseignants.notes.create', compact('formations', 'matieres', 'sessions'));
-}
+        return view('admin.enseignants.notes.create', compact('formations', 'matieres', 'sessions'));
+    }
 
     public function store(Request $request)
     {

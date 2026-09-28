@@ -78,7 +78,12 @@ class InscriptionController extends Controller
     {
         $sessions = SessionFormation::with('formation.categorie')
             ->where('statut', 'ouverte')
-            ->where('date_debut', '>=', now())
+            ->whereDate('date_debut', '>=', today())
+            ->where(function ($q) {
+                $q->whereNull('date_limite_depot')
+                    ->orWhereDate('date_limite_depot', '>=', today());
+            })
+            ->orderBy('date_limite_depot')   // les plus urgentes d'abord (NULL en dernier sous PostgreSQL)
             ->orderBy('date_debut')
             ->get();
 

@@ -21,15 +21,17 @@
                     <div><span class="num">{{ $param_site->annee_creation ?? '—' }}</span><span class="lbl">Année
                             de création de l'école</span>
                     </div>
-                    <div><span class="num">{{ $param_site->personne_forme ?? '—' }} <strong>+</strong> </span><span
-                            class="lbl">Personnes
+                    <div><span class="num">
+                            {{ is_numeric($param_site->personne_forme ?? null) ? number_format($param_site->personne_forme, 0, ',', ' ') : '—' }}
+                            <strong>+</strong>
+                        </span><span class="lbl">Personnes
                             formées à nos jours</span>
                     </div>
                     {{-- <div><span class="num">{{ $fillieres->count() }}</span><span class="lbl">Filières de
                             spécialisation</span></div> --}}
                 </div>
             </div>
-            <div class="hero-side">
+            {{-- <div class="hero-side">
                 @if ($derniereActualite)
                     <img src="{{ $derniereActualite->image }}" alt="{{ $derniereActualite->titre }}"
                         class="hero-side-photo">
@@ -47,19 +49,10 @@
                         continue sont ouvertes jusqu'au 15 octobre 2026.</p>
                     <a href="#admissions" class="btn btn-water btn-sm">Voir les conditions d'accès</a>
                 @endif
-            </div>
+            </div> --}}
+            @include('partials.hero-actualites-ring')
         </div>
     </section>
-
-    <!-- ===================== TÉMOIGNAGES (BANDE COMPACTE) ===================== -->
-    @if ($temoignages->isNotEmpty())
-        <div class="testi-marquee testi-marquee--compact" aria-label="Témoignages des élèves de l'ENEF">
-            @include('partials.testimonials-track', [
-                'temoignages' => $temoignages,
-                'compact' => true,
-            ])
-        </div>
-    @endif
 
     <!-- ===================== MOT DU DG ===================== -->
     <section id="dg">
@@ -93,8 +86,41 @@
         </div>
     </section>
 
+    <!-- ===================== TÉMOIGNAGES (BANDE COMPACTE) ===================== -->
+    <!-- ===================== TÉMOIGNAGES (BANDE COMPACTE) ===================== -->
+    @if ($temoignages->isNotEmpty())
+        <section id="temoignages" class="alt">
+            <div class="container">
+                <div class="section-head">
+                    <div>
+                        <span class="kicker">Ils témoignent</span>
+                        <h2>La parole à nos élèves et anciens élèves</h2>
+                    </div>
+                </div>
+
+                <div class="testi-slider">
+                    <button type="button" id="testi-prev" class="testi-nav-btn testi-arrow testi-arrow--left"
+                        aria-label="Témoignage précédent" title="Témoignage précédent">&larr;</button>
+
+                    <div class="testi-marquee testi-marquee--compact" id="testi-marquee"
+                        aria-label="Témoignages des élèves de l'ENEF">
+                        @include('partials.testimonials-track', [
+                            'temoignages' => $temoignages,
+                            'compact' => true,
+                        ])
+                    </div>
+
+                    <button type="button" id="testi-next" class="testi-nav-btn testi-arrow testi-arrow--right"
+                        aria-label="Témoignage suivant" title="Témoignage suivant">&rarr;</button>
+                </div>
+            </div>
+        </section>
+    @endif
+
+
+
     <!-- ===================== ACTUALITÉS ===================== -->
-    <section id="actualites" class="alt">
+    {{-- <section id="actualites" class="alt">
         <div class="container">
             <div class="section-head">
                 <div>
@@ -115,7 +141,6 @@
                             <p style="color:var(--ink-soft);">Aucune actualité publiée pour le moment.</p>
                         @endforelse
 
-                        {{-- Duplication du flux pour l'effet de défilement continu (CSS) --}}
                         @if ($actualites->count() > 2)
                             @foreach ($actualites as $actualite)
                                 @include('partials.news-card', [
@@ -130,7 +155,112 @@
                 <button type="button" id="news-next" class="news-nav-btn news-arrow news-arrow--right"
                     aria-label="Actualité suivante" title="Actualité suivante">&rarr;</button>
             </div>
-    </section>
+    </section> --}}
+
+    <!-- ===================== SESSIONS À VENIR ===================== -->
+    @if ($sessions->isNotEmpty())
+        <section id="sessions" class="alt">
+            <div class="container">
+                <div class="section-head">
+                    <div>
+                        <span class="kicker">Agenda</span>
+                        <h2>Prochaines sessions de formation</h2>
+                        <p class="desc">Calendrier des sessions ouvertes — inscrivez-vous avant la clôture des
+                            inscriptions.</p>
+                    </div>
+                </div>
+
+                <div class="sessions-agenda">
+                    @foreach ($sessions as $session)
+                        @php
+                            $debut = \Carbon\Carbon::parse($session->date_debut);
+                            $fin = $session->date_fin ? \Carbon\Carbon::parse($session->date_fin) : null;
+                            $limite = $session->date_limite_depot
+                                ? \Carbon\Carbon::parse($session->date_limite_depot)
+                                : null;
+
+                            $depotClos = $limite && $limite->copy()->endOfDay()->isPast();
+                            $joursRestants = $limite && !$depotClos ? today()->diffInDays($limite) : null;
+                            $urgent = $joursRestants !== null && $joursRestants <= 7;
+
+                            $dispo = (int) $session->places_disponibles;
+                            $complet = $dispo <= 0 || $session->statut === 'complete';
+                        @endphp
+
+                        <div class="agenda-card {{ $depotClos ? 'is-closed' : '' }}">
+                            <div class="agenda-date">
+                                <span class="day">{{ $debut->format('d') }}</span>
+                                <span class="month">{{ $debut->translatedFormat('M') }}</span>
+                                <span class="year">{{ $debut->format('Y') }}</span>
+                            </div>
+
+                            <div class="agenda-body">
+                                <h4>{{ $session->formation->titre ?? 'Formation' }}</h4>
+
+                                <p class="lieu">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                        width="14" height="14" aria-hidden="true">
+                                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                                        <circle cx="12" cy="10" r="3" />
+                                    </svg>
+                                    {{ $session->lieu ?: 'Lieu à préciser' }}
+                                </p>
+
+                                <p class="duree">
+                                    @if ($fin && !$fin->isSameDay($debut))
+                                        Du {{ $debut->translatedFormat('d M Y') }}
+                                        au {{ $fin->translatedFormat('d M Y') }}
+                                    @else
+                                        À partir du {{ $debut->translatedFormat('d M Y') }}
+                                    @endif
+                                </p>
+
+                                @if ($limite)
+                                    <p class="depot-limite {{ $depotClos ? 'is-expired' : ($urgent ? 'is-urgent' : '') }}">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                            width="14" height="14" aria-hidden="true">
+                                            <circle cx="12" cy="12" r="10" />
+                                            <polyline points="12 6 12 12 16 14" />
+                                        </svg>
+                                        @if ($depotClos)
+                                            Dépôt des dossiers clos le {{ $limite->translatedFormat('d M Y') }}
+                                        @else
+                                            Dépôt des dossiers jusqu'au
+                                            <strong>{{ $limite->translatedFormat('d M Y') }}</strong>
+                                            @if ($joursRestants === 0)
+                                                · dernier jour
+                                            @elseif ($urgent)
+                                                · plus que {{ $joursRestants }} jour{{ $joursRestants > 1 ? 's' : '' }}
+                                            @endif
+                                        @endif
+                                    </p>
+                                @endif
+                            </div>
+
+                            <div class="agenda-cta">
+                                @if ($depotClos)
+                                    <span class="places-badge is-full">Dépôt clos</span>
+                                @elseif ($complet)
+                                    <span class="places-badge is-full">Complet</span>
+                                @else
+                                    <span class="places-badge">{{ $dispo }} /
+                                        {{ $session->places_totales }} places</span>
+                                @endif
+                                {{-- @unless ($depotClos || $complet)
+                                <a href="{{ url('/enef') }}" class="btn btn-primary btn-sm">S'inscrire</a>
+                            @endunless --}}
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+                <div class="sessions-cta">
+                    <a href="{{ route('login') }}" class="btn btn-primary">
+                        Se connecter pour candidater
+                    </a>
+                </div>
+            </div>
+        </section>
+    @endif
 
     <!-- ===================== ADMISSIONS ===================== -->
     <section id="admissions">
@@ -303,58 +433,7 @@
         </div>
     </section> --}}
 
-    <!-- ===================== SESSIONS À VENIR ===================== -->
-    @if ($sessions->isNotEmpty())
-        <section id="sessions" class="alt">
-            <div class="container">
-                <div class="section-head">
-                    <div>
-                        <span class="kicker">Agenda</span>
-                        <h2>Prochaines sessions de formation</h2>
-                        <p class="desc">Calendrier des sessions ouvertes — inscrivez-vous avant la clôture des
-                            inscriptions.</p>
-                    </div>
-                </div>
-                <div class="sessions-agenda">
-                    @foreach ($sessions as $session)
-                        <div class="agenda-card">
-                            <div class="agenda-date">
-                                <span class="day">{{ \Carbon\Carbon::parse($session->date_debut)->format('d') }}</span>
-                                <span
-                                    class="month">{{ \Carbon\Carbon::parse($session->date_debut)->translatedFormat('M') }}</span>
-                                <span class="year">{{ \Carbon\Carbon::parse($session->date_debut)->format('Y') }}</span>
-                            </div>
-                            <div class="agenda-body">
-                                <h4>{{ $session->formation->titre ?? 'Formation' }}</h4>
-                                <p class="lieu">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                        width="14" height="14">
-                                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
-                                        <circle cx="12" cy="10" r="3" />
-                                    </svg>
-                                    {{ $session->lieu ?? 'Lieu à préciser' }}
-                                </p>
-                                <p class="duree">
-                                    @if ($session->date_fin)
-                                        Du {{ \Carbon\Carbon::parse($session->date_debut)->translatedFormat('d M Y') }}
-                                        au {{ \Carbon\Carbon::parse($session->date_fin)->translatedFormat('d M Y') }}
-                                    @else
-                                        À partir du
-                                        {{ \Carbon\Carbon::parse($session->date_debut)->translatedFormat('d M Y') }}
-                                    @endif
-                                </p>
-                            </div>
-                            <div class="agenda-cta">
-                                <span class="places-badge">{{ $session->places_disponibles }} /
-                                    {{ $session->places_totales }} places</span>
-                                {{-- <a href="{{ url('/enef') }}" class="btn btn-primary btn-sm">S'inscrire</a> --}}
-                            </div>
-                        </div>
-                    @endforeach
-                </div>
-            </div>
-        </section>
-    @endif
+
 
     <!-- ===================== PRESTATIONS ===================== -->
     <section id="prestations">
@@ -364,48 +443,81 @@
                     <span class="kicker">Prestations &amp; appui-conseil</span>
                     <h2>Études, expertises et accompagnement technique</h2>
                     <p class="desc">L'ENEF met son expertise au service des structures publiques, privées et des
-                        collectivités territoriales.</p>
+                        collectivités territoriales, à travers des prestations d'études, de conseil et d'accompagnement
+                        technique dans les domaines des eaux, forêts et de l'environnement.</p>
                 </div>
             </div>
+
             <div class="presta-grid">
+
                 <div class="presta-card">
-                    <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2">
+                    <div class="ic" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2">
                             <path d="M9 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-4" />
                             <path d="M18 2l4 4-11 11H7v-4z" />
-                        </svg></div>
+                        </svg>
+                    </div>
                     <h4>Études &amp; études thématiques</h4>
-                    <p>Études socio-économiques, plans d'aménagement, études d'impact environnemental, audits et
-                        bilans carbone.</p>
-                    {{-- <a href="#prestations" class="btn btn-outline btn-sm">Voir nos références</a> --}}
+                    <p>Réalisation d'études techniques et de diagnostics pour éclairer la décision publique et privée.</p>
+                    <ul class="presta-list">
+                        <li>Études socio-économiques</li>
+                        <li>Plans d'aménagement et de gestion</li>
+                        <li>Études d'impact environnemental (EIE)</li>
+                        <li>Audits et bilans carbone</li>
+                    </ul>
+                    {{-- <a href="mailto:infos@enef.gov.bf?subject=Demande%20d%27étude" class="btn btn-outline btn-sm">
+                    Voir nos références
+                </a> --}}
                 </div>
+
                 <div class="presta-card">
-                    <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2">
+                    <div class="ic" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2">
                             <path d="M12 20h9" />
                             <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z" />
-                        </svg></div>
+                        </svg>
+                    </div>
                     <h4>Appui-conseil &amp; accompagnement</h4>
-                    <p>Planification environnementale, projets finance carbone, valorisation des savoirs locaux,
-                        réhabilitation de sites miniers.</p>
-                    {{-- <a href="mailto:infos@enef.gov.bf?subject=Demande%20de%20formation%20%C3%A0%20la%20carte"
-                        class="btn btn-primary btn-sm">Découvrir nos missions</a> --}}
+                    <p>Un accompagnement technique de proximité pour les porteurs de projets et les collectivités.</p>
+                    <ul class="presta-list">
+                        <li>Planification environnementale</li>
+                        <li>Montage de projets finance carbone</li>
+                        <li>Valorisation des savoirs locaux</li>
+                        <li>Réhabilitation de sites miniers</li>
+                    </ul>
+                    {{-- <a href="mailto:infos@enef.gov.bf?subject=Demande%20d%27appui-conseil" class="btn btn-outline btn-sm">
+                    Découvrir nos missions
+                </a> --}}
                 </div>
-                <div class="presta-card">
-                    <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2">
+
+                <div class="presta-card presta-card--highlight">
+                    <div class="ic" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2">
                             <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
                             <path d="M14 2v6h6" />
-                        </svg></div>
+                        </svg>
+                    </div>
                     <h4>Demande de prestation</h4>
-                    <p>Formulaire dédié pour formuler une demande d'étude ou d'appui-conseil, distinct de la demande
-                        de formation.</p>
-                    {{-- <a href="mailto:infos@enef.gov.bf?subject=Demande%20de%20formation%20%C3%A0%20la%20carte"
-                        class="btn btn-primary btn-sm">Faire une demande</a> --}}
+                    <p>Vous portez un projet d'étude ou avez besoin d'un accompagnement technique ? Formulez votre
+                        demande en quelques minutes.</p>
+                    <ul class="presta-list">
+                        <li>Formulaire dédié, distinct de la demande de formation</li>
+                        <li>Traitement par nos équipes spécialisées</li>
+                        <li>Réponse sous 72h ouvrées</li>
+                    </ul>
+                    {{-- <a href="" class="btn btn-primary btn-sm">
+                    Faire une demande
+                </a> --}}
                 </div>
+
             </div>
         </div>
     </section>
 
+
+
     {{-- ===================== BOUTON FLOTTANT "NOUS ÉCRIRE" ===================== --}}
-    <a href="{{ route('contact.index')}}" class="float-contact-btn" title="Nous écrire">
+    <a href="{{ route('contact.index') }}" class="float-contact-btn" title="Nous écrire">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M4 4h16v16H4z" opacity="0" />
             <path d="M22 6l-10 7L2 6" />
@@ -439,7 +551,7 @@
             <div class="biblio-search">
                 <form action="{{ route('bibliotheque.index') }}" method="GET" class="search-row">
                     <input type="text" name="q" placeholder="Rechercher un document, un thème…"
-    aria-label="Rechercher un document" style="background:#f0f0f0;">
+                        aria-label="Rechercher un document" style="background:#f0f0f0;">
                     <button type="submit" aria-label="Lancer la recherche"><svg viewBox="0 0 24 24" fill="none"
                             stroke="currentColor" stroke-width="2">
                             <circle cx="11" cy="11" r="7" />
@@ -1160,10 +1272,54 @@
         }
 
         /* ---------- Agenda des sessions à venir ---------- */
+        /* 2 cartes par ligne */
         .sessions-agenda {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 1.25rem;
+        }
+
+        .agenda-card {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            /* date | contenu */
+            grid-template-areas:
+                "date body"
+                "cta  cta";
+            gap: 1rem 1.25rem;
+            align-items: start;
+            height: 100%;
+        }
+
+        .agenda-card .agenda-date {
+            grid-area: date;
+        }
+
+        .agenda-card .agenda-body {
+            grid-area: body;
+            min-width: 0;
+        }
+
+        /* min-width évite le débordement du texte */
+        .agenda-card .agenda-body h4 {
+            overflow-wrap: anywhere;
+        }
+
+        .agenda-card .agenda-cta {
+            grid-area: cta;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: .75rem;
+            padding-top: .75rem;
+            border-top: 1px solid rgba(0, 0, 0, .08);
+        }
+
+        /* 1 carte par ligne sur tablette et mobile */
+        @media (max-width: 768px) {
+            .sessions-agenda {
+                grid-template-columns: 1fr;
+            }
         }
 
         .agenda-card {
@@ -1586,21 +1742,199 @@
             }
         }
 
-    /* ---------- Navigation du défilement des actualités ---------- */
-    .news-slider { position: relative; margin: 0 -28px; }
-    .news-slider .news-marquee { margin-left: 0; margin-right: 0; }
-    .news-nav-btn { width: 38px; height: 38px; display: inline-flex; align-items: center; justify-content: center; border: 1px solid var(--line); border-radius: 50%; background: var(--white); color: var(--ink); font-size: 19px; line-height: 1; cursor: pointer; transition: border-color .15s ease, color .15s ease, background .15s ease; }
-    .news-nav-btn:hover:not(:disabled) { border-color: #2e7d32; color: #fff; background: var(--forest-deep); }
-    .news-nav-btn:disabled { opacity: .45; cursor: default; }
-    .news-arrow { position: absolute; top: 50%; transform: translateY(-50%); z-index: 3; }
-    .news-arrow--left { left: 0; }
-    .news-arrow--right { right: 0; }
+        /* ---------- Navigation du défilement des actualités ---------- */
+        .news-slider {
+            position: relative;
+            margin: 0 -28px;
+        }
+
+        .news-slider .news-marquee {
+            margin-left: 0;
+            margin-right: 0;
+        }
+
+        .news-nav-btn {
+            width: 38px;
+            height: 38px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--line);
+            border-radius: 50%;
+            background: var(--white);
+            color: var(--ink);
+            font-size: 19px;
+            line-height: 1;
+            cursor: pointer;
+            transition: border-color .15s ease, color .15s ease, background .15s ease;
+        }
+
+        .news-nav-btn:hover:not(:disabled) {
+            border-color: #2e7d32;
+            color: #fff;
+            background: var(--forest-deep);
+        }
+
+        .news-nav-btn:disabled {
+            opacity: .45;
+            cursor: default;
+        }
+
+        .news-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 3;
+        }
+
+        .news-arrow--left {
+            left: 0;
+        }
+
+        .news-arrow--right {
+            right: 0;
+        }
 
         @media (max-width: 640px) {
             .news-arrow {
                 width: 32px;
                 height: 32px;
                 font-size: 16px;
+            }
+        }
+
+        .presta-list {
+            list-style: none;
+            padding: 0;
+            margin: 12px 0 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .presta-list li {
+            position: relative;
+            padding-left: 20px;
+            font-size: 0.92rem;
+            color: var(--text-muted, #555);
+        }
+
+        .presta-list li::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 8px;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--primary, #2e7d32);
+        }
+
+        .presta-card--highlight {
+            border: 1px solid var(--primary, #2e7d32);
+        }
+
+        /* ---------- Navigation du défilement des témoignages ---------- */
+        .testi-slider {
+            position: relative;
+            margin: 0 -28px;
+        }
+
+        .testi-slider .testi-marquee {
+            margin-left: 0;
+            margin-right: 0;
+        }
+
+        .testi-nav-btn {
+            width: 40px;
+            height: 40px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            border-radius: 50%;
+            background: var(--forest-deep, #1b5e20);
+            color: #fff;
+            font-size: 20px;
+            font-weight: 700;
+            line-height: 1;
+            cursor: pointer;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, .22);
+            transition: background .15s ease, transform .15s ease;
+        }
+
+        .testi-nav-btn:hover:not(:disabled) {
+            background: var(--forest-mid, #2e7d32);
+            transform: translateY(-50%) scale(1.06);
+        }
+
+        .testi-nav-btn:disabled {
+            opacity: .35;
+            cursor: default;
+            box-shadow: none;
+        }
+
+        .testi-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 3;
+        }
+
+        .testi-arrow--left {
+            left: 8px;
+        }
+
+        .testi-arrow--right {
+            right: 8px;
+        }
+
+        @media (max-width: 640px) {
+            .testi-nav-btn {
+                width: 34px;
+                height: 34px;
+                font-size: 17px;
+            }
+        }
+
+        .depot-limite {
+            display: flex;
+            align-items: center;
+            gap: .35rem;
+            margin: .25rem 0 0;
+            color: #6c757d;
+            font-size: .9rem;
+        }
+
+        .depot-limite.is-urgent {
+            color: #b45309;
+            font-weight: 600;
+        }
+
+        .depot-limite.is-expired {
+            color: #842029;
+        }
+
+        .places-badge.is-full {
+            background: #f8d7da;
+            color: #842029;
+        }
+
+        .agenda-card.is-closed {
+            opacity: .65;
+        }
+
+        .sessions-cta {
+            display: flex;
+            justify-content: flex-end;
+            /* à droite ; "center" pour centrer, "flex-start" pour la gauche */
+            margin-top: 2rem;
+        }
+
+        @media (max-width: 640px) {
+            .sessions-cta .btn {
+                width: 100%;
+                text-align: center;
             }
         }
     </style>
@@ -1613,8 +1947,8 @@
             var marquee = document.getElementById('news-marquee');
             if (!marquee) return;
             var track = marquee.querySelector('.news-track');
-            var prevBtn = document.getElementById('news-prev');
-            var nextBtn = document.getElementById('news-next');
+            var prevBtn = document.getElementById('testi-prev');
+            var nextBtn = document.getElementById('testi-next');
             if (!track || !prevBtn || !nextBtn) return;
 
             var gap = 26;
@@ -1701,6 +2035,66 @@
             });
 
             applyFilters(); // état initial : onglet "Programmées"
+        })();
+    </script>
+
+    <script>
+        // Navigation précédent / suivant du défilement des témoignages
+        (function() {
+            var marquee = document.getElementById('testi-marquee');
+            if (!marquee) return;
+            var track = marquee.querySelector('.testi-track');
+            var prevBtn = document.getElementById('testi-prev');
+            var nextBtn = document.getElementById('testi-next');
+            if (!track || !prevBtn || !nextBtn) return;
+
+            var gap = 24;
+            var pos = 0;
+            var paused = false;
+
+            function stepSize() {
+                var card = track.querySelector('.testi-card');
+                if (!card) return 360 + gap;
+                return card.getBoundingClientRect().width + gap;
+            }
+
+            function maxPos() {
+                var uniqueWidth = (track.scrollWidth - gap) / 2;
+                return -(uniqueWidth - marquee.clientWidth);
+            }
+
+            function updateButtons() {
+                prevBtn.disabled = pos >= -1;
+                nextBtn.disabled = pos <= maxPos() + 1;
+            }
+
+            function pause() {
+                if (paused) return;
+                paused = true;
+                // fige la position actuelle de l'animation avant de la couper
+                var computedTransform = getComputedStyle(track).transform;
+                track.style.animation = 'none';
+                if (computedTransform && computedTransform !== 'none') {
+                    var matrix = new DOMMatrixReadOnly(computedTransform);
+                    pos = matrix.m41;
+                }
+                track.style.transform = 'translateX(' + pos + 'px)';
+            }
+
+            function go(direction) {
+                pause();
+                pos = Math.round(Math.max(maxPos(), Math.min(0, pos - direction * stepSize())));
+                track.style.transform = 'translateX(' + pos + 'px)';
+                updateButtons();
+            }
+
+            prevBtn.addEventListener('click', function() {
+                go(-1);
+            });
+            nextBtn.addEventListener('click', function() {
+                go(1);
+            });
+            updateButtons();
         })();
     </script>
 @endpush

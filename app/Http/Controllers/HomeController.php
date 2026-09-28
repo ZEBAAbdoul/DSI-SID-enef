@@ -86,9 +86,11 @@ class HomeController extends Controller
         });
 
         $formationsInitiales = Formation::whereNotIn('type', ['continue_programmee', 'continue_a_la_carte'])
-    ->orderByRaw("CASE WHEN code_module LIKE 'FI-GRN%' THEN 0 ELSE 1 END")
-    ->orderBy('code_module')
-    ->get();
+            ->orderByRaw("CASE WHEN code_module LIKE 'FI-GRN%' THEN 0 ELSE 1 END")
+            ->orderBy('code_module')
+            ->get();
+
+        $dernieresActualites = Actualite::where('is_publiee', true)->latest()->take(5)->get();
 
         return view('welcome', [
             'param_site'          => $paramSite,
@@ -104,11 +106,10 @@ class HomeController extends Controller
             'biblioStats'         => $biblioStats,
             'typeLabels'          => $typeLabels,
             'partenaires'         => $partenaires,
-            'formationsInitiales' =>$formationsInitiales,
-            
+            'formationsInitiales' => $formationsInitiales,
+            'dernieresActualites' => $dernieresActualites,
+
         ]);
-
-
     }
 
     public function mentionLegale()
@@ -132,7 +133,7 @@ class HomeController extends Controller
         $unites = UnitePedagogique::publiees()
             ->orderBy('ordre')
             ->get();
-            
+
 
         return view('unites-pedagogiques.index', compact('unites'));
     }
