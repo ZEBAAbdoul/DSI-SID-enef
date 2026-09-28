@@ -1925,10 +1925,18 @@
         }
 
         .sessions-cta {
-    display: flex;
-    justify-content: flex-end;   /* à droite ; "center" pour centrer, "flex-start" pour la gauche */
-    margin-top: 2rem;
-}
+            display: flex;
+            justify-content: flex-end;
+            /* à droite ; "center" pour centrer, "flex-start" pour la gauche */
+            margin-top: 2rem;
+        }
+
+        @media (max-width: 640px) {
+            .sessions-cta .btn {
+                width: 100%;
+                text-align: center;
+            }
+        }
     </style>
 @endpush
 
