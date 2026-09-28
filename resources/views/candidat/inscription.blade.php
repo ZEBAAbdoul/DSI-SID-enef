@@ -69,7 +69,7 @@
                         $telRh = $contactRh ? preg_replace('/[^\d+]/', '', $contactRh) : null;
 
                         // Confettis : positions/couleurs déterministes (pas d'aléatoire → rendu stable)
-                        $couleursConfettis = ['#ffd166', '#ffffff', '#ef476f', '#06d6a0', '#4cc9f0', '#ffb703'];
+$couleursConfettis = ['#ffd166', '#ffffff', '#ef476f', '#06d6a0', '#4cc9f0', '#ffb703'];
                     @endphp
 
                     <div class="validation-banner mb-4" role="status">
@@ -77,7 +77,8 @@
                         {{-- Confettis (décor) --}}
                         <div class="vb-confetti" aria-hidden="true">
                             @for ($i = 0; $i < 32; $i++)
-                                <i style="--l: {{ ($i * 37 + 11) % 100 }}%;
+                                <i
+                                    style="--l: {{ ($i * 37 + 11) % 100 }}%;
                                           --d: {{ number_format((($i * 7) % 14) / 10, 1) }}s;
                                           --c: {{ $couleursConfettis[$i % count($couleursConfettis)] }};
                                           --s: {{ 6 + ($i % 4) * 2 }}px;
@@ -89,12 +90,14 @@
                         {{-- Décor : toque flottante --}}
                         <i class="fas fa-graduation-cap vb-watermark" aria-hidden="true"></i>
 
-                        <div class="vb-content d-flex flex-column flex-md-row align-items-center text-center text-md-left">
+                        <div
+                            class="vb-content d-flex flex-column flex-md-row align-items-center text-center text-md-left">
 
                             {{-- Coche SVG qui se dessine --}}
                             <div class="vb-icon mb-3 mb-md-0 mr-md-4" aria-hidden="true">
                                 <svg viewBox="0 0 52 52" class="vb-check">
-                                    <circle class="vb-check-circle" cx="26" cy="26" r="24" fill="none" />
+                                    <circle class="vb-check-circle" cx="26" cy="26" r="24"
+                                        fill="none" />
                                     <path class="vb-check-mark" fill="none" d="M14 27l8 8 16-17" />
                                 </svg>
                             </div>
@@ -119,6 +122,8 @@
                                         <a href="tel:{{ $telRh }}" class="btn btn-light vb-call">
                                             <i class="fas fa-phone-alt vb-phone"></i>
                                             {{ $contactRh }}
+                                            <i class="fab fa-whatsapp vb-wa-icon"
+                                                title="Également joignable sur WhatsApp"></i>
                                         </a>
                                     </div>
                                 @endif
@@ -211,10 +216,21 @@
                             animation: vb-up .55s ease-out both;
                         }
 
-                        .vb-d1 { animation-delay: .45s; }
-                        .vb-d2 { animation-delay: .6s; }
-                        .vb-d3 { animation-delay: .75s; }
-                        .vb-d4 { animation-delay: .9s; }
+                        .vb-d1 {
+                            animation-delay: .45s;
+                        }
+
+                        .vb-d2 {
+                            animation-delay: .6s;
+                        }
+
+                        .vb-d3 {
+                            animation-delay: .75s;
+                        }
+
+                        .vb-d4 {
+                            animation-delay: .9s;
+                        }
 
                         /* ---------- Bouton d'appel ---------- */
                         .vb-call {
@@ -270,74 +286,176 @@
                             animation: vb-fall 2.9s cubic-bezier(.25, .6, .4, 1) var(--d) 1 forwards;
                         }
 
+                        .vb-wa-icon {
+                            color: #25d366;
+                            font-size: 1.2em;
+                            margin-left: 8px;
+                            vertical-align: middle;
+                        }
+
                         @media (max-width: 767px) {
-                            .vb-watermark { font-size: 5rem; }
+                            .vb-watermark {
+                                font-size: 5rem;
+                            }
                         }
 
                         /* ---------- Keyframes ---------- */
                         @keyframes vb-in {
-                            from { opacity: 0; transform: translateY(-28px) scale(.92); }
-                            to   { opacity: 1; transform: none; }
+                            from {
+                                opacity: 0;
+                                transform: translateY(-28px) scale(.92);
+                            }
+
+                            to {
+                                opacity: 1;
+                                transform: none;
+                            }
                         }
 
                         @keyframes vb-gradient {
-                            0%, 100% { background-position: 0% 50%; }
-                            50%      { background-position: 100% 50%; }
+
+                            0%,
+                            100% {
+                                background-position: 0% 50%;
+                            }
+
+                            50% {
+                                background-position: 100% 50%;
+                            }
                         }
 
                         @keyframes vb-glow {
-                            0%, 100% { box-shadow: 0 10px 28px rgba(25, 135, 84, .30); }
-                            50%      { box-shadow: 0 14px 42px rgba(25, 135, 84, .55); }
+
+                            0%,
+                            100% {
+                                box-shadow: 0 10px 28px rgba(25, 135, 84, .30);
+                            }
+
+                            50% {
+                                box-shadow: 0 14px 42px rgba(25, 135, 84, .55);
+                            }
                         }
 
                         @keyframes vb-pop {
-                            from { opacity: 0; transform: scale(0) rotate(-90deg); }
-                            to   { opacity: 1; transform: scale(1) rotate(0); }
+                            from {
+                                opacity: 0;
+                                transform: scale(0) rotate(-90deg);
+                            }
+
+                            to {
+                                opacity: 1;
+                                transform: scale(1) rotate(0);
+                            }
                         }
 
                         @keyframes vb-draw {
-                            to { stroke-dashoffset: 0; }
+                            to {
+                                stroke-dashoffset: 0;
+                            }
                         }
 
                         @keyframes vb-ring {
-                            0%   { opacity: .7; transform: scale(.85); }
-                            100% { opacity: 0;  transform: scale(1.8); }
+                            0% {
+                                opacity: .7;
+                                transform: scale(.85);
+                            }
+
+                            100% {
+                                opacity: 0;
+                                transform: scale(1.8);
+                            }
                         }
 
                         @keyframes vb-up {
-                            from { opacity: 0; transform: translateY(10px); }
-                            to   { opacity: 1; transform: none; }
+                            from {
+                                opacity: 0;
+                                transform: translateY(10px);
+                            }
+
+                            to {
+                                opacity: 1;
+                                transform: none;
+                            }
                         }
 
                         @keyframes vb-pulse {
-                            0%   { box-shadow: 0 0 0 0 rgba(255, 255, 255, .65); }
-                            70%  { box-shadow: 0 0 0 14px rgba(255, 255, 255, 0); }
-                            100% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); }
+                            0% {
+                                box-shadow: 0 0 0 0 rgba(255, 255, 255, .65);
+                            }
+
+                            70% {
+                                box-shadow: 0 0 0 14px rgba(255, 255, 255, 0);
+                            }
+
+                            100% {
+                                box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
+                            }
                         }
 
                         @keyframes vb-ringing {
-                            0%, 60%, 100% { transform: rotate(0); }
-                            64% { transform: rotate(-20deg); }
-                            68% { transform: rotate(18deg); }
-                            72% { transform: rotate(-16deg); }
-                            76% { transform: rotate(14deg); }
-                            80% { transform: rotate(-8deg); }
-                            84% { transform: rotate(6deg); }
+
+                            0%,
+                            60%,
+                            100% {
+                                transform: rotate(0);
+                            }
+
+                            64% {
+                                transform: rotate(-20deg);
+                            }
+
+                            68% {
+                                transform: rotate(18deg);
+                            }
+
+                            72% {
+                                transform: rotate(-16deg);
+                            }
+
+                            76% {
+                                transform: rotate(14deg);
+                            }
+
+                            80% {
+                                transform: rotate(-8deg);
+                            }
+
+                            84% {
+                                transform: rotate(6deg);
+                            }
                         }
 
                         @keyframes vb-float {
-                            0%, 100% { transform: translateY(0) rotate(-8deg); }
-                            50%      { transform: translateY(-12px) rotate(-3deg); }
+
+                            0%,
+                            100% {
+                                transform: translateY(0) rotate(-8deg);
+                            }
+
+                            50% {
+                                transform: translateY(-12px) rotate(-3deg);
+                            }
                         }
 
                         @keyframes vb-fall {
-                            0%   { opacity: 1; transform: translate3d(0, 0, 0) rotate(0); }
-                            80%  { opacity: 1; }
-                            100% { opacity: 0; transform: translate3d(var(--dx), 340px, 0) rotate(var(--r)); }
+                            0% {
+                                opacity: 1;
+                                transform: translate3d(0, 0, 0) rotate(0);
+                            }
+
+                            80% {
+                                opacity: 1;
+                            }
+
+                            100% {
+                                opacity: 0;
+                                transform: translate3d(var(--dx), 340px, 0) rotate(var(--r));
+                            }
                         }
 
                         /* Accessibilité : pas de mouvement, mais la coche reste visible */
                         @media (prefers-reduced-motion: reduce) {
+
                             .validation-banner,
                             .vb-icon,
                             .vb-icon::before,

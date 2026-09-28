@@ -294,7 +294,8 @@
 
 
                         <label class="checkbox-row">
-                            <input type="checkbox" name="terms" required>
+                            <input type="checkbox" name="terms" value="1" required
+                                {{ old('terms') ? 'checked' : '' }}>
                             <span>J'accepte les <a href="{{ route('conditionutilisation') }}">conditions d'utilisation</a>
                                 et la
                                 <a href="{{ route('politiqueConfidentialite') }}">politique de confidentialité</a> de
@@ -304,7 +305,8 @@
                             <span class="field-error d-block">{{ $message }}</span>
                         @enderror
 
-                        <button type="submit" class="btn btn-primary" style="width:100%;margin-top:8px;">
+                        <button type="submit" id="submitBtn" class="btn btn-primary" style="width:100%;margin-top:8px;"
+                            disabled>
                             Créer mon compte
                         </button>
                     </form>
@@ -540,6 +542,15 @@
             background: var(--line);
         }
 
+        .btn:disabled {
+            opacity: .5;
+            cursor: not-allowed;
+        }
+
+        .btn-primary:disabled:hover {
+            background: var(--clay);
+        }
+
         @media (max-width: 900px) {
             .auth-grid {
                 grid-template-columns: 1fr;
@@ -556,6 +567,22 @@
                 grid-template-columns: 1fr;
             }
         }
+
+        @media (max-width: 900px) {
+            .auth-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .auth-side,
+            .auth-card {
+                padding: 36px 28px;
+            }
+
+            .form-row-split,
+            .form-row-split--phone,
+            .nat-toggle {
+                grid-template-columns: 1fr;
+            }
     </style>
 @endpush
 
@@ -602,6 +629,23 @@
             pieceType.addEventListener('change', syncPieceLabel);
 
             syncNationalite();
+        })();
+    </script>
+
+    <script>
+        (function() {
+            var terms = document.querySelector('input[name="terms"]');
+            var submitBtn = document.getElementById('submitBtn');
+            if (!terms || !submitBtn) return;
+
+            function syncSubmit() {
+                submitBtn.disabled = !terms.checked;
+            }
+
+            terms.addEventListener('change', syncSubmit);
+            // Au chargement, et au retour arrière du navigateur (qui restaure l'état des champs)
+            window.addEventListener('pageshow', syncSubmit);
+            syncSubmit();
         })();
     </script>
 @endpush
