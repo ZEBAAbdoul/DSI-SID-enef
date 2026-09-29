@@ -6,32 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'ENEF — École Nationale des Eaux et Forêts')</title>
 
-    <meta name="description"
-        content="ENEF — École Nationale des Eaux et Forêts : actualités, formations, galerie et ressources.">
-    <link rel="icon" type="image/jpeg" href="{{ asset('images/logo.jpg') }}">
-    <link rel="canonical" href="{{ url()->current() }}">
-
-    {{-- Open Graph : aperçu avec le logo ENEF quand un lien est partagé (WhatsApp, Facebook…) --}}
-    <meta property="og:site_name" content="ENEF — École Nationale des Eaux et Forêts">
-    <meta property="og:type" content="website">
-    <meta property="og:locale" content="fr_FR">
-    <meta property="og:title" content="@yield('title', 'ENEF — École Nationale des Eaux et Forêts')">
-    <meta property="og:description"
-        content="ENEF — École Nationale des Eaux et Forêts : actualités, formations, galerie et ressources.">
-    <meta property="og:image" content="{{ asset('images/logo.jpg') }}">
-    <meta property="og:image:type" content="image/jpeg">
-    <meta property="og:image:alt" content="Logo ENEF">
-    <meta property="og:url" content="{{ url()->current() }}">
-
-    {{-- Twitter Card --}}
-    <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content="@yield('title', 'ENEF — École Nationale des Eaux et Forêts')">
-    <meta name="twitter:description"
-        content="ENEF — École Nationale des Eaux et Forêts : actualités, formations, galerie et ressources.">
-    <meta name="twitter:image" content="{{ asset('images/logo.jpg') }}">
-
-    @stack('head')
-
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
@@ -1873,6 +1847,62 @@
             object-fit: contain;
             display: block;
         }
+
+        /* ---------- État actif du menu ---------- */
+.menu > li > a,
+.menu > li > button.toplink {
+    position: relative;
+}
+
+.menu > li > a.active,
+.menu > li > button.toplink.active {
+    color: #2e7d32;
+}
+
+/* Trait de soulignement animé sous l'entrée active */
+.menu > li > a::after,
+.menu > li > button.toplink::after {
+    content: "";
+    position: absolute;
+    left: 13px;
+    right: 13px;
+    bottom: 4px;
+    height: 3px;
+    border-radius: 2px;
+    background: #2e7d32;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform .2s ease;
+}
+
+.menu > li > a.active::after,
+.menu > li > button.toplink.active::after,
+.menu > li > a:hover::after,
+.menu > li > button.toplink:hover::after {
+    transform: scaleX(1);
+}
+
+/* Page active dans un menu déroulant */
+.dropdown a.active {
+    background: var(--paper-alt);
+    color: #2e7d32;
+    font-weight: 700;
+    box-shadow: inset 3px 0 0 #2e7d32;
+}
+
+@media (max-width: 980px) {
+    /* Sur mobile, on remplace le soulignement par une barre latérale */
+    .menu > li > a::after,
+    .menu > li > button.toplink::after {
+        display: none;
+    }
+
+    .menu > li > a.active,
+    .menu > li > button.toplink.active {
+        box-shadow: inset 3px 0 0 #2e7d32;
+        background: var(--paper-alt);
+    }
+}
     </style>
     @stack('styles')
 </head>
@@ -1980,34 +2010,44 @@
         </ul>
     </li>
 
-                <li>
-                    <button class="toplink" aria-expanded="false">Formations <svg class="chev" viewBox="0 0 12 8"
-                            fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M1 1l5 5 5-5" />
-                        </svg></button>
-                    <ul class="dropdown">
-                        <li><a href="{{ url('/catalogue-formations-initiales') }}">Formations initiales</a></li>
-                        <li><a href="{{ url('/catalogue-formations-continues') }}">Formations continues</a></li>
-                        {{-- <li><a href="mailto:infos@enef.gov.bf?subject=Demande%20de%20formation%20%C3%A0%20la%20carte">Demande
-                                de formation à la carte</a></li>  --}}
-                    </ul>
-                </li>
-<li><a href="{{ route('actualites.index') }}#actualites">Actualités</a></li>
-                <li>
-                    <button class="toplink" aria-expanded="false">E-services <svg class="chev" viewBox="0 0 12 8"
-                            fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M1 1l5 5 5-5" />
-                        </svg></button>
-                    <ul class="dropdown">
-                        <li><a href="{{ route('bibliotheque.consultation') }}">Bibliothèque en ligne</a></li>
-                        <li><a href="{{ route('bibliotheque.index') }}">Centre de téléchargement</a></li>
-                    </ul>
-                </li>
+    <li>
+        <button class="toplink {{ $navFormations ? 'active' : '' }}" aria-expanded="false">Formations
+            <svg class="chev" viewBox="0 0 12 8" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M1 1l5 5 5-5" />
+            </svg>
+        </button>
+        <ul class="dropdown">
+            <li><a href="{{ url('/catalogue-formations-initiales') }}" class="{{ $navInitiales ? 'active' : '' }}"
+                    @if ($navInitiales) aria-current="page" @endif>Formations initiales</a></li>
+            <li><a href="{{ url('/catalogue-formations-continues') }}" class="{{ $navContinues ? 'active' : '' }}"
+                    @if ($navContinues) aria-current="page" @endif>Formations continues</a></li>
+        </ul>
+    </li>
 
+    <li>
+        <a href="{{ route('actualites.index') }}#actualites" class="{{ $navActualites ? 'active' : '' }}"
+            @if ($navActualites) aria-current="page" @endif>Actualités</a>
+    </li>
 
-                <li><a href="{{ route('contact.index') }}">Contact</a></li>
+    <li>
+        <button class="toplink {{ $navEservices ? 'active' : '' }}" aria-expanded="false">E-services
+            <svg class="chev" viewBox="0 0 12 8" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M1 1l5 5 5-5" />
+            </svg>
+        </button>
+        <ul class="dropdown">
+            <li><a href="{{ route('bibliotheque.consultation') }}" class="{{ $navBiblioEnLigne ? 'active' : '' }}"
+                    @if ($navBiblioEnLigne) aria-current="page" @endif>Bibliothèque en ligne</a></li>
+            <li><a href="{{ route('bibliotheque.index') }}" class="{{ $navTelechargement ? 'active' : '' }}"
+                    @if ($navTelechargement) aria-current="page" @endif>Centre de téléchargement</a></li>
+        </ul>
+    </li>
 
-            </ul>
+    <li>
+        <a href="{{ route('contact.index') }}" class="{{ $navContact ? 'active' : '' }}"
+            @if ($navContact) aria-current="page" @endif>Contact</a>
+    </li>
+</ul>
 
             <div class="nav-actions">
                 {{-- <button class="icon-btn" aria-label="Rechercher sur le site">
