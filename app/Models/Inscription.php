@@ -116,4 +116,9 @@ class Inscription extends Model
                     ->contains(fn($piece) => $piece->estConforme())
             );
     }
+
+    public function traitePar(): BelongsTo
+{
+    return $this->belongsTo(User::class, 'traite_par');
+}
 }

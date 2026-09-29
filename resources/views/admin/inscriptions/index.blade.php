@@ -34,89 +34,115 @@
         {{-- ================================
              EN-TÊTE + FILTRES
         ================================= --}}
-        <div class="card-header">
+        @php
+    $statutsFiltres = [
+        'depose'    => 'Déposé',
+        'en_cours'  => 'En cours',
+        'incomplet' => 'Incomplet',
+        'valide'    => 'Validé',
+        'rejete'    => 'Rejeté',
+    ];
+    $filtresActifs = request()->filled('q') || request()->filled('session_id')
+        || request()->filled('statut') || request()->filled('du') || request()->filled('au');
+@endphp
 
-            <h3 class="card-title">
-                <i class="fas fa-file-alt mr-2"></i>
-                Liste des candidatures
-            </h3>
+<div class="card-header">
+    <h3 class="card-title">
+        <i class="fas fa-file-alt mr-2"></i>
+        Liste des candidatures
+        <span class="badge badge-secondary ml-2">{{ $inscriptions->total() }}</span>
+    </h3>
+</div>
 
-            <div class="card-tools">
+{{-- ================= FILTRES ================= --}}
+<div class="card-body border-bottom pb-2">
 
-                {{-- Un seul formulaire : les deux filtres se combinent --}}
-                <form action="{{ route('admin.inscriptions.index') }}" method="GET"
-                    class="form-inline flex-wrap justify-content-end">
+    {{-- Pastilles de statut --}}
+    <div class="mb-3">
+        <a href="{{ route('admin.inscriptions.index', request()->except('statut', 'page')) }}"
+           class="btn btn-sm rounded-pill mr-1 mb-1 {{ request('statut') ? 'btn-outline-secondary' : 'btn-primary' }}">
+            Tous <span class="badge badge-light ml-1">{{ $comptes->sum() }}</span>
+        </a>
 
-                    {{-- FILTRE SESSION --}}
-                    <select name="session_id" class="form-control form-control-sm mr-2 mb-1 mb-md-0"
-                        onchange="this.form.submit()" aria-label="Filtrer par session"
-                        style="width:auto; max-width:340px;">
+        @foreach ($statutsFiltres as $valeur => $libelle)
+            <a href="{{ route('admin.inscriptions.index', array_merge(request()->except('statut', 'page'), ['statut' => $valeur])) }}"
+               class="btn btn-sm rounded-pill mr-1 mb-1 {{ request('statut') === $valeur ? 'btn-primary' : 'btn-outline-secondary' }}">
+                {{ $libelle }}
+                <span class="badge badge-light ml-1">{{ $comptes[$valeur] ?? 0 }}</span>
+            </a>
+        @endforeach
+    </div>
 
-                        <option value="">
-                            Toutes les sessions
+    <form action="{{ route('admin.inscriptions.index') }}" method="GET">
+        @if (request()->filled('statut'))
+            <input type="hidden" name="statut" value="{{ request('statut') }}">
+        @endif
+
+        <div class="form-row align-items-end">
+
+            {{-- Recherche texte --}}
+            <div class="form-group col-lg-4 col-md-12">
+                <label for="filtre-q" class="small text-muted mb-1">Recherche</label>
+                <div class="input-group input-group-sm">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text"><i class="fas fa-search"></i></span>
+                    </div>
+                    <input type="search" id="filtre-q" name="q" value="{{ request('q') }}"
+                           class="form-control" placeholder="N° dossier, nom, e-mail, téléphone…"
+                           autocomplete="off">
+                </div>
+            </div>
+
+            {{-- Session --}}
+            <div class="form-group col-lg-3 col-md-6">
+                <label for="filtre-session" class="small text-muted mb-1">Session</label>
+                <select id="filtre-session" name="session_id" class="form-control form-control-sm">
+                    <option value="">Toutes les sessions</option>
+                    @foreach ($sessions as $sessionOption)
+                        @php
+                            $debut = $sessionOption->date_debut
+                                ? \Carbon\Carbon::parse($sessionOption->date_debut)->format('d/m/Y') : '—';
+                            $fin = $sessionOption->date_fin
+                                ? \Carbon\Carbon::parse($sessionOption->date_fin)->format('d/m/Y') : '—';
+                        @endphp
+                        <option value="{{ $sessionOption->id }}" @selected((string) request('session_id') === (string) $sessionOption->id)>
+                            {{ $sessionOption->formation->titre ?? 'Formation' }} — {{ $debut }} au {{ $fin }}
                         </option>
+                    @endforeach
+                </select>
+            </div>
 
-                        @foreach ($sessions as $sessionOption)
-                            @php
-                                $debut = $sessionOption->date_debut
-                                    ? \Carbon\Carbon::parse($sessionOption->date_debut)->format('d/m/Y')
-                                    : '—';
-                                $fin = $sessionOption->date_fin
-                                    ? \Carbon\Carbon::parse($sessionOption->date_fin)->format('d/m/Y')
-                                    : '—';
-                            @endphp
+            {{-- Période de dépôt --}}
+            <div class="form-group col-lg-2 col-md-3 col-6">
+                <label for="filtre-du" class="small text-muted mb-1">Déposé du</label>
+                <input type="date" id="filtre-du" name="du" value="{{ request('du') }}"
+                       class="form-control form-control-sm @error('du') is-invalid @enderror">
+            </div>
 
-                            <option value="{{ $sessionOption->id }}" @selected((string) request('session_id') === (string) $sessionOption->id)>
-                                {{ $sessionOption->formation->titre ?? 'Formation' }}
-                                — {{ $debut }} au {{ $fin }}
-                            </option>
-                        @endforeach
+            <div class="form-group col-lg-2 col-md-3 col-6">
+                <label for="filtre-au" class="small text-muted mb-1">au</label>
+                <input type="date" id="filtre-au" name="au" value="{{ request('au') }}"
+                       class="form-control form-control-sm @error('au') is-invalid @enderror">
+            </div>
 
-                    </select>
-
-                    {{-- FILTRE STATUT --}}
-                    <select name="statut" class="form-control form-control-sm mb-1 mb-md-0"
-                        onchange="this.form.submit()" aria-label="Filtrer par statut" style="width:auto;">
-
-                        <option value="">
-                            Tous les statuts
-                        </option>
-
-                        <option value="depose" @selected(request('statut') === 'depose')>
-                            Déposé
-                        </option>
-
-                        <option value="en_cours" @selected(request('statut') === 'en_cours')>
-                            En cours
-                        </option>
-
-                        <option value="incomplet" @selected(request('statut') === 'incomplet')>
-                            Incomplet
-                        </option>
-
-                        <option value="valide" @selected(request('statut') === 'valide')>
-                            Validé
-                        </option>
-
-                        <option value="rejete" @selected(request('statut') === 'rejete')>
-                            Rejeté
-                        </option>
-
-                    </select>
-
-                    {{-- RÉINITIALISER --}}
-                    @if (request()->filled('session_id') || request()->filled('statut'))
-                        <a href="{{ route('admin.inscriptions.index') }}"
-                            class="btn btn-sm btn-outline-secondary ml-2 mb-1 mb-md-0">
-                            <i class="fas fa-times mr-1"></i>
-                            Réinitialiser
-                        </a>
-                    @endif
-
-                </form>
-
+            {{-- Boutons --}}
+            <div class="form-group col-lg-1 col-12 text-lg-right">
+                <button type="submit" class="btn btn-sm btn-primary" title="Rechercher">
+                    <i class="fas fa-search"></i>
+                    <span class="d-lg-none ml-1">Rechercher</span>
+                </button>
             </div>
         </div>
+
+        @if ($filtresActifs)
+            <div class="mb-2">
+                <a href="{{ route('admin.inscriptions.index') }}" class="small text-secondary">
+                    <i class="fas fa-times mr-1"></i> Réinitialiser les filtres
+                </a>
+            </div>
+        @endif
+    </form>
+</div>
 
 
         {{-- ================================
@@ -399,5 +425,6 @@
             white-space: nowrap;
         }
     </style>
+    <br>
 
 </x-admin>

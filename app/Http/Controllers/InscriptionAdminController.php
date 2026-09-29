@@ -16,32 +16,68 @@ use Illuminate\View\View;
 class InscriptionAdminController extends Controller
 {
     public function index(Request $request): View
-    {
-        $inscriptions = Inscription::with(['candidat', 'formation', 'session'])
-            ->when($request->filled('statut'), fn ($q) => $q->where('statut', $request->statut))
-            ->latest()
-            ->paginate(20)
-            ->withQueryString();
+{
+    $request->validate([
+        'q'          => ['nullable', 'string', 'max:100'],
+        'session_id' => ['nullable', 'string'],
+        'statut'     => ['nullable', 'in:depose,en_cours,incomplet,valide,rejete'],
+        'du'         => ['nullable', 'date'],
+        'au'         => ['nullable', 'date', 'after_or_equal:du'],
+    ]);
 
-        // Liste des sessions pour le menu déroulant
+    $recherche = trim((string) $request->input('q'));
+
+    $inscriptions = Inscription::with(['candidat.personne', 'formation', 'session'])
+        ->when($recherche !== '', function ($query) use ($recherche) {
+            // on échappe % et _ pour qu'ils soient cherchés littéralement
+            $like = '%' . addcslashes($recherche, '%_\\') . '%';
+
+            $query->where(function ($q) use ($like) {
+                $q->where('numero_dossier', 'ilike', $like)
+                  ->orWhereHas('candidat', fn ($c) => $c
+                      ->where('email', 'ilike', $like)
+                      ->orWhereHas('personne', fn ($p) => $p
+                          ->where('nom', 'ilike', $like)
+                          ->orWhere('prenom', 'ilike', $like)
+                          ->orWhere('telephone', 'ilike', $like)));
+            });
+        })
+        ->when($request->filled('session_id'), fn ($q) => $q->where('session_formation_id', $request->session_id))
+        ->when($request->filled('statut'), fn ($q) => $q->where('statut', $request->statut))
+        ->when($request->filled('du'), fn ($q) => $q->whereDate('date_soumission', '>=', $request->du))
+        ->when($request->filled('au'), fn ($q) => $q->whereDate('date_soumission', '<=', $request->au))
+        ->latest('date_soumission')
+        ->paginate(20)
+        ->withQueryString();
+
     $sessions = SessionFormation::with('formation:id,titre')
         ->orderByDesc('date_debut')
         ->get();
 
-        return view('admin.inscriptions.index', compact('inscriptions', 'sessions'));
-    }
+    // Compteurs pour les pastilles de statut
+    $comptes = Inscription::selectRaw('statut, count(*) as total')
+        ->groupBy('statut')
+        ->pluck('total', 'statut');
+
+    return view('admin.inscriptions.index', compact('inscriptions', 'sessions', 'comptes'));
+}
 
     public function show(Inscription $inscription): View
     {
-        $inscription->load(['candidat', 'formation', 'session', 'pieces']);
-
+        $inscription->load([
+            'candidat.personne',
+            'formation.categorie',
+            'session',
+            'pieces',
+            'traitePar.personne',
+        ]);
         return view('admin.inscriptions.show', compact('inscription'));
     }
 
     public function valider(Inscription $inscription): RedirectResponse
     {
         $toutesConformes = $inscription->pieces->isNotEmpty()
-            && $inscription->pieces->every(fn ($piece) => $piece->statut_verification === 'conforme');
+            && $inscription->pieces->every(fn($piece) => $piece->statut_verification === 'conforme');
 
         abort_unless(
             $toutesConformes,

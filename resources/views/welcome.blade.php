@@ -67,22 +67,45 @@
 
                 <span class="cap">
                     <b>{{ $param_site->mot_dg_nom ?? 'Cdt R. SAWADOGO' }}</b>
-                    {{ $param_site->mot_dg_titre ?? "Directeur Général de l'ENEF" }}
+                    {{-- {{ $param_site->mot_dg_titre ?? "Directeur Général de l'ENEF" }} --}}
+                    Directeur Général de l'École Nationale des Eaux et Forêts
                 </span>
             </div>
-            <div>
-                <span class="section-head kicker" style="display:block;">Mot du Directeur Général</span>
-                <blockquote>« {{ \Illuminate\Support\Str::limit($param_site->mot_dg_contenu ?? '', 320) }} »</blockquote>
-                <div class="dg-signoff">
-                    <b>{{ $param_site->mot_dg_nom ?? 'Cdt R. SAWADOGO' }}</b>
-                    Directeur Général de l'École Nationale des Eaux et Forêts
-                </div>
-                <div style="margin-top:24px;display:flex;gap:14px;flex-wrap:wrap;">
-                    <a href="{{ route('mot-directeur') }}" class="btn btn-outline btn-sm">Lire le message intégral</a>
-                    <a href="{{ route('unites-pedagogiques') }}" class="btn btn-outline btn-sm">Découvrir nos unités
-                        pédagogiques</a>
+            <div class="dg-content">
+                <span class="section-head kicker">Mot du Directeur Général</span>
+
+                <blockquote class="dg-quote">
+                    <span class="quote-mark">“</span>
+
+                    <span class="quote-text">
+                        {{ \Illuminate\Support\Str::limit(trim($param_site->mot_dg_contenu ?? ''), 420, '…') }}
+                    </span>
+
+                    <span class="quote-mark quote-mark-end">”</span>
+                </blockquote>
+
+                {{-- <div class="dg-signoff">
+                    <strong>
+                        {{ $param_site->mot_dg_nom ?? 'Cdt R. SAWADOGO' }}
+                    </strong>
+
+                    <span>
+                        Directeur Général de l'École Nationale des Eaux et Forêts
+                    </span>
+                </div> --}}
+
+                <div class="dg-actions">
+                    <a href="{{ route('mot-directeur') }}" class="btn btn-primary btn-sm">
+                        Lire le message intégral
+                        <span aria-hidden="true">→</span>
+                    </a>
+
+                    <a href="{{ route('unites-pedagogiques') }}" class="btn btn-outline btn-sm">
+                        Découvrir nos unités pédagogiques
+                    </a>
                 </div>
             </div>
+
         </div>
     </section>
 
@@ -1214,6 +1237,110 @@
                 .float-contact-btn {
                     padding: 14px;
                     border-radius: 50%;
+                }
+            }
+
+            .dg-content {
+                max-width: 760px;
+            }
+
+            .dg-content .kicker {
+                display: block;
+                margin-bottom: 22px;
+            }
+
+            .dg-quote {
+                position: relative;
+                margin: 0 0 28px;
+                padding: 28px 32px;
+                border-left: 4px solid var(--water);
+                background: rgba(255, 255, 255, 0.55);
+                color: var(--ink);
+                font-family: "Fraunces", serif;
+                font-size: 19px;
+                line-height: 1.75;
+                font-style: italic;
+            }
+
+            .quote-mark {
+                color: var(--water);
+                font-size: 42px;
+                line-height: 0;
+                vertical-align: -12px;
+                margin-right: 5px;
+                font-weight: 700;
+            }
+
+            .quote-mark-end {
+                margin-left: 4px;
+            }
+
+            .quote-text {
+                display: inline;
+            }
+
+            .dg-signoff {
+                display: flex;
+                flex-direction: column;
+                gap: 4px;
+                margin-top: 20px;
+                padding-left: 36px;
+                color: var(--ink);
+            }
+
+            .dg-signoff strong {
+                font-size: 16px;
+                color: var(--forest-deep);
+            }
+
+            .dg-signoff span {
+                font-size: 13px;
+                line-height: 1.5;
+                color: #68736d;
+            }
+
+            .dg-actions {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                flex-wrap: wrap;
+                margin-top: 28px;
+            }
+
+            /* .dg-actions .btn {
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+            }
+
+            .dg-actions .btn-primary {
+                background: var(--forest-deep);
+                color: #fff;
+                border-color: var(--forest-deep);
+            }
+
+            .dg-actions .btn-primary:hover {
+                background: var(--water);
+                border-color: var(--water);
+            } */
+
+            @media (max-width: 768px) {
+                .dg-quote {
+                    padding: 22px 20px;
+                    font-size: 17px;
+                }
+
+                .dg-signoff {
+                    padding-left: 24px;
+                }
+
+                .dg-actions {
+                    flex-direction: column;
+                    align-items: stretch;
+                }
+
+                .dg-actions .btn {
+                    justify-content: center;
                 }
             }
         </style>
