@@ -306,20 +306,102 @@
 
 
                 <!-- Sidebar user (optional) -->
-                <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-                    <div class="image">
-                        @if (Auth::user()->avatar != null)
-                            <img src="{{ Auth::user()->avatar }}" class="img-circle elevation-2" alt="User Image"
-                                width="100" height="100">
-                        @else
-                            <img src="{{ asset('admin/dist/img/user.jpg') }}" class="img-circle elevation-2"
-                                alt="User Image" width="100" height="100">
-                        @endif
+                @php
+                    $sidebarUser = Auth::user()->loadMissing(['roles', 'personne']);
+                    $sidebarNom = $sidebarUser->personne?->nom_complet ?: $sidebarUser->email;
+                    $sidebarAvatar = $sidebarUser->avatar ?: asset('admin/dist/img/user.jpg');
 
+                    $roleName = $sidebarUser->roles->first()?->name;
+
+                    $rolesAffichage = [
+                        'super-admin' => ['label' => 'Super administrateur', 'class' => 'role-super'],
+                        'admin' => ['label' => 'Administrateur', 'class' => 'role-admin'],
+                        'dg' => ['label' => 'Directeur général', 'class' => 'role-direction'],
+                        'sg' => ['label' => 'Secrétaire général', 'class' => 'role-direction'],
+                        'sc' => ['label' => 'Service communication', 'class' => 'role-direction'],
+                        'se' => ['label' => 'Suivie évaluation', 'class' => 'role-direction'],
+                        'enseignant' => ['label' => 'Enseignant', 'class' => 'role-enseignant'],
+                        'user' => ['label' => 'Utilisateur', 'class' => 'role-user'],
+                    ];
+
+                    $roleInfo = $rolesAffichage[$roleName] ?? [
+                        'label' => $roleName ? strtoupper($roleName) : null,
+                        'class' => 'role-user',
+                    ];
+                @endphp
+
+                <style>
+                    .enef-user-panel .enef-user-avatar {
+                        width: 48px !important;
+                        height: 48px !important;
+                        object-fit: cover;
+                        border: 2px solid rgba(40, 167, 69, .7);
+                    }
+
+                    .enef-user-panel .info {
+                        min-width: 0;
+                        padding-left: 12px;
+                    }
+
+                    .enef-user-name {
+                        display: block;
+                        color: #fff;
+                        font-weight: 600;
+                        line-height: 1.2;
+                        white-space: nowrap;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                    }
+
+                    .enef-user-name:hover {
+                        color: #28a745;
+                    }
+
+                    .enef-role-badge {
+                        display: inline-block;
+                        margin-top: 4px;
+                        padding: 2px 9px;
+                        font-size: .68rem;
+                        font-weight: 600;
+                        letter-spacing: .4px;
+                        text-transform: uppercase;
+                        border-radius: 20px;
+                        color: #fff;
+                    }
+
+                    .enef-role-badge.role-super {
+                        background: linear-gradient(90deg, #dc3545, #b02a37);
+                    }
+
+                    .enef-role-badge.role-admin {
+                        background: linear-gradient(90deg, #fd7e14, #e8590c);
+                    }
+
+                    .enef-role-badge.role-direction {
+                        background: linear-gradient(90deg, #007bff, #0056b3);
+                    }
+
+                    .enef-role-badge.role-enseignant {
+                        background: linear-gradient(90deg, #28a745, #1e7e34);
+                    }
+
+                    .enef-role-badge.role-user {
+                        background: linear-gradient(90deg, #6c757d, #545b62);
+                    }
+                </style>
+
+                <div class="user-panel enef-user-panel mt-3 pb-3 mb-3 d-flex align-items-center">
+                    <div class="image">
+                        <img src="{{ $sidebarAvatar }}" class="img-circle elevation-2 enef-user-avatar"
+                            alt="Photo de {{ $sidebarNom }}">
                     </div>
                     <div class="info">
-                        <a href="{{ route('admin.dashboard') }}" class="d-block text-white">{{ Auth::user()->name }}
-                            {{ Auth::user()->forname }}</a>
+                        <a href="{{ route('admin.dashboard') }}" class="enef-user-name" title="{{ $sidebarNom }}">
+                            {{ $sidebarNom }}
+                        </a>
+                        @if ($roleInfo['label'])
+                            <span class="enef-role-badge {{ $roleInfo['class'] }}">{{ $roleInfo['label'] }}</span>
+                        @endif
                     </div>
                 </div>
                 <!-- SidebarSearch Form -->

@@ -79,6 +79,12 @@ class Inscription extends Model
         return $query->whereIn('statut', ['depose', 'en_cours']);
     }
 
+    public function scopeStatutEnCours($query)
+    {
+        return $query->where('statut', 'en_cours');
+    }
+    
+
     /* -----------------------------------------------------------------
      |  Complétude / validation du dossier (pilotées par TypePiece)
      | -----------------------------------------------------------------
@@ -104,9 +110,10 @@ class Inscription extends Model
         }
 
         return TypePiece::actifs()->obligatoires()->get()
-            ->every(fn ($type) => $this->pieces
-                ->where('type_piece', $type->code)
-                ->contains(fn ($piece) => $piece->estConforme())
+            ->every(
+                fn($type) => $this->pieces
+                    ->where('type_piece', $type->code)
+                    ->contains(fn($piece) => $piece->estConforme())
             );
     }
 }
