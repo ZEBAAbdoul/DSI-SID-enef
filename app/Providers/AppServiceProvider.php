@@ -2,35 +2,50 @@
 
 namespace App\Providers;
 
+use App\Models\Inscription;
 use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
 
 class AppServiceProvider extends ServiceProvider
 {
-    /**
-     * Register any application services.
-     */
     public function register(): void
     {
         //
     }
 
-    /**
-     * Bootstrap any application services.
-     */
     public function boot(): void
     {
         Schema::defaultStringLength(191);
         Paginator::useBootstrapFive();
 
         // Règle de mot de passe appliquée partout où le code utilise Password::defaults()
-        // (inscription, réinitialisation, changement depuis le profil, création d'utilisateur) : 12 caractères minimum
-        Password::defaults(fn () => Password::min(12));
+        Password::defaults(fn() => Password::min(12));
+
+        // ---------- Cloche de notification : inscriptions « en_cours » ----------
+        View::composer('components.navbar', function ($view) {
+            $user = Auth::user();
+            $rolesAutorises = ['super-admin', 'admin', 'dg', 'sg', 'sc', 'se'];
+            $afficherCloche = $user && $user->hasAnyRole($rolesAutorises);
+
+            $view->with([
+                'afficherCloche' => $afficherCloche,
+                'inscriptionsEnCoursCount' => $afficherCloche ? Inscription::statutEnCours()->count() : 0,
+                'inscriptionsEnCours' => $afficherCloche
+                    ? Inscription::statutEnCours()
+                    ->with(['candidat.personne', 'formation'])
+                    ->latest('date_soumission')
+                    ->limit(5)
+                    ->get()
+                    : collect(),
+            ]);
+        });
 
         // ---------- E-mail « Réinitialisation du mot de passe » ----------
         ResetPassword::toMailUsing(function ($notifiable, string $token) {
