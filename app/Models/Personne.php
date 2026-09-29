@@ -27,12 +27,9 @@ class Personne extends Model
         'pays_residence',
     ];
 
-    protected function casts(): array
-    {
-        return [
-            'date_naissance' => 'date',
-        ];
-    }
+   protected $casts = [
+    'date_naissance' => 'date',
+];
 
     /**
      * Le compte utilisateur rattaché à cette personne.
