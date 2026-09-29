@@ -36,7 +36,17 @@
                 </div>
             @endif
 
-            <div style="margin-top:36px;">
+            <div style="margin-top:36px; display:flex; gap:12px; flex-wrap:wrap; align-items:center;">
+                <button type="button" class="btn btn-outline" data-partage
+                        data-titre="{{ $actualite->titre }}"
+                        data-url="{{ route('actualites.show', $actualite->slug) }}">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;" aria-hidden="true">
+                        <line x1="12" y1="2" x2="12" y2="15" />
+                        <polyline points="16 6 12 2 8 6" />
+                        <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8" />
+                    </svg>
+                    Partager cette actualité
+                </button>
                 <a href="{{ route('actualites.index') }}" class="btn btn-outline">Retour aux actualités</a>
             </div>
 
@@ -59,6 +69,8 @@
                 });
             })();
         </script>
+
+        @include('partials.share-action')
     @endpush
 
 @endsection

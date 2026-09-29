@@ -5,7 +5,33 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'ENEF — École Nationale des Eaux et Forêts')</title>
-    
+
+    <meta name="description"
+        content="ENEF — École Nationale des Eaux et Forêts : actualités, formations, galerie et ressources.">
+    <link rel="icon" type="image/jpeg" href="{{ asset('images/logo.jpg') }}">
+    <link rel="canonical" href="{{ url()->current() }}">
+
+    {{-- Open Graph : aperçu avec le logo ENEF quand un lien est partagé (WhatsApp, Facebook…) --}}
+    <meta property="og:site_name" content="ENEF — École Nationale des Eaux et Forêts">
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="fr_FR">
+    <meta property="og:title" content="@yield('title', 'ENEF — École Nationale des Eaux et Forêts')">
+    <meta property="og:description"
+        content="ENEF — École Nationale des Eaux et Forêts : actualités, formations, galerie et ressources.">
+    <meta property="og:image" content="{{ asset('images/logo.jpg') }}">
+    <meta property="og:image:type" content="image/jpeg">
+    <meta property="og:image:alt" content="Logo ENEF">
+    <meta property="og:url" content="{{ url()->current() }}">
+
+    {{-- Twitter Card --}}
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="@yield('title', 'ENEF — École Nationale des Eaux et Forêts')">
+    <meta name="twitter:description"
+        content="ENEF — École Nationale des Eaux et Forêts : actualités, formations, galerie et ressources.">
+    <meta name="twitter:image" content="{{ asset('images/logo.jpg') }}">
+
+    @stack('head')
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
