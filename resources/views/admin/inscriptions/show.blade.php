@@ -194,7 +194,7 @@
                         <dt class="col-4">Pièce ID</dt>
                         <dd class="col-8">
                             @if ($personne?->piece_type || $personne?->piece_numero)
-                                {{ $personne->piece_type }}
+                                {{-- {{ $personne->piece_type }} --}}
                                 @if ($personne->piece_numero)
                                     <span class="text-muted font-weight-normal">N° {{ $personne->piece_numero }}</span>
                                 @endif
